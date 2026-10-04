@@ -36,7 +36,7 @@ nav:
 {% include section.html size="full" %}
 
 {% capture text %}
-We are looking for talented graduate students and postdocs.
+We are looking for talented candidates at the postdoctoral level with a background in mineral physics, physical chemistry, planetary sciences, geophysics and astrobiology.
 
 {% include button.html link="join" text="How to join" %}
 {% endcapture %}

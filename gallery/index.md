@@ -8,7 +8,6 @@ nav:
 # Gallery
 
 A few pictures related to our research. Click a picture to see it full size.
-More (non-science) photography on [Baptiste's photo website](https://kioska.wordpress.com/).
 
 {% include section.html %}
 

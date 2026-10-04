@@ -83,7 +83,7 @@ Thermodynamic and elastic properties of water, ice polymorphs (Ih to VII/X) up t
 {% include section.html size="full" %}
 
 {% capture text %}
-We are looking for talented graduate students and postdocs. Postdoctoral opportunities are available through the [51 Pegasi b Fellowship](https://www.hsfoundation.org/programs/science/51-pegasi-b-fellowship/) of the Heising-Simons Foundation.
+We are looking for talented candidates at the postdoctoral level with a background in mineral physics, physical chemistry, planetary sciences, geophysics and astrobiology. Postdoctoral opportunities are available through the [51 Pegasi b Fellowship](https://www.hsfoundation.org/programs/science/51-pegasi-b-fellowship/) of the Heising-Simons Foundation.
 
 {% include button.html link="join" text="How to join" %}
 {% endcapture %}

@@ -8,7 +8,7 @@ nav:
 
 # Join us
 
-We are looking for talented candidates at the graduate student and postdoctoral levels.
+We are looking for talented candidates at the postdoctoral level with a background in mineral physics, physical chemistry, planetary sciences, geophysics and astrobiology.
 
 {% include section.html %}
 
@@ -18,7 +18,7 @@ Postdoctoral opportunities to join the group are available through the [51 Pegas
 
 ## Graduate students
 
-We welcome inquiries from prospective graduate students interested in planetary mineral physics, high-pressure experiments and icy worlds.
+I am not looking for new graduate students at the moment, but we welcome collaborations with graduate students interested in planetary mineral physics, high-pressure experiments and icy worlds.
 
 ## Contact
 
