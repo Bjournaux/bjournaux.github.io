@@ -541,56 +541,207 @@ From a pressure and temperature (and concentration for solutions), it returns th
 <p>The formalism is described in <a href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JE006176">Journaux et al. (2020)</a>, and the liquid water representation in <a href="https://aip.scitation.org/doi/abs/10.1063/1.5097179">Bollengier, Brown and Shaw (2019)</a>.
 SeaFreeze is open source (GPL-3.0) and available as Python and MATLAB packages.
 You can also try it directly in your browser with the <a href="https://seafreeze.streamlit.app/">SeaFreeze online app</a> (beta; for research use, please install the Python or MATLAB package).</p>
+  </section>
 
-<div class="grid" data-style="">
   
-<figure class="figure">
-  <a href="/images/seafreeze/gibbs.png" class="figure-image" aria-label="Gibbs energy surfaces and phase stability of liquid water light blue , ice Ih dark blue , ice III yellow , ice II orange , ice V purple and ice VI green .">
-    <img src="/images/seafreeze/gibbs.png" style="
-        width: auto;
-        max-height: unset;
-      " alt="Gibbs energy surfaces and phase stability of liquid water light blue , ice Ih dark blue , ice III yellow , ice II orange , ice V purple and ice VI green ." loading="lazy" onerror="this.src = '/images/fallback.svg'; this.onerror = null;">
-  </a>
   
-    <figcaption class="figure-caption">
-      Gibbs energy surfaces and phase stability of liquid water (light blue), ice Ih (dark blue), ice III (yellow), ice II (orange), ice V (purple) and ice VI (green).
+  
 
-    </figcaption>
-  
-</figure>
+  <section class="background" data-size="page">
+    <!--
+  <background></background>
+  <dark></dark>
+  <size></size>
+-->
 
-<figure class="figure">
-  <a href="/images/seafreeze/properties.png" class="figure-image" aria-label="Thermodynamic properties of liquid water and ice polymorphs computed with SeaFreeze.">
-    <img src="/images/seafreeze/properties.png" style="
-        width: auto;
-        max-height: unset;
-      " alt="Thermodynamic properties of liquid water and ice polymorphs computed with SeaFreeze." loading="lazy" onerror="this.src = '/images/fallback.svg'; this.onerror = null;">
-  </a>
-  
-    <figcaption class="figure-caption">
-      Thermodynamic properties of liquid water and ice polymorphs computed with SeaFreeze.
+<h2 id="explore-water-and-ices-in-3d">Explore water and ices in 3D</h2>
 
-    </figcaption>
-  
-</figure>
+<p>Density, sound speed, heat capacity, thermal expansivity and bulk modulus of liquid water and ices across the phase diagram, as computed by SeaFreeze.</p>
 
-<figure class="figure">
-  <a href="/images/seafreeze/phase-diagram.png" class="figure-image" aria-label="Phase transitions predicted by SeaFreeze compared with experimental data. Triple point predictions are also indicated.">
-    <img src="/images/seafreeze/phase-diagram.png" style="
-        width: auto;
-        max-height: unset;
-      " alt="Phase transitions predicted by SeaFreeze compared with experimental data. Triple point predictions are also indicated." loading="lazy" onerror="this.src = '/images/fallback.svg'; this.onerror = null;">
-  </a>
+<div class="sf3d" id="sf3d" data-src="/files/seafreeze/water-ice-properties.json">
+  <div class="sf3d-controls" role="group" aria-label="Property shown">
+    <button type="button" data-prop="rho" aria-pressed="true">Density</button>
+    <button type="button" data-prop="vel" aria-pressed="false">Sound speed</button>
+    <button type="button" data-prop="Cp" aria-pressed="false">Heat capacity</button>
+    <button type="button" data-prop="alpha" aria-pressed="false">Thermal expansivity</button>
+    <button type="button" data-prop="Kt" aria-pressed="false">Bulk modulus</button>
+  </div>
+  <div class="sf3d-plot" id="sf3d-plot">
+    <p class="sf3d-loading">Loading the interactive plot…</p>
+  </div>
+  <div class="sf3d-legend" id="sf3d-legend"></div>
+  <p class="sf3d-caption">
+    Stable phase of H<sub>2</sub>O from 200 to 355 K and up to 2200 MPa, computed with SeaFreeze.
+    Drag to rotate, scroll or pinch to zoom, hover to read values.
+    The steps between colors are phase transitions.
+  </p>
+  <p class="sf3d-more">
+    More phases, properties and salty solutions in the SeaFreeze app:
+  </p>
   
-    <figcaption class="figure-caption">
-      Phase transitions predicted by SeaFreeze compared with experimental data. Triple point predictions are also indicated.
 
-    </figcaption>
-  
-</figure>
+
+
+  <div class="button-wrapper">
+    <a class="button" href="https://seafreeze.streamlit.app/" data-style="highlight" aria-label="fa-solid fa-play">
+      <i class="icon fa-solid fa-play"></i>
+      
+        <span>Try the full version here</span>
+      
+    </a>
+  </div>
 
 
 </div>
+
+<script>
+  (() => {
+    const box = document.getElementById("sf3d");
+    if (!box) return;
+    const plotEl = document.getElementById("sf3d-plot");
+    const PLOTLY = "https://cdn.jsdelivr.net/npm/plotly.js-gl3d-dist-min@4.1.1/plotly-gl3d.min.js";
+
+    // colors follow the SeaFreeze Gibbs-energy figure
+    const COLORS = { 0: "#3fa9f5", 1: "#1f4fa3", 2: "#f08a24", 3: "#f2d024", 5: "#8b5cc8", 6: "#2e9e5b" };
+    // name: axis title, unit: shown on hover, d: format of the value on hover
+    const PROPS = {
+      rho: { name: "Density", unit: "kg/m³", d: ".0f" },
+      vel: { name: "Sound speed, Vp", unit: "m/s", d: ".0f" },
+      Cp: { name: "Heat capacity, Cp", unit: "J/kg/K", d: ".0f" },
+      alpha: { name: "Thermal expansivity, α", unit: "10⁻⁶ K⁻¹", d: ".1f" },
+      Kt: { name: "Bulk modulus, K<sub>T</sub>", unit: "GPa", d: ".2f" },
+    };
+    const title = (p) => `${PROPS[p].name} (${PROPS[p].unit})`;
+    let data = null;
+    let current = "rho";
+
+    const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+    const traces = (prop) =>
+      data.phases.map((ph) => {
+        // adaptive triangle mesh: coarse inside the phase, dense along its boundaries
+        const c = COLORS[ph.id] || "#999";
+        return {
+          type: "mesh3d",
+          name: ph.name,
+          x: ph.P, y: ph.T, z: ph[prop],
+          i: ph.i, j: ph.j, k: ph.k,
+          color: c,
+          opacity: 1,
+          flatshading: false,
+          hovertemplate:
+            "<b>" + ph.name + "</b><br>P = %{x:.0f} MPa<br>T = %{y:.0f} K<br>" +
+            PROPS[prop].name + " = %{z:" + PROPS[prop].d + "} " + PROPS[prop].unit + "<extra></extra>",
+          lighting: { ambient: 0.7, diffuse: 0.6, specular: 0.15, roughness: 0.8 },
+        };
+      });
+
+    const layout = (prop) => {
+      const text = css("--text") || "#eee";
+      const grid = css("--light-gray") || "#444";
+      const axis = (title) => ({
+        title: { text: title, font: { size: 12 } },
+        color: text, gridcolor: grid, zerolinecolor: grid, backgroundcolor: "rgba(0,0,0,0)", showspikes: false,
+      });
+      return {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        font: { family: css("--body") || "sans-serif", color: text },
+        margin: { l: 0, r: 0, t: 0, b: 0 },
+        showlegend: false,
+        scene: {
+          xaxis: axis("Pressure (MPa)"),
+          yaxis: axis("Temperature (K)"),
+          zaxis: axis(title(prop)),
+          camera: { eye: { x: -1.55, y: -1.6, z: 0.85 } },
+          aspectratio: { x: 1.25, y: 1, z: 0.75 },
+        },
+      };
+    };
+
+    const legend = () => {
+      document.getElementById("sf3d-legend").innerHTML = data.phases
+        .map((ph) => `<span><i style="background:${COLORS[ph.id]}"></i>${ph.name}</span>`)
+        .join("");
+    };
+
+    const draw = () => {
+      const cam = plotEl._fullLayout && plotEl._fullLayout.scene ? plotEl._fullLayout.scene.camera : null;
+      const lay = layout(current);
+      if (cam) lay.scene.camera = cam;
+      window.Plotly.react(plotEl, traces(current), lay, { responsive: true, displaylogo: false, modeBarButtonsToRemove: ["toImage"] });
+    };
+
+    const start = async () => {
+      try {
+        await new Promise((ok, fail) => {
+          const s = document.createElement("script");
+          s.src = PLOTLY; s.onload = ok; s.onerror = fail;
+          document.head.appendChild(s);
+        });
+        data = await (await fetch(box.dataset.src)).json();
+        plotEl.innerHTML = "";
+        legend();
+        draw();
+      } catch (e) {
+        plotEl.innerHTML = '<p class="sf3d-loading">The interactive plot could not be loaded.</p>';
+      }
+    };
+
+    box.querySelectorAll("[data-prop]").forEach((b) =>
+      b.addEventListener("click", () => {
+        current = b.dataset.prop;
+        box.querySelectorAll("[data-prop]").forEach((x) => x.setAttribute("aria-pressed", x === b));
+        if (data) draw();
+      })
+    );
+
+    // redraw with the right text colors when dark/light mode is switched
+    new MutationObserver(() => data && draw()).observe(document.documentElement, { attributes: true, attributeFilter: ["data-dark"] });
+
+    // load Plotly (~0.5 MB compressed) once the rest of the page has loaded,
+    // or right away if the visitor scrolls to the plot first
+    let started = false;
+    const go = () => { if (!started) { started = true; start(); } };
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((entries) => {
+        if (entries.some((e) => e.isIntersecting)) { io.disconnect(); go(); }
+      }, { rootMargin: "600px" });
+      io.observe(box);
+    }
+    if (document.readyState === "complete") setTimeout(go, 300);
+    else window.addEventListener("load", () => setTimeout(go, 300));
+  })();
+</script>
+  </section>
+
+  
+  
+  
+
+  <section class="background" data-size="page">
+    <!--
+  <background></background>
+  <dark></dark>
+  <size></size>
+-->
+
+<h2 id="phase-diagram">Phase diagram</h2>
+
+<figure class="figure">
+  <a href="/images/seafreeze/phase-diagram.png" class="figure-image" aria-label="Phase transitions predicted by SeaFreeze compared with experimental data. Triple point predictions are also indicated. Click to enlarge.">
+    <img src="/images/seafreeze/phase-diagram.png" style="
+        width: auto;
+        max-height: unset;
+      " alt="Phase transitions predicted by SeaFreeze compared with experimental data. Triple point predictions are also indicated. Click to enlarge." loading="lazy" onerror="this.src = '/images/fallback.svg'; this.onerror = null;">
+  </a>
+  
+    <figcaption class="figure-caption">
+      Phase transitions predicted by SeaFreeze compared with experimental data. Triple point predictions are also indicated. Click to enlarge.
+
+    </figcaption>
+  
+</figure>
   </section>
 
   
@@ -606,7 +757,10 @@ You can also try it directly in your browser with the <a href="https://seafreeze
 
 <h2 id="credits">Credits</h2>
 
-<p>SeaFreeze was developed by J. Michael Brown, Penny Espinoza and Baptiste Journaux in the Department of Earth and Space Sciences at the University of Washington, with support from the NASA Astrobiology Institute (Icy Worlds and Titan nodes), the NASA Postdoctoral Program and the NASA Solar System Workings program.</p>
+<p>SeaFreeze is developed by Baptiste Journaux (main developer) with J. Michael Brown.
+It is based on the <a href="https://github.com/jmichaelb/LocalBasisFunction">Local Basis Function (LBF)</a> code developed by J. Michael Brown (University of Washington).
+Penny Espinoza and Ula Jones co-developed the first Python version, with Penny Espinoza also contributing to the equation-of-state development.
+SeaFreeze was developed with support from the NASA Astrobiology Institute (Icy Worlds and Titan nodes), the NASA Postdoctoral Program and the NASA Solar System Workings program.</p>
 
 <p>If you use SeaFreeze, please cite <a href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JE006176">Journaux et al. (2020)</a> and the references given in the <a href="https://github.com/Bjournaux/SeaFreeze#readme">README</a>.</p>
   </section>
