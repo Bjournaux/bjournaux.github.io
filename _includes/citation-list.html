@@ -1,0 +1,13 @@
+{% comment %}
+  All citations of one type, without year headings.
+  {% include citation-list.html type="preprint" %}
+{% endcomment %}
+{% assign items = site.data.citations | where: "type", include.type %}
+{% for d in items %}
+  {%
+    include citation.html
+    id=d.id title=d.title authors=d.authors publisher=d.publisher date=d.date
+    link=d.link type=d.type description=d.description buttons=d.buttons
+    image=d.image tags=d.tags repo=d.repo style=include.style
+  %}
+{% endfor %}

@@ -1,0 +1,54 @@
+# =====================================================================
+#  LAB ALUMNI (shown on the People page), newest first.
+#  Fields: name, role, years, now (optional: where they went), note (optional)
+#  When someone leaves: delete their file in _members/ and add them here.
+# =====================================================================
+
+- name: Chris Woodburn
+  role: PhD
+  years: 2023–2025
+  note: "Thesis: Advancement in high pressure chemistry: informing biosignature detection and aqueous salt equilibria"
+  image: images/people/chris-woodburn.jpg
+
+- name: Elizabeth Pawelka
+  role: Undergraduate, UW Physics
+  years: 2023–2025
+  now: PhD student, Rice University
+
+- name: Jack Rosenbloom
+  role: Undergraduate, UW Computer Science & Engineering
+  years: 2023–2024
+
+- name: Jillian Floren
+  role: Undergraduate, UW Earth & Space Sciences
+  years: 2023
+
+- name: Abby Sylvester
+  role: Undergraduate, UW Earth & Space Sciences
+  years: 2023
+
+- name: Erica Clinton
+  role: Undergraduate, UW Chemistry
+  years: 2020–2021
+  now: PhD student, ETH Zurich and Paul Scherrer Institut
+
+- name: Wei Dai
+  role: Undergraduate, UW Computer Science & Engineering
+  years: 2020
+
+- name: Penny Espinoza
+  role: Graduate student
+  years: 2018–2020
+
+- name: Lane Lindblom
+  role: Undergraduate, UW Earth & Space Sciences
+  years: 2019
+
+- name: Nathan Reinsdorf
+  role: Undergraduate, UW Earth & Space Sciences
+  years: 2018
+
+- name: Jason Ott
+  role: UW Earth & Space Sciences
+  years: 2016–2019
+  now: Postdoctoral fellow, Rice University

@@ -1,0 +1,5 @@
+# Publications can also be imported automatically from ORCID.
+# Add the lab members ORCID iDs below to enable it, e.g.
+#   - orcid: 0000-0000-0000-0000
+# (left empty on purpose: the list in sources.yaml is curated by hand)
+[]

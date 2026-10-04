@@ -1,0 +1,318 @@
+# =====================================================================
+#  LAB PUBLICATIONS
+# =====================================================================
+#  How to add a paper (newest at the top of its section):
+#
+#    - id: doi:10.1038/s41586-025-09818-x        <- the paper's DOI
+#      link: https://www.nature.com/articles/...  <- optional: where the title links to
+#      type: paper                               <- paper, preprint or book
+#
+#  Title, authors, journal and date are filled in automatically from the DOI
+#  when the site is rebuilt on GitHub (or by running the "cite" step locally).
+#  Any field you write here (title, link, date...) overrides the automatic one.
+#
+#  Entries WITHOUT an id (e.g. a manuscript under review) are shown exactly
+#  as written: give them title, authors, publisher, date and type.
+#
+#  Optional extras:
+#    group: featured        -> also shown on the homepage ("Featured papers")
+#    image: images/...jpg   -> thumbnail for featured papers
+#    buttons:               -> extra links under the citation (press, data, code)
+#      - type: external
+#        text: New Scientist
+#        link: https://...
+# =====================================================================
+
+# ---------- Preprints / under review ----------
+
+- title: "Meta-analytical Gibbs energy equation of state of ice VII-X"
+  authors:
+    - U. Jones
+    - J. M. Brown
+    - B. Journaux
+  publisher: Under review in JGR Planets
+  type: preprint
+
+- title: "Thermodynamic Modeling of Alterations During Climate Transition Reveals Minerals Indicative of Past Temperate Conditions on Venus"
+  authors:
+    - H. T. White-Gianella
+    - V. Chevrier
+    - B. Journaux
+  publisher: Under review in Icarus
+  type: preprint
+
+- title: "On the Melting Curves of Water at Pressure and in the Presence of Salts Expected in Icy Worlds"
+  authors:
+    - C. Woodburn
+    - S. Vance
+    - J. M. Brown
+    - B. Journaux
+  publisher: Under review in PNAS
+  type: preprint
+
+- id: arxiv:2510.23733
+  link: https://arxiv.org/abs/2510.23733
+  description: Under review in the Journal of Open Source Software (JOSS)
+  type: preprint
+
+- title: "Overcoming hydrophobicity: A maximally filled methane clathrate hydrate reservoir under planetary conditions"
+  authors:
+    - K. Skrzyńska
+    - E. Le Menn
+    - O. Bollengier
+    - B. Journaux
+    - A. Pantousas
+    - M. Mezouar
+    - G. Tobie
+    - A. Pakhomova
+  publisher: Under review in Nature Communications
+  type: preprint
+
+- title: "Thermodynamics of NaCl(aq) from 230 to 2000 K and from 1 bar to 10,000 MPa: Applications to Earth and Other Ocean Worlds"
+  authors:
+    - J. M. Brown
+    - O. Bollengier
+    - U. Jones
+    - S. D. Vance
+    - B. Journaux
+  publisher: Under review in Geochimica et Cosmochimica Acta
+  type: preprint
+
+- title: "The Avalon assemblage as astrobiological analog for icy ocean worlds"
+  authors:
+    - M. Cantine
+    - B. Journaux
+    - H. Griffiths
+    - E. Mitchell
+    - C. Ostrander
+    - H. Cothren
+    - U. Jones
+  publisher: Under review in Astrobiology
+  type: preprint
+
+# ---------- Peer-reviewed papers ----------
+
+- id: doi:10.1021/acsearthspacechem.5c00273
+  link: https://pubs.acs.org/doi/10.1021/acsearthspacechem.5c00273
+  type: paper
+
+- id: doi:10.1038/s41586-025-09818-x
+  link: https://www.nature.com/articles/s41586-025-09818-x
+  type: paper
+  group: featured
+  image: images/research/dragonfly.jpg
+
+- id: doi:10.3847/PSJ/addda8
+  link: https://iopscience.iop.org/article/10.3847/PSJ/addda8
+  type: paper
+
+- id: doi:10.1016/j.epsl.2025.119478
+  link: https://www.sciencedirect.com/science/article/pii/S0012821X25002778
+  type: paper
+
+- id: doi:10.1130/G53025.1
+  link: https://pubs.geoscienceworld.org/gsa/geology/article/doi/10.1130/G53025.1/653453/Dislocation-creep-of-glaucophane-in-mafic
+  type: paper
+
+- id: doi:10.3847/PSJ/adb305
+  link: https://iopscience.iop.org/article/10.3847/PSJ/adb305
+  type: paper
+
+- id: doi:10.1038/s41467-024-54625-z
+  link: https://www.nature.com/articles/s41467-024-54625-z
+  type: paper
+  group: featured
+  image: images/research/gibbs.jpg
+
+- id: doi:10.1021/acsearthspacechem.3c00345
+  link: https://pubs.acs.org/doi/10.1021/acsearthspacechem.3c00345
+  type: paper
+
+- id: doi:10.1021/acsearthspacechem.3c00091
+  link: https://pubs.acs.org/doi/10.1021/acsearthspacechem.3c00091
+  type: paper
+
+- id: doi:10.1016/j.icarus.2023.115772
+  link: https://www.sciencedirect.com/science/article/pii/S0019103523003494
+  type: paper
+
+- id: doi:10.1073/pnas.2217125120
+  link: https://www.pnas.org/doi/10.1073/pnas.2217125120
+  type: paper
+  group: featured
+  image: images/research/hydrate.jpg
+
+- id: doi:10.1038/s41467-022-35187-4
+  link: https://www.nature.com/articles/s41467-022-35187-4
+  type: paper
+
+- id: doi:10.3847/PSJ/ac787e
+  link: https://iopscience.iop.org/article/10.3847/PSJ/ac787e
+  type: paper
+
+- id: doi:10.1038/s41467-022-30799-2
+  link: https://www.nature.com/articles/s41467-022-30799-2
+  type: paper
+
+- id: doi:10.1029/2021GL097602
+  link: http://dx.doi.org/10.1029/2021GL097602
+  type: paper
+
+- id: doi:10.1016/j.xcrp.2022.100856
+  link: https://www.cell.com/cell-reports-physical-science/fulltext/S2666-3864(22)00130-8
+  type: paper
+
+- id: doi:10.1021/acs.jpclett.1c03911
+  link: https://pubs.acs.org/doi/abs/10.1021/acs.jpclett.1c03911
+  type: paper
+
+- id: doi:10.3847/PSJ/ac1272
+  link: http://iopscience.iop.org/article/10.3847/PSJ/ac1272/pdf
+  type: paper
+
+- id: doi:10.3847/PSJ/abf7c9
+  link: https://iopscience.iop.org/article/10.3847/PSJ/abf7c9
+  type: paper
+
+- id: doi:10.1029/2020JE006736
+  link: https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2020JE006736
+  type: paper
+
+- id: doi:10.1029/2019JE006176
+  link: https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2019JE006176
+  type: paper
+
+- id: doi:10.3390/min10020092
+  link: https://www.mdpi.com/2075-163X/10/2/92
+  type: paper
+
+- id: doi:10.1007/s11214-020-0635-5
+  link: https://link.springer.com/article/10.1007/s11214-020-0635-5
+  type: paper
+
+- id: doi:10.1007/s11214-019-0633-7
+  link: https://link.springer.com/article/10.1007%2Fs11214-019-0633-7
+  type: paper
+
+- id: doi:10.1016/j.actaastro.2020.01.030
+  link: https://www.sciencedirect.com/science/article/pii/S0094576520300412
+  type: paper
+
+- id: doi:10.5194/tc-13-1495-2019
+  link: https://www.the-cryosphere.net/13/1495/2019/tc-13-1495-2019.html
+  type: paper
+
+- id: doi:10.2138/am-2018-6554
+  link: https://www.degruyter.com/view/j/ammin.2018.103.issue-9/am-2018-6554/am-2018-6554.xml
+  type: paper
+
+- id: doi:10.1103/PhysRevLett.119.215701
+  link: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.119.215701
+  type: paper
+  title: "SiO₂ glass density to lower-mantle pressures"
+
+- id: doi:10.1016/j.epsl.2017.06.020
+  link: http://www.sciencedirect.com/science/article/pii/S0012821X17303308
+  type: paper
+
+- id: doi:10.1016/j.epsl.2017.01.017
+  link: http://www.sciencedirect.com/science/article/pii/S0012821X17300237
+  type: paper
+
+- id: doi:10.1016/j.icarus.2016.05.009
+  link: http://www.sciencedirect.com/science/article/pii/S001910351630149X
+  type: paper
+  buttons:
+    - type: external
+      text: Nature Physics research highlight
+      link: http://www.nature.com/nphys/journal/v12/n7/full/nphys3822.html
+    - type: external
+      text: New Scientist
+      link: https://www.newscientist.com/article/2093631-ocean-worlds-could-host-life-under-layers-of-high-pressure-ice/
+
+- id: doi:10.1063/1.4894421
+  link: http://scitation.aip.org/content/aip/journal/jcp/141/10/10.1063/1.4894421
+  type: paper
+
+- id: doi:10.1016/j.pepi.2014.08.002
+  link: http://www.sciencedirect.com/science/article/pii/S0031920114001885
+  type: paper
+
+- id: doi:10.1016/j.icarus.2013.05.039
+  link: http://www.sciencedirect.com/science/article/pii/S001910351300239X
+  type: paper
+
+# ---------- Book chapters ----------
+
+- title: "Chapter 13: Exchange processes between surface, atmosphere, and interior"
+  authors:
+    - S. Vance
+    - A. Crósta
+    - M. Melwani Daswani
+    - S. A. Fagents
+    - B. Journaux
+    - C. D. Neish
+    - C. Jamieson
+    - M. Choukroun
+  publisher: "Titan After Cassini-Huygens, Elsevier"
+  date: 2024-01-01
+  link: https://shop.elsevier.com/books/titan-after-cassini-huygens/lopes/978-0-323-99161-2
+  type: book
+
+- title: "Large ocean worlds with high-pressure ices"
+  authors:
+    - B. Journaux
+    - K. Kalousová
+    - C. Sotin
+    - G. Tobie
+    - S. Vance
+    - J. Saur
+    - O. Bollengier
+    - L. Noack
+    - T. Rückriemen-Bez
+    - T. Van Hoolst
+    - K. M. Soderlund
+    - J. M. Brown
+  publisher: "Ocean Worlds, ISSI Books, Springer"
+  date: 2020-01-01
+  link: https://link.springer.com/article/10.1007%2Fs11214-019-0633-7
+  type: book
+
+- title: "Experimental and simulation efforts in the astrobiological exploration of exooceans"
+  authors:
+    - R.-S. Taubner
+    - K. Olsson-Francis
+    - S. Vance
+    - A. Antunes
+    - E. Camprubi Casas
+    - J. P. de Vera
+    - J. Goodman
+    - B. Journaux
+    - F. Klenner
+    - L. Noack
+    - F. Postberg
+    - E. Rabbow
+    - N. Ramkissoon
+    - T. Rückriemen-Bez
+    - J. Saur
+    - Y. Sekine
+    - K. Soderlund
+  publisher: "Ocean Worlds, ISSI Books, Springer"
+  date: 2020-01-01
+  link: https://link.springer.com/article/10.1007/s11214-020-0635-5
+  type: book
+
+- title: "Chapter 3: Solids and fluids at low temperatures"
+  authors:
+    - S. Vance
+    - T. Loerting
+    - J. Stern
+    - M. Kropf
+    - B. Journaux
+    - C. Jamieson
+    - M. L. Cable
+    - O. Bollengier
+  publisher: "Low Temperature Materials and Mechanisms (ed. Y. Bar-Cohen), CRC Press"
+  date: 2016-01-01
+  link: https://www.taylorfrancis.com/chapters/edit/10.1201/9781315371962-11/solids-fluids-low-temperatures-steve-vance-thomas-loerting-josef-stern-matt-kropf-baptiste-journaux-corey-jamieson-morgan-cable-olivier-bollengier
+  type: book

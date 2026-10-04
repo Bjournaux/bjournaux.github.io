@@ -1,0 +1,16 @@
+{% comment %}
+  Section title with a small label above and an optional "see all" link.
+  {% include section-head.html eyebrow="News" title="Latest from the lab"
+     link="news" link-text="All news" %}
+{% endcomment %}
+<div class="section-head">
+  <div>
+    {% if include.eyebrow %}<p class="eyebrow">{{ include.eyebrow }}</p>{% endif %}
+    <h2>{{ include.title }}</h2>
+  </div>
+  {% if include.link %}
+    <a class="more" href="{{ include.link | relative_url | uri_escape }}">
+      {{ include.link-text | default: "See all" }} <i class="fa-solid fa-arrow-right"></i>
+    </a>
+  {% endif %}
+</div>

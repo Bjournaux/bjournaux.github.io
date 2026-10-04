@@ -1,0 +1,18 @@
+{% comment %} Former lab members, from _data/alumni.yaml {% endcomment %}
+<div class="alumni">
+  {% for person in site.data.alumni %}
+    <div class="alumni-item">
+      {% if person.image %}
+        <img class="alumni-photo" src="{{ person.image | relative_url }}" alt="{{ person.name }}" loading="lazy">
+      {% else %}
+        <span class="alumni-photo alumni-initials">{{ person.name | slice: 0, 1 }}{{ person.name | split: " " | last | slice: 0, 1 }}</span>
+      {% endif %}
+      <div>
+        <span class="alumni-name">{{ person.name }}</span>
+        <span class="alumni-role">{{ person.role }} · {{ person.years }}</span>
+        {% if person.now %}<span class="alumni-now">Now: {{ person.now }}</span>{% endif %}
+        {% if person.note %}<span class="alumni-note">{{ person.note }}</span>{% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>

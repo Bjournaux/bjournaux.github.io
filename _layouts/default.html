@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" data-dark="true">
+  {% include head.html %}
+  <body {% if page.url == "/" %}data-home{% endif %}>
+    {% include header.html %}
+    <main>
+      {% include content.html content=content %}
+    </main>
+    {% include footer.html %}
+  </body>
+</html>

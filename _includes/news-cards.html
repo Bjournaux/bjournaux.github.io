@@ -1,0 +1,18 @@
+{% comment %}
+  The latest news posts (from the _posts folder) as cards.
+  {% include news-cards.html count=3 %}       cards (homepage)
+  {% include news-cards.html style="list" %}  full list (News page)
+{% endcomment %}
+{% assign count = include.count | default: 1000 %}
+<div class="news-{% if include.style == 'list' %}list{% else %}cards{% endif %}">
+  {% for post in site.posts limit: count %}
+    <a class="news-card" href="{{ post.url | relative_url }}">
+      <span class="news-date">
+        <i class="{{ post.icon | default: 'fa-solid fa-newspaper' }}"></i>
+        {% include news-date.html post=post %}
+      </span>
+      <span class="news-title">{{ post.title }}</span>
+      <span class="news-excerpt">{{ post.excerpt | strip_html | strip }}</span>
+    </a>
+  {% endfor %}
+</div>

@@ -1,0 +1,4 @@
+{%- comment -%} Date of a news post; set "date-precision: year" or "month" in a post when the exact day is unknown. {%- endcomment -%}
+{%- if include.post.date-precision == "year" -%}{{ include.post.date | date: "%Y" }}
+{%- elsif include.post.date-precision == "month" -%}{{ include.post.date | date: "%B %Y" }}
+{%- else -%}{{ include.post.date | date: "%B %-d, %Y" }}{%- endif -%}

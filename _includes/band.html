@@ -1,0 +1,12 @@
+{% comment %}
+  Full-width photo banner with text, e.g. the SeaFreeze and "Join us" banners.
+  {% include band.html image="images/home/eclipse.jpg" position="right center"
+     eyebrow="Opportunities" title="Join us" text=text %}
+{% endcomment %}
+<div class="band" style="--image: url('{{ include.image | relative_url | uri_escape }}'); --position: {{ include.position | default: 'center' }}">
+  <div class="band-content">
+    {% if include.eyebrow %}<p class="eyebrow">{{ include.eyebrow }}</p>{% endif %}
+    {% if include.title %}<h2>{{ include.title }}</h2>{% endif %}
+    {{ include.text | markdownify }}
+  </div>
+</div>
