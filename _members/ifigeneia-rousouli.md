@@ -1,6 +1,7 @@
 ---
 name: Ifigeneia Rousouli
-image: images/people/ifigeneia-rousouli.jpg   # placeholder with initials: replace this file with a photo
+last-name: Rousouli
+image: images/people/ifigeneia-rousouli.jpg
 role: grad-student
 links:
   # email: someone@uw.edu

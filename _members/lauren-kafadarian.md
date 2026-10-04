@@ -1,5 +1,6 @@
 ---
 name: Lauren Kafadarian
+last-name: Kafadarian
 image: images/people/lauren-kafadarian.jpg
 role: grad-student
 links:

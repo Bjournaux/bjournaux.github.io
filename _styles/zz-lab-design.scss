@@ -46,7 +46,7 @@ li {
 
 .eyebrow {
   margin: 0 0 10px;
-  color: var(--primary);
+  color: var(--gold);
   font-size: 0.78rem;
   font-weight: var(--semi-bold);
   letter-spacing: 0.14em;
@@ -306,7 +306,7 @@ section {
   content: counter(feature, decimal-leading-zero);
   display: block;
   margin-bottom: 6px;
-  color: var(--primary);
+  color: var(--gold);
   font-size: 0.9rem;
   letter-spacing: 0.1em;
 }
@@ -406,6 +406,26 @@ section {
   transform: translateY(-2px);
 }
 
+// news card with a small picture (set "thumbnail:" in the post)
+.news-card.has-thumb {
+  display: grid;
+  grid-template-columns: 1fr 84px;
+  grid-template-areas: "date thumb" "title thumb" "excerpt excerpt";
+  column-gap: 14px;
+}
+
+.news-card.has-thumb .news-date { grid-area: date; }
+.news-card.has-thumb .news-title { grid-area: title; }
+.news-card.has-thumb .news-excerpt { grid-area: excerpt; }
+
+.news-thumb {
+  grid-area: thumb;
+  width: 84px;
+  height: 84px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
 .news-date {
   display: flex;
   align-items: center;
@@ -415,7 +435,7 @@ section {
 }
 
 .news-date i {
-  color: var(--primary);
+  color: var(--gold);
 }
 
 .news-title {
@@ -479,6 +499,10 @@ section {
 
 .portrait:hover .portrait-image {
   transform: scale(1.04);
+}
+
+.portrait-name {
+  color: var(--gold);
 }
 
 .portrait-description {
@@ -548,13 +572,14 @@ section {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--secondary);
-  color: var(--text);
+  background: #12403b;   // same as the initials placeholder photos
+  color: #f2c14e;
   font-size: 0.9rem;
   font-weight: var(--semi-bold);
 }
 
 .alumni-name {
+  color: var(--gold);
   font-family: var(--heading);
   font-weight: var(--semi-bold);
 }
@@ -569,6 +594,26 @@ section {
 
 .alumni-now {
   color: var(--primary);
+}
+
+a.alumni-name:hover {
+  color: var(--text);
+}
+
+.alumni-more {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  font-weight: var(--semi-bold);
+  text-decoration: none;
+}
+
+.alumni-more i {
+  margin-left: 3px;
+  font-size: 0.8em;
+}
+
+h3 + .alumni {
+  margin-bottom: 36px;
 }
 
 // ---------- figures and photo grids ----------
@@ -622,4 +667,48 @@ details {
 details summary {
   font-family: var(--heading);
   font-weight: var(--semi-bold);
+}
+
+// ---------- highlighted button (e.g. "Try it online") ----------
+// use it by adding style="highlight" to a button include in a page
+
+.button[data-style="highlight"] {
+  background: var(--on-dark-accent);
+  border-color: var(--on-dark-accent);
+  color: #141312;
+  animation: highlight-pulse 1.5s ease-out infinite;
+}
+
+.button[data-style="highlight"]:hover {
+  background: #ffd76e;
+  border-color: #ffd76e;
+  color: #141312;
+  transform: translateY(-1px);
+  animation-play-state: paused;
+}
+
+.button[data-style="highlight"] .icon {
+  transition: transform var(--transition);
+}
+
+.button[data-style="highlight"]:hover .icon {
+  transform: scale(1.2);
+}
+
+@keyframes highlight-pulse {
+  0% {
+    box-shadow: 0 0 0 0 #f2c14e8c;
+  }
+  70% {
+    box-shadow: 0 0 0 12px #f2c14e00;
+  }
+  100% {
+    box-shadow: 0 0 0 0 #f2c14e00;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button[data-style="highlight"] {
+    animation: none;
+  }
 }

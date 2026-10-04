@@ -1,5 +1,6 @@
 ---
 name: Ula Jones
+last-name: Jones
 image: images/people/ula-jones.jpg
 role: grad-student
 links:

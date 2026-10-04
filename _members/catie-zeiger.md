@@ -1,6 +1,7 @@
 ---
 name: Catie Zeiger
-image: images/people/catie-zeiger.jpg   # placeholder with initials: replace this file with a photo
+last-name: Zeiger
+image: images/people/catie-zeiger.jpg
 role: undergrad
 links:
   # email: someone@uw.edu

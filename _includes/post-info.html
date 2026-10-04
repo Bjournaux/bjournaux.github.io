@@ -38,12 +38,10 @@
     </span>
   {% endif %}
 
-  {% if updated and updated != "" and updated != published %}
-    <span data-tooltip="Last updated on">
-      {% include icon.html icon="fa-solid fa-clock-rotate-left" %}
-      <span>{{ updated }}</span>
-    </span>
-  {% endif %}
+  {% comment %}
+    "Last updated" date hidden: it reflects when the file was last edited,
+    not when the news happened.
+  {% endcomment %}
 </div>
 
 {% if include.tags %}

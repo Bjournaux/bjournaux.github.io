@@ -41,7 +41,7 @@ Our data constrain interior models through the [PlanetProfile](https://github.co
 {% capture text %}
 Our measurements support the [NASA Dragonfly](https://dragonfly.jhuapl.edu/) seismometer, Europa Clipper and JUICE observations, and organ cryopreservation research with the [Public Thermo Lab](https://publicthermo.com/) at Texas A&M.
 {% endcapture %}
-{% include feature.html image="images/research/dragonfly.jpg" link="research#applications" title="From space missions to cryobiology" text=text flip=true %}
+{% include feature.html image="images/research/dragonfly-titan-dunes.jpg" link="research#applications" title="From space missions to cryobiology" text=text flip=true %}
 
 {% include section.html size="full" %}
 
@@ -49,6 +49,7 @@ Our measurements support the [NASA Dragonfly](https://dragonfly.jhuapl.edu/) sei
 Thermodynamic and elastic properties of water, ice polymorphs (Ih to VII/X) up to 100 GPa and 10,000 K, and aqueous NaCl up to 8 GPa and 2,000 K. Python and MATLAB packages, and an online app.
 
 {% include button.html link="https://github.com/Bjournaux/SeaFreeze" text="Get SeaFreeze" icon="fa-brands fa-github" %}
+{% include button.html link="https://seafreeze.streamlit.app/" text="Try it online" icon="fa-solid fa-play" style="highlight" %}
 {% include button.html link="seafreeze" text="Learn more" style="outline" %}
 {% endcapture %}
 

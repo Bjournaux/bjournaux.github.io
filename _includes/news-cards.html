@@ -6,7 +6,8 @@
 {% assign count = include.count | default: 1000 %}
 <div class="news-{% if include.style == 'list' %}list{% else %}cards{% endif %}">
   {% for post in site.posts limit: count %}
-    <a class="news-card" href="{{ post.url | relative_url }}">
+    <a class="news-card{% if post.thumbnail %} has-thumb{% endif %}" href="{{ post.url | relative_url }}">
+      {% if post.thumbnail %}<img class="news-thumb" src="{{ post.thumbnail | relative_url }}" alt="" loading="lazy">{% endif %}
       <span class="news-date">
         <i class="{{ post.icon | default: 'fa-solid fa-newspaper' }}"></i>
         {% include news-date.html post=post %}

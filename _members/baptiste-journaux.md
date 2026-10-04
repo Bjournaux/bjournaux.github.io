@@ -1,5 +1,6 @@
 ---
 name: Baptiste Journaux
+last-name: Journaux
 image: images/people/baptiste-journaux.jpg
 role: principal-investigator
 description: Assistant Professor
@@ -188,6 +189,7 @@ Planetary science, experimental high-pressure mineral physics, astrobiology, the
 
 ### Podcasts and radio
 
+- KUOW *Pocket Science*, ["These frozen moons are not dead"](https://omny.fm/shows/pocket-science/these-frozen-moons-are-not-dead), with Gabriel Spitzer, July 6, 2026
 - New Scientist *Dead Planets Society* podcast, episode 2: "Punch a hole in a planet", July 31, 2023
 - *Exocast* 45b: special guest Dr. Baptiste Journaux, June 2, 2020
 - *Strange New Worlds* podcast by Dr. [Michael Wong](http://web.gps.caltech.edu/~mlwong/), [episode 76: Chateau Picard](https://soundcloud.com/strange-new-worlds/episode-76-chateau-picard), Aug. 11, 2019

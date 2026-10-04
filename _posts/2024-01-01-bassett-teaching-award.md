@@ -1,6 +1,7 @@
 ---
 title: Bassett Distinguished Teaching Award
 icon: fa-solid fa-chalkboard-user
+thumbnail: images/news/thumbs/bassett-sun.jpg   # small picture on the news card
 date-precision: year   # exact date unknown: only the year is shown
 ---
 

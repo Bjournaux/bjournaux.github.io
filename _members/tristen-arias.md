@@ -1,6 +1,7 @@
 ---
 name: Tristen Arias
-image: images/people/tristen-arias.jpg   # placeholder with initials: replace this file with a photo
+last-name: Arias
+image: images/people/tristen-arias.jpg
 role: undergrad
 links:
   # email: someone@uw.edu

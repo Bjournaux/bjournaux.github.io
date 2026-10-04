@@ -56,6 +56,11 @@ home-page:
   text: Home Page
   tooltip: Home page
 
+thesis:
+  icon: fa-solid fa-book-open
+  text: PhD thesis
+  tooltip: PhD thesis
+
 cv:
   icon: fa-solid fa-file-lines
   text: CV

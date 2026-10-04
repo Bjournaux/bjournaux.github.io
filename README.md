@@ -13,7 +13,7 @@ To add an image, open its folder and use **Add file → Upload files**.
 | I want to…                         | Edit this                                   |
 | ---------------------------------- | ------------------------------------------- |
 | Add or update a lab member         | `_members/firstname-lastname.md` + photo in `images/people/` |
-| Move someone to the alumni list    | delete their `_members/` file, add them to `_data/alumni.yaml` |
+| Move someone to the alumni list    | add them to `_data/alumni.yaml` (level: graduate or undergraduate); delete their `_members/` file, or set its role to `alumni` to keep a profile page |
 | Update the PI's CV (PDF)           | replace `files/CV_Baptiste_Journaux.pdf`    |
 | Add gallery photos                 | photo in `images/gallery/lab`, `field` or `sky` + one line in `gallery/index.md` |
 | Post a news item                   | `_posts/YYYY-MM-DD-short-title.md`          |
@@ -32,6 +32,7 @@ Create `_members/jane-doe.md`, and put a square-ish photo at `images/people/jane
 ```markdown
 ---
 name: Jane Doe
+last-name: Doe            # people are listed alphabetically by this
 image: images/people/jane-doe.jpg
 role: grad-student        # principal-investigator, postdoc, grad-student, undergrad
 links:
@@ -42,7 +43,7 @@ links:
 One or two sentences about Jane's research.
 ```
 
-When someone leaves, delete their file in `_members/` and add a few lines to `_data/alumni.yaml` (name, role, years, and where they went).
+When someone leaves, add a few lines to `_data/alumni.yaml` (name, level, role, graduation year, and where they went). Either delete their file in `_members/`, or keep it with `role: alumni` to keep their profile page (see `chris-woodburn.md`), and add `page:` in `alumni.yaml` to link to it.
 New members without a photo yet can use an initials placeholder: just replace the image file later, keeping the same name.
 
 ### Post a news item

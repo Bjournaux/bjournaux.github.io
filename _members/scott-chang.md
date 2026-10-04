@@ -1,6 +1,7 @@
 ---
 name: Scott Chang
-image: images/people/scott-chang.jpg   # placeholder with initials: replace this file with a photo
+last-name: Chang
+image: images/people/scott-chang.jpg
 role: grad-student
 links:
   # email: someone@uw.edu
@@ -9,4 +10,4 @@ links:
 
 PhD student since fall 2025, co-advised with Dr. Steve Vance (NASA Jet Propulsion Laboratory). Scott develops synergistic geophysical analyses of icy world spacecraft data using machine learning.
 
-Awards: Provost Award, Washington Space Grant (SURP).
+Awards: NSF Graduate Research Fellowship (GRFP), Provost Award, Washington Space Grant (SURP).

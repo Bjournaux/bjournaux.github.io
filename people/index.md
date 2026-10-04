@@ -25,7 +25,13 @@ nav:
 
 ## Alumni
 
-{% include alumni-list.html %}
+### Former graduate students
+
+{% include alumni-list.html level="graduate" %}
+
+### Former undergraduate researchers
+
+{% include alumni-list.html level="undergraduate" %}
 
 {% include section.html size="full" %}
 

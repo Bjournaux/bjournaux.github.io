@@ -37,9 +37,10 @@ defaults:
       layout: post
 
 collections:
-  # generate page for each member
+  # generate page for each member, listed in order of last name
   members:
     output: true
+    sort_by: last-name
   # generate page for each post
   posts:
     output: true

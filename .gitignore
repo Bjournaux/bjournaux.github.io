@@ -13,7 +13,7 @@ yarn.lock
 node_modules
 
 # local preview
-Gemfile.local.lock
+Gemfile.local*.lock
 
 # macOS
 .DS_Store

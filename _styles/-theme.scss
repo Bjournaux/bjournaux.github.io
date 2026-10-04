@@ -3,15 +3,17 @@
 
 // =====================================================================
 //  COLORS AND FONTS of the whole site.
-//  Change a color by editing one line (any CSS color, e.g. #0f766e).
-//  "Glacier" palette: teal on warm white (light) / warm near-black (dark).
+//  Change a color by editing one line (any CSS color, e.g. #2a9d8f).
+//  "Sea teal + gold": teal for links and buttons, gold for small labels,
+//  on warm white (light mode) / warm near-black (dark mode).
 // =====================================================================
 
 // colors in light mode
 [data-dark="false"] {
-  --primary: #0f766e;        // links, buttons, accents
-  --secondary: #a7e3dc;      // soft accent
-  --on-dark-accent: #a7e3dc; // accent used over photos (hero, banners)
+  --primary: #0b6e66;        // links, buttons, photo rings (sea teal)
+  --gold: #a16207;           // small labels, numbers, news icons
+  --secondary: #fde68a;      // soft accent (tag labels)
+  --on-dark-accent: #f2c14e; // accent used over photos (hero, banners)
   --text: #1c1917;
   --background: #fbfaf7;
   --background-alt: #f2efe8; // every other page section
@@ -23,9 +25,10 @@
 
 // colors in dark mode (the default, see _scripts/dark-mode.js)
 [data-dark="true"] {
-  --primary: #4fd1c0;
-  --secondary: #134e48;
-  --on-dark-accent: #4fd1c0;
+  --primary: #2a9d8f;
+  --gold: #f2c14e;
+  --secondary: #5c4410;
+  --on-dark-accent: #f2c14e;
   --text: #f2efe8;
   --background: #141312;
   --background-alt: #1c1a18;

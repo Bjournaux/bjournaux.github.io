@@ -11,7 +11,7 @@ nav:
 Thermodynamic and elastic properties of pure water, ice polymorphs (Ih, II, III, V, VI and VII/X) up to 100 GPa and 10,000 K, and aqueous NaCl solutions up to 8 GPa and 2,000 K: the conditions found in all the hydrospheres of our solar system, and beyond.
 
 {% include button.html link="https://github.com/Bjournaux/SeaFreeze" text="SeaFreeze on GitHub" icon="fa-brands fa-github" %}
-{% include button.html link="https://seafreeze.streamlit.app/" text="Try it online (beta)" style="outline" %}
+{% include button.html link="https://seafreeze.streamlit.app/" text="Try it online (beta)" icon="fa-solid fa-play" style="highlight" %}
 {% endcapture %}
 
 {% include band.html image="images/hero.jpg" position="center 70%" eyebrow="Open-source software" title="SeaFreeze" text=text %}
@@ -24,7 +24,8 @@ SeaFreeze evaluates Gibbs energy representations built with the [Local Basis Fun
 From a pressure and temperature (and concentration for solutions), it returns the thermodynamic and elastic properties of each phase, and the stable phase of the water phase diagram.
 
 The formalism is described in [Journaux et al. (2020)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JE006176), and the liquid water representation in [Bollengier, Brown and Shaw (2019)](https://aip.scitation.org/doi/abs/10.1063/1.5097179).
-SeaFreeze is open source (GPL-3.0) and available as Python and MATLAB packages, with an online interface in beta.
+SeaFreeze is open source (GPL-3.0) and available as Python and MATLAB packages.
+You can also try it directly in your browser with the [SeaFreeze online app](https://seafreeze.streamlit.app/) (beta; for research use, please install the Python or MATLAB package).
 
 {% capture content %}
 {% include figure.html image="images/seafreeze/gibbs.png" link="images/seafreeze/gibbs.png" caption="Gibbs energy surfaces and phase stability of liquid water (light blue), ice Ih (dark blue), ice III (yellow), ice II (orange), ice V (purple) and ice VI (green)." %}

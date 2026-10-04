@@ -1,5 +1,6 @@
 ---
 name: Haskelle White-Gianella
+last-name: White-Gianella
 image: images/people/haskelle-white-gianella.jpg
 role: grad-student
 aliases:

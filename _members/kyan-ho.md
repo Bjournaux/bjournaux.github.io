@@ -1,6 +1,7 @@
 ---
 name: Kyan Ho
-image: images/people/kyan-ho.jpg   # placeholder with initials: replace this file with a photo
+last-name: Ho
+image: images/people/kyan-ho.jpg
 role: grad-student
 links:
   # email: someone@uw.edu

@@ -1,54 +1,66 @@
 # =====================================================================
 #  LAB ALUMNI (shown on the People page), newest first.
-#  Fields: name, role, years, now (optional: where they went), note (optional)
-#  When someone leaves: delete their file in _members/ and add them here.
+#  Fields: name, level (graduate or undergraduate), role,
+#          year (graduation year, or last year in the lab),
+#          now (optional: where they went), note (optional),
+#          page (optional: their profile page), thesis + thesis-title (optional)
+#  When someone leaves: add them here; keep their _members/ file only if
+#  you want a profile page for them (set its role to alumni).
 # =====================================================================
 
 - name: Chris Woodburn
+  level: graduate
   role: PhD
-  years: 2023–2025
-  note: "Thesis: Advancement in high pressure chemistry: informing biosignature detection and aqueous salt equilibria"
+  year: 2025
   image: images/people/chris-woodburn.jpg
+  page: members/chris-woodburn.html
+  thesis: https://digital.lib.washington.edu/researchworks/items/d4f89600-0988-4d5d-8d66-07e9a388e803/full
+  thesis-title: "Advancements in High-pressure Chemistry: Informing Biosignature Detection and Aqueous Salt Equilibria"
 
 - name: Elizabeth Pawelka
+  level: undergraduate
   role: Undergraduate, UW Physics
-  years: 2023–2025
+  year: 2025
   now: PhD student, Rice University
 
 - name: Jack Rosenbloom
+  level: undergraduate
   role: Undergraduate, UW Computer Science & Engineering
-  years: 2023–2024
-
+  year: 2024
 - name: Jillian Floren
+  level: undergraduate
   role: Undergraduate, UW Earth & Space Sciences
-  years: 2023
-
+  year: 2023
 - name: Abby Sylvester
+  level: undergraduate
   role: Undergraduate, UW Earth & Space Sciences
-  years: 2023
-
+  year: 2023
 - name: Erica Clinton
+  level: undergraduate
   role: Undergraduate, UW Chemistry
-  years: 2020–2021
+  year: 2021
   now: PhD student, ETH Zurich and Paul Scherrer Institut
 
 - name: Wei Dai
+  level: undergraduate
   role: Undergraduate, UW Computer Science & Engineering
-  years: 2020
-
+  year: 2020
 - name: Penny Espinoza
+  level: graduate
   role: Graduate student
-  years: 2018–2020
+  year: 2020
+  note: "EoS development and Python integration of the first version of [SeaFreeze](/seafreeze/)"
 
 - name: Lane Lindblom
+  level: undergraduate
   role: Undergraduate, UW Earth & Space Sciences
-  years: 2019
-
+  year: 2019
 - name: Nathan Reinsdorf
+  level: undergraduate
   role: Undergraduate, UW Earth & Space Sciences
-  years: 2018
-
+  year: 2018
 - name: Jason Ott
-  role: UW Earth & Space Sciences
-  years: 2016–2019
+  level: undergraduate
+  role: Undergraduate, UW Earth & Space Sciences
+  year: 2019
   now: Postdoctoral fellow, Rice University
