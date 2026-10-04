@@ -1,3 +1,5 @@
+Visit **[bjournaux.github.io](https://bjournaux.github.io)** 🚀
+
 # UW Planetary Mineral Physics Laboratory website
 
 Built with the [Lab Website Template](https://greene-lab.gitbook.io/lab-website-template-docs) (Jekyll + GitHub Pages).
