@@ -1,0 +1,109 @@
+{% comment %}
+  Photo gallery from _data/gallery.yaml: justified rows (photos uncropped),
+  filter buttons by group, and a lightbox viewer.
+  {% include gallery.html %}
+{% endcomment %}
+{% assign gallery = site.data.gallery %}
+<div class="gallery" id="photo-gallery" data-filter="all">
+  <div class="gal-filters" role="group" aria-label="Show photos">
+    <button type="button" data-filter="all" aria-pressed="true">All <span>{{ gallery.photos.size }}</span></button>
+    {% for g in gallery.groups %}
+      {% assign n = gallery.photos | where: "group", g.id | size %}
+      <button type="button" data-filter="{{ g.id }}" aria-pressed="false">{{ g.name }} <span>{{ n }}</span></button>
+    {% endfor %}
+  </div>
+
+
+  <div class="gal-items">
+    {% for p in gallery.photos %}
+      <figure class="gal-item" data-group="{{ p.group }}" style="--ar: {{ p.ratio | default: 1.5 }}">
+        <a href="{{ p.image | relative_url }}" class="gal-link">
+          <img src="{{ p.image | relative_url }}" alt="{{ p.caption | strip_html | escape }}" loading="lazy">
+        </a>
+        {% if p.caption %}
+          <figcaption>{{ p.caption | markdownify | remove: "<p>" | remove: "</p>" | strip }}</figcaption>
+        {% endif %}
+      </figure>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button type="button" class="lb-close" aria-label="Close">&times;</button>
+  <button type="button" class="lb-prev" aria-label="Previous photo">&#8249;</button>
+  <figure class="lb-figure">
+    <img alt="">
+    <figcaption><span class="lb-caption"></span> <span class="lb-count"></span></figcaption>
+  </figure>
+  <button type="button" class="lb-next" aria-label="Next photo">&#8250;</button>
+</div>
+
+
+<script>
+  (() => {
+    const gal = document.getElementById("photo-gallery");
+    if (!gal) return;
+    const items = [...gal.querySelectorAll(".gal-item")];
+    const visible = () => items.filter((it) => !it.hidden);
+    const info = (it) => ({
+      src: it.querySelector("a").getAttribute("href"),
+      caption: it.querySelector("figcaption") ? it.querySelector("figcaption").innerHTML : "",
+    });
+
+    // ---------- filter buttons ----------
+    gal.querySelectorAll(".gal-filters button").forEach((b) =>
+      b.addEventListener("click", () => {
+        const f = b.dataset.filter;
+        gal.dataset.filter = f;
+        gal.querySelectorAll(".gal-filters button").forEach((x) => x.setAttribute("aria-pressed", x === b));
+        items.forEach((it) => (it.hidden = f !== "all" && it.dataset.group !== f));
+      })
+    );
+
+    // ---------- lightbox ----------
+    const lb = document.getElementById("lightbox");
+    document.body.appendChild(lb); // above the site header, outside the page sections
+    const lbImg = lb.querySelector("img");
+    let lbIndex = 0;
+    const lbShow = (i) => {
+      const list = visible();
+      if (!list.length) return;
+      lbIndex = (i + list.length) % list.length;
+      const { src, caption } = info(list[lbIndex]);
+      lbImg.src = src;
+      lbImg.alt = list[lbIndex].querySelector("img").alt;
+      lb.querySelector(".lb-caption").innerHTML = caption;
+      lb.querySelector(".lb-count").textContent = `${lbIndex + 1} / ${list.length}`;
+    };
+    const lbOpen = (i) => { lbShow(i); lb.hidden = false; document.body.style.overflow = "hidden"; lb.querySelector(".lb-close").focus(); };
+    const lbClose = () => { lb.hidden = true; document.body.style.overflow = ""; };
+    lb.querySelector(".lb-close").addEventListener("click", lbClose);
+    lb.querySelector(".lb-prev").addEventListener("click", () => lbShow(lbIndex - 1));
+    lb.querySelector(".lb-next").addEventListener("click", () => lbShow(lbIndex + 1));
+    lb.addEventListener("click", (e) => { if (e.target === lb) lbClose(); });
+    document.addEventListener("keydown", (e) => {
+      if (lb.hidden) return;
+      if (e.key === "Escape") lbClose();
+      if (e.key === "ArrowLeft") lbShow(lbIndex - 1);
+      if (e.key === "ArrowRight") lbShow(lbIndex + 1);
+    });
+    let touchX = null;
+    lb.addEventListener("touchstart", (e) => (touchX = e.touches[0].clientX), { passive: true });
+    lb.addEventListener("touchend", (e) => {
+      if (touchX === null) return;
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 50) lbShow(lbIndex + (dx < 0 ? 1 : -1));
+      touchX = null;
+    });
+
+
+    // clicking a photo opens the lightbox
+    items.forEach((it) =>
+      it.querySelector("a").addEventListener("click", (e) => {
+        e.preventDefault();
+        lbOpen(visible().indexOf(it));
+      })
+    );
+
+  })();
+</script>

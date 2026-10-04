@@ -1,0 +1,179 @@
+# =====================================================================
+#  GALLERY PHOTOS, in display order.
+#  To add a photo: put the file in images/gallery/<group>/ and add an entry:
+#
+#    - group: lab                      <- lab, space or field (see groups)
+#      image: images/gallery/lab/my-photo.jpg
+#      caption: "What the photo shows (place, date)"
+#      ratio: 1.5                       <- width / height (optional, avoids
+#                                          the layout jumping while loading)
+# =====================================================================
+
+groups:
+  - id: lab
+    name: Lab and experiments
+  - id: space
+    name: Space and astronomy
+  - id: field
+    name: Fieldwork
+
+photos:
+  - group: lab
+    image: images/gallery/lab/2018-02-21-08-42-59.jpg
+    caption: "Gold coated cryostat holder for diamond anvil cell (ESRF, Grenoble, France)"
+    ratio: 0.559
+
+  - group: lab
+    image: images/gallery/lab/2018-05-02-21-02-04.jpg
+    caption: "Peltier modules cryostat for the diamond anvil cell (UW, Seattle, WA)"
+    ratio: 0.559
+
+  - group: lab
+    image: images/gallery/lab/esrf-beamline-setup.jpg
+    caption: "Synchrotron X-ray diffraction set-up on the ID27 beamline at the ESRF (Grenoble, France)"
+    ratio: 1.333
+
+  - group: lab
+    image: images/gallery/lab/esrf-beamtime-team.jpg
+    caption: "Preparing a high-pressure experiment during beamtime at the ESRF (Grenoble, France)"
+    ratio: 1.333
+
+  - group: lab
+    image: images/gallery/lab/dac-loading.jpg
+    caption: "Loading clathrate hydrates into a diamond anvil cell at 100 K"
+    ratio: 0.75
+
+  - group: lab
+    image: images/gallery/lab/005.jpg
+    caption: "Ice VII cubic crystal in equilibrium with NaCl-rich aqueous solution inside a diamond anvil cell at 2.5 GPa. (picture scale 150×150µm)"
+    ratio: 1.0
+
+  - group: lab
+    image: images/gallery/lab/aita-001-copie.jpg
+    caption: "Thin section of strained sample of columnar ice measured with the Automatic Ice Texture Analyzer (AITA). Image scale (70x70mm)"
+    ratio: 1.0
+
+  - group: lab
+    image: images/gallery/lab/img_0032_r.jpg
+    caption: "Columnar ice Ih thin section (cross-polarized light). Picture scale, 80x80mm"
+    ratio: 1.208
+
+  - group: lab
+    image: images/gallery/lab/ante218.jpg
+    caption: "Strained columnar ice Ih sample (3%) under cross-polarized light."
+    ratio: 0.831
+
+  - group: space
+    image: images/gallery/sky/dragonfly-test-blade-apl.jpg
+    caption: "Baptiste Journaux holding the engineering test blade for the Dragonfly rotorcraft (Johns Hopkins Applied Physics Laboratory)"
+    ratio: 0.75
+
+  - group: space
+    image: images/gallery/sky/apl-titan-chamber-visit.jpg
+    caption: "Visit of Johns Hopkins APL's Titan Chamber for Dragonfly testing"
+    ratio: 1.132
+
+  - group: space
+    image: images/gallery/sky/dsc_7783-2.jpg
+    caption: "Launch of NASA's Europa Clipper on a SpaceX Falcon Heavy, October 14, 2024 (Kennedy Space Center, Florida)"
+    ratio: 1.0
+
+  - group: space
+    image: images/gallery/sky/dsc_7812.jpg
+    caption: "Europa Clipper lift-off, October 14, 2024"
+    ratio: 0.667
+
+  - group: space
+    image: images/gallery/sky/dsc_7851.jpg
+    caption: "Europa Clipper on its way to Jupiter's moon Europa, October 14, 2024"
+    ratio: 0.667
+
+  - group: space
+    image: images/gallery/sky/dsc_7882.jpg
+    caption: "Europa Clipper launch, October 14, 2024"
+    ratio: 0.667
+
+  - group: space
+    image: images/gallery/sky/dsc_7987.jpg
+    caption: "Europa Clipper launch, October 14, 2024"
+    ratio: 1.501
+
+  - group: space
+    image: images/gallery/sky/capture-decran-2024-04-12-a-1-28-07e280afpm.jpg
+    caption: "Total solar eclipse of April 8, 2024, from Arkansas"
+    ratio: 1.309
+
+  - group: space
+    image: images/gallery/sky/capture-decran-2024-08-09-a-2-10-51e280afpm.jpg
+    caption: "Phases of the total solar eclipse of April 8, 2024, from Arkansas"
+    ratio: 1.8
+
+  - group: space
+    image: images/gallery/sky/dsc_6842.jpg
+    caption: "Total solar eclipse of August 21, 2017, from Idaho: the diamond ring"
+    ratio: 1.15
+
+  - group: space
+    image: images/gallery/sky/eclipse_10_2005.jpg
+    caption: "Partial solar eclipse (October 3, 2005) with a plane taking off from Orly airport, Paris"
+    ratio: 1.069
+
+  - group: space
+    image: images/gallery/sky/lune.jpg
+    caption: "Lunar eclipse from Lyon (January 4, 2011)"
+    ratio: 1.494
+
+  - group: space
+    image: images/gallery/sky/sun_03_18_tot.jpg
+    caption: "The Sun through an H-alpha telescope, March 18, 2024"
+    ratio: 1.016
+
+  - group: space
+    image: images/gallery/sky/dsc_0236.jpg
+    caption: "Venus transit, June 6, 2012, from the top of the Grand Veymont (Vercors, French Alps)"
+    ratio: 1.045
+
+  - group: field
+    image: images/gallery/field/untitled_panorama1.jpg
+    caption: "Precious opal mine region, May 2009. Lightning Ridge, NSW, Australia."
+    ratio: 2.299
+
+  - group: field
+    image: images/gallery/field/dsc_0026.jpg
+    caption: "Inside a precious opal mine, May 2009. Lightning Ridge, NSW, Australia."
+    ratio: 1.494
+
+  - group: field
+    image: images/gallery/field/dsc_0320.jpg
+    caption: "Helicopter drive over Argentière Glacier, Mont Blanc Massif, France"
+    ratio: 1.494
+
+  - group: field
+    image: images/gallery/field/dsc_0352.jpg
+    caption: "Helicopter drop on the Talèfre Glacier, Mont Blanc Massif, France"
+    ratio: 1.494
+
+  - group: field
+    image: images/gallery/field/dsc_0481.jpg
+    caption: "Winter snow accumulation measurements on the Talèfre Glacier, Mont Blanc Massif, France"
+    ratio: 1.494
+
+  - group: field
+    image: images/gallery/field/dsc_0619.jpg
+    caption: "Helicopter pickup on the Talèfre Glacier, Mont Blanc Massif, France"
+    ratio: 1.494
+
+  - group: field
+    image: images/gallery/field/p1160674.jpg
+    caption: ""
+    ratio: 1.497
+
+  - group: field
+    image: images/gallery/field/dsc_0549.jpg
+    caption: "Les Drus, Mont Blanc Massif, France"
+    ratio: 1.494
+
+  - group: field
+    image: images/gallery/field/dsc_0502.jpg
+    caption: "Argentière Glacier seracs, Mont Blanc Massif, France"
+    ratio: 1.494

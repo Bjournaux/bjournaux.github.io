@@ -15,7 +15,7 @@ To add an image, open its folder and use **Add file → Upload files**.
 | Add or update a lab member         | `_members/firstname-lastname.md` + photo in `images/people/` |
 | Move someone to the alumni list    | add them to `_data/alumni.yaml` (level: graduate or undergraduate); delete their `_members/` file, or set its role to `alumni` to keep a profile page |
 | Update the PI's CV (PDF)           | replace `files/CV_Baptiste_Journaux.pdf`    |
-| Add gallery photos                 | photo in `images/gallery/lab`, `field` or `sky` + one line in `gallery/index.md` |
+| Add gallery photos                 | photo in `images/gallery/lab`, `field` or `sky` + an entry in `_data/gallery.yaml` |
 | Post a news item                   | `_posts/YYYY-MM-DD-short-title.md`          |
 | Add a publication                  | `_data/sources.yaml`                        |
 | Change homepage text               | `index.md`                                  |
