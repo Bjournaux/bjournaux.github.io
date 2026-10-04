@@ -28,7 +28,7 @@ Also on [Google Scholar](https://scholar.google.com/citations?user=fCwV6igAAAAJ)
 
 {% include search-info.html %}
 
-{% include list.html data="citations" component="citation" filter="type == 'paper'" %}
+{% include citation-list.html type="paper" sort="date" %}
 
 ## Book chapters
 

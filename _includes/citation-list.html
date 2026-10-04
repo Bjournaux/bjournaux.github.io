@@ -1,8 +1,10 @@
 {% comment %}
   All citations of one type, without year headings.
   {% include citation-list.html type="preprint" %}
+  {% include citation-list.html type="paper" sort="date" %}   (newest first)
 {% endcomment %}
 {% assign items = site.data.citations | where: "type", include.type %}
+{% if include.sort == "date" %}{% assign items = items | sort: "date" | reverse %}{% endif %}
 {% for d in items %}
   {%
     include citation.html
