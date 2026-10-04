@@ -582,35 +582,12 @@ h3 + .alumni {
 }
 
 .figure-caption {
+  width: 100%;
   margin-top: 8px;
   color: var(--dark-gray);
   font-size: 0.88rem;
   line-height: 1.45;
   text-align: left;
-}
-
-.grid[data-style=square] > .figure {
-  aspect-ratio: auto;
-}
-
-.grid[data-style=square] .figure-image {
-  display: block;
-  aspect-ratio: 1/1;
-  overflow: hidden;
-  border-radius: 8px;
-  background: #000;
-}
-
-.grid[data-style=square] .figure-image img {
-  width: 100% !important;
-  height: 100%;
-  max-height: none !important;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.grid[data-style=square] .figure-image:hover img {
-  transform: scale(1.04);
 }
 
 details {
@@ -747,6 +724,209 @@ details summary {
 
 .sf3d .button-wrapper .button {
   margin-left: 0;
+}
+
+.gallery {
+  text-align: left;
+}
+
+.gal-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.gal-filters button {
+  padding: 7px 14px;
+  border: 1.5px solid var(--light-gray);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.gal-filters button span {
+  margin-left: 4px;
+  color: var(--gray);
+  font-size: 0.8rem;
+}
+
+.gal-filters button:hover {
+  border-color: var(--primary);
+}
+
+.gal-filters button[aria-pressed=true] {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--background);
+}
+
+.gal-filters button[aria-pressed=true] span {
+  color: var(--background);
+}
+
+.gal-item {
+  margin: 0;
+}
+
+.gal-item[hidden] {
+  display: none !important;
+}
+
+.gal-link {
+  display: block;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #000;
+}
+
+.gal-link img {
+  display: block;
+  width: 100%;
+  transition: transform 0.4s ease;
+}
+
+.gal-link:hover img {
+  transform: scale(1.03);
+}
+
+.gal-item figcaption {
+  margin-top: 8px;
+  color: var(--dark-gray);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.gallery .gal-items {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 18px 12px;
+}
+
+.gallery .gal-items::after {
+  content: "";
+  flex-grow: 999;
+}
+
+.gallery .gal-item {
+  flex-grow: var(--ar);
+  flex-basis: calc(var(--ar) * 230px);
+  min-width: 0;
+}
+
+.gallery .gal-link img {
+  aspect-ratio: var(--ar);
+  height: auto;
+  object-fit: cover;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 56px 72px 24px;
+  background: rgba(0, 0, 0, 0.9215686275);
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+.lb-figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+}
+
+.lb-figure img {
+  max-width: 100%;
+  max-height: calc(100vh - 150px);
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.lb-figure figcaption {
+  max-width: 900px;
+  margin-top: 12px;
+  color: #ece8e1;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.lb-figure figcaption a {
+  color: var(--on-dark-accent);
+}
+
+.lb-prev,
+.lb-next,
+.lb-close {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1215686275);
+  color: #fff;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.lb-prev:hover,
+.lb-next:hover,
+.lb-close:hover {
+  background: rgba(255, 255, 255, 0.2509803922);
+}
+
+.lb-count {
+  margin-left: 6px;
+  color: #a8a196;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+.lb-close {
+  top: 12px;
+  right: 16px;
+}
+
+.lb-prev {
+  left: 16px;
+  top: calc(50% - 22px);
+}
+
+.lb-next {
+  right: 16px;
+  top: calc(50% - 22px);
+}
+
+@media (max-width: 700px) {
+  .lightbox {
+    padding: 56px 8px 16px;
+  }
+  .lb-prev,
+  .lb-next {
+    top: auto;
+    bottom: 14px;
+  }
+  .gallery .gal-item {
+    flex-basis: calc(var(--ar) * 150px);
+  }
 }
 
 /*# sourceMappingURL=zz-lab-design.css.map */
