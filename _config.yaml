@@ -1,0 +1,83 @@
+# site properties and page defaults
+title: UW Planetary Mineral Physics Laboratory
+subtitle:
+description: The UW Planetary Mineral Physics Laboratory studies water, ices and minerals at the extreme conditions of planets and moons to understand the evolution and habitability of icy and ocean worlds, support their exploration, and inform fields from environmental science to biomedical engineering.
+header: images/hero.jpg
+footer: images/hero.jpg
+proofer: false
+# the logo (images/logo.svg) already contains the lab name, so hide the text title
+logo-text: false
+
+# site social media and other links (shown as icons in the footer)
+links:
+  email: bjournau@uw.edu
+  google-scholar: fCwV6igAAAAJ
+  researchgate: Baptiste_Journaux
+  github: Bjournaux
+  twitter: B_jour
+
+### jekyll settings
+
+# front matter defaults
+defaults:
+  # all markdown files
+  - scope:
+      path: ""
+    values:
+      layout: default
+  # markdown files in /_members
+  - scope:
+      type: "members"
+    values:
+      layout: member
+  # markdown files in /_posts
+  - scope:
+      type: "posts"
+    values:
+      layout: post
+
+collections:
+  # generate page for each member
+  members:
+    output: true
+  # generate page for each post
+  posts:
+    output: true
+
+# jekyll plugins
+plugins:
+  - jekyll-spaceship
+  - jekyll-sitemap
+  - jekyll-redirect-from
+  - jekyll-feed
+  - jekyll-last-modified-at
+
+# code block syntax highlighting
+highlighter: rouge
+
+# jekyll theme
+theme: null
+
+# sass settings
+sass:
+  sass_dir: _styles
+
+# force jekyll to include certain files/folders
+include:
+  - _styles
+  - _scripts
+  - .nojekyll
+
+# force jekyll to exclude certain files/folders
+exclude:
+  - README.md
+  - LICENSE.md
+  - preview.sh
+  - Gemfile.local
+  - Gemfile.local.lock
+
+# configure jekyll spaceship
+jekyll-spaceship:
+  mathjax-processor:
+    src:
+      - https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js

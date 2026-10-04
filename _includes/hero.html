@@ -1,0 +1,12 @@
+{% comment %}
+  Full-screen photo with a title, used at the top of the homepage.
+  {% include hero.html image="images/hero.jpg" eyebrow="small line above"
+     title="Big title" text=text %}   (text: markdown, may contain buttons)
+{% endcomment %}
+<div class="hero" style="--image: url('{{ include.image | relative_url | uri_escape }}')">
+  <div class="hero-content">
+    {% if include.eyebrow %}<p class="eyebrow">{{ include.eyebrow }}</p>{% endif %}
+    <h1 class="hero-title">{{ include.title }}</h1>
+    <div class="hero-text">{{ include.text | markdownify }}</div>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+{% comment %}
+  Papers marked "group: featured" in _data/sources.yaml, newest first.
+{% endcomment %}
+{% assign featured = site.data.citations | where: "group", "featured" | sort: "date" | reverse %}
+{% for citation in featured %}
+  {% include citation.html lookup=citation.id style="rich" %}
+{% endfor %}

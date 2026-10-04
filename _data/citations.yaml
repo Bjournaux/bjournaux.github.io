@@ -1,0 +1,825 @@
+# DO NOT EDIT, GENERATED AUTOMATICALLY
+
+- title: Meta-analytical Gibbs energy equation of state of ice VII-X
+  authors:
+  - U. Jones
+  - J. M. Brown
+  - B. Journaux
+  publisher: Under review in JGR Planets
+  type: preprint
+  plugin: sources.py
+  file: sources.yaml
+- title: Thermodynamic Modeling of Alterations During Climate Transition Reveals Minerals
+    Indicative of Past Temperate Conditions on Venus
+  authors:
+  - H. T. White-Gianella
+  - V. Chevrier
+  - B. Journaux
+  publisher: Under review in Icarus
+  type: preprint
+  plugin: sources.py
+  file: sources.yaml
+- title: On the Melting Curves of Water at Pressure and in the Presence of Salts Expected
+    in Icy Worlds
+  authors:
+  - C. Woodburn
+  - S. Vance
+  - J. M. Brown
+  - B. Journaux
+  publisher: Under review in PNAS
+  type: preprint
+  plugin: sources.py
+  file: sources.yaml
+- id: arxiv:2510.23733
+  title: 'Magrathea v2: A planetary interior modeling platform in C++'
+  authors:
+  - David R. Rice
+  - Chenliang Huang
+  - Robert Royer
+  - Mangesh Daspute
+  - Krishang Mittal
+  - Baptiste Journaux
+  - Jason H. Steffen
+  - Allona Vazan
+  publisher: arXiv
+  date: '2026-09-17'
+  link: https://arxiv.org/abs/2510.23733
+  description: Under review in the Journal of Open Source Software (JOSS)
+  type: preprint
+  plugin: sources.py
+  file: sources.yaml
+- title: 'Overcoming hydrophobicity: A maximally filled methane clathrate hydrate
+    reservoir under planetary conditions'
+  authors:
+  - "K. Skrzy\u0144ska"
+  - E. Le Menn
+  - O. Bollengier
+  - B. Journaux
+  - A. Pantousas
+  - M. Mezouar
+  - G. Tobie
+  - A. Pakhomova
+  publisher: Under review in Nature Communications
+  type: preprint
+  plugin: sources.py
+  file: sources.yaml
+- title: 'Thermodynamics of NaCl(aq) from 230 to 2000 K and from 1 bar to 10,000 MPa:
+    Applications to Earth and Other Ocean Worlds'
+  authors:
+  - J. M. Brown
+  - O. Bollengier
+  - U. Jones
+  - S. D. Vance
+  - B. Journaux
+  publisher: Under review in Geochimica et Cosmochimica Acta
+  type: preprint
+  plugin: sources.py
+  file: sources.yaml
+- title: The Avalon assemblage as astrobiological analog for icy ocean worlds
+  authors:
+  - M. Cantine
+  - B. Journaux
+  - H. Griffiths
+  - E. Mitchell
+  - C. Ostrander
+  - H. Cothren
+  - U. Jones
+  publisher: Under review in Astrobiology
+  type: preprint
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1021/acsearthspacechem.5c00273
+  title: Polymorphism of Magnesium Chloride Decahydrate under High Pressures and Low
+    Temperatures Found in Icy Moons
+  authors:
+  - Ines E. Collings
+  - Anna Pakhomova
+  - Baptiste Journaux
+  - Tiziana Boffa Ballaran
+  - Alexander Kurnosov
+  - J. Michael Brown
+  - Gaston Garbarino
+  - Jesse S. Smith
+  publisher: ACS Earth and Space Chemistry
+  date: '2026-01-12'
+  link: https://pubs.acs.org/doi/10.1021/acsearthspacechem.5c00273
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1038/s41586-025-09818-x
+  title: "Titan\u2019s strong tidal dissipation precludes a subsurface ocean"
+  authors:
+  - Flavio Petricca
+  - Steven D. Vance
+  - Marzia Parisi
+  - Dustin Buccino
+  - Gael Cascioli
+  - Julie Castillo-Rogez
+  - Brynna G. Downey
+  - Francis Nimmo
+  - Gabriel Tobie
+  - Baptiste Journaux
+  - Andrea Magnanini
+  - Ula Jones
+  - Mark Panning
+  - Amirhossein Bagheri
+  - Antonio Genova
+  - Jonathan I. Lunine
+  publisher: Nature
+  date: '2025-12-17'
+  link: https://www.nature.com/articles/s41586-025-09818-x
+  type: paper
+  group: featured
+  image: images/research/dragonfly.jpg
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.3847/PSJ/addda8
+  title: A Terminology and Quantitative Framework for Assessing the Habitability of
+    Solar System and Extraterrestrial Worlds
+  authors:
+  - "D\xE1niel Apai"
+  - Rory Barnes
+  - Matthew M. Murphy
+  - Tim Lichtenberg
+  - Noah Tuchow
+  - "R\xE9gis Ferri\xE8re"
+  - Kevin Wagner
+  - Antonin Affholder
+  - Renu Malhotra
+  - Baptiste Journaux
+  - Allona Vazan
+  - Ramses Ramirez
+  - "Abel M\xE9ndez"
+  - Stephen R. Kane
+  - Veronica H. Klawender
+  publisher: The Planetary Science Journal
+  date: '2025-07-01'
+  link: https://iopscience.iop.org/article/10.3847/PSJ/addda8
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1016/j.epsl.2025.119478
+  title: Methanol storage in high-pressure clathrate hydrates as a prolonged source
+    of methane in large ocean worlds
+  authors:
+  - Anna Pakhomova
+  - Baptiste Journaux
+  - Alexander Kurnosov
+  - Tiziana Boffa Ballaran
+  - Gabriel Tobie
+  - Michael Hanfland
+  publisher: Earth and Planetary Science Letters
+  date: '2025-09-01'
+  link: https://www.sciencedirect.com/science/article/pii/S0012821X25002778
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1130/G53025.1
+  title: 'Dislocation creep of glaucophane in mafic blueschists during subduction:
+    Weighted Burgers vector analysis from the Catalina Schist (California, USA)'
+  authors:
+  - Jason N. Ott
+  - Cailey B. Condit
+  - Matej Pec
+  - Baptiste Journaux
+  publisher: Geology
+  date: '2025-04-03'
+  link: https://pubs.geoscienceworld.org/gsa/geology/article/doi/10.1130/G53025.1/653453/Dislocation-creep-of-glaucophane-in-mafic
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.3847/PSJ/adb305
+  title: "Supercooling, Glass Formation, and Mineral Assemblages upon Freezing of\
+    \ Salty Ice Grains from Enceladus\u2019s Ocean"
+  authors:
+  - Fabian Klenner
+  - Lucas M. Fifer
+  - Baptiste Journaux
+  - Ardith D. Bravenec
+  - Allan M. M. Leal
+  - Steven D. Vance
+  - David C. Catling
+  publisher: The Planetary Science Journal
+  date: '2025-03-01'
+  link: https://iopscience.iop.org/article/10.3847/PSJ/adb305
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1038/s41467-024-54625-z
+  title: On the equilibrium limit of liquid stability in pressurized aqueous systems
+  authors:
+  - Arian Zarriz
+  - Baptiste Journaux
+  - Matthew J. Powell-Palm
+  publisher: Nature Communications
+  date: '2024-12-18'
+  link: https://www.nature.com/articles/s41467-024-54625-z
+  type: paper
+  group: featured
+  image: images/research/gibbs.jpg
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1021/acsearthspacechem.3c00345
+  title: Electrical Conductivity of Subsurface Ocean Analogue Solutions from Molecular
+    Dynamics Simulations
+  authors:
+  - Catherine A. Psarakis
+  - Timothy Tizhe Fidelis
+  - Keith B. Chin
+  - Baptiste Journaux
+  - Abby Kavner
+  - Pranab Sarker
+  - Marshall J. Styczinski
+  - Steven D. Vance
+  - Tao Wei
+  publisher: ACS Earth and Space Chemistry
+  date: '2024-06-08'
+  link: https://pubs.acs.org/doi/10.1021/acsearthspacechem.3c00345
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1021/acsearthspacechem.3c00091
+  title: "Low-Temperature Specific Heat Capacity of Water\u2013Ammonia Mixtures Down\
+    \ to the Eutectic"
+  authors:
+  - Bing Hong Chua
+  - Elodie Gloesener
+  - Mathieu Choukroun
+  - Tuan H. Vu
+  - Mohit Melwani Daswani
+  - Baptiste Journaux
+  - Marshall J. Styczinski
+  - Steven D. Vance
+  publisher: ACS Earth and Space Chemistry
+  date: '2023-09-21'
+  link: https://pubs.acs.org/doi/10.1021/acsearthspacechem.3c00091
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1016/j.icarus.2023.115772
+  title: Thermophysical arguments against basal melting in the south polar region
+    of Mars
+  authors:
+  - Lujendra Ojha
+  - Jacob Buffo
+  - Baptiste Journaux
+  publisher: Icarus
+  date: '2024-01-01'
+  link: https://www.sciencedirect.com/science/article/pii/S0019103523003494
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1073/pnas.2217125120
+  title: On the identification of hyperhydrated sodium chloride hydrates, stable at
+    icy moon conditions
+  authors:
+  - Baptiste Journaux
+  - Anna Pakhomova
+  - Ines E. Collings
+  - Sylvain Petitgirard
+  - Tiziana Boffa Ballaran
+  - J. Michael Brown
+  - Steven D. Vance
+  - Stella Chariton
+  - Vitali B. Prakapenka
+  - Dongyang Huang
+  - Jason Ott
+  - Konstantin Glazyrin
+  - Gaston Garbarino
+  - Davide Comboni
+  - Michael Hanfland
+  publisher: Proceedings of the National Academy of Sciences
+  date: '2023-02-21'
+  link: https://www.pnas.org/doi/10.1073/pnas.2217125120
+  type: paper
+  group: featured
+  image: images/research/hydrate.jpg
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1038/s41467-022-35187-4
+  title: Liquid water on cold exo-Earths via basal melting of ice sheets
+  authors:
+  - Lujendra Ojha
+  - Bryce Troncone
+  - Jacob Buffo
+  - Baptiste Journaux
+  - George McDonald
+  publisher: Nature Communications
+  date: '2022-12-06'
+  link: https://www.nature.com/articles/s41467-022-35187-4
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.3847/PSJ/ac787e
+  title: The Effects of Methane Clathrates on the Thermal and Seismic Profile of Titan's
+    Icy Lithosphere
+  authors:
+  - Angela G. Marusiak
+  - Steven Vance
+  - Mark P. Panning
+  - Andrea S. Bryant
+  - Marc A. Hesse
+  - Evan Carnahan
+  - Baptiste Journaux
+  publisher: The Planetary Science Journal
+  date: '2022-07-01'
+  link: https://iopscience.iop.org/article/10.3847/PSJ/ac787e
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1038/s41467-022-30799-2
+  title: Salty ice and the dilemma of ocean exoplanet habitability
+  authors:
+  - Baptiste Journaux
+  publisher: Nature Communications
+  date: '2022-06-21'
+  link: https://www.nature.com/articles/s41467-022-30799-2
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1029/2021GL097602
+  title: "Dynamics of Mixed Clathrate\u2010Ice Shells on Ocean Worlds"
+  authors:
+  - Evan Carnahan
+  - Steven D. Vance
+  - Marc A. Hesse
+  - Baptiste Journaux
+  - Christophe Sotin
+  publisher: Geophysical Research Letters
+  date: '2022-04-14'
+  link: http://dx.doi.org/10.1029/2021GL097602
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1016/j.xcrp.2022.100856
+  title: On the pressure dependence of salty aqueous eutectics
+  authors:
+  - Brooke Chang
+  - Anthony N. Consiglio
+  - Drew Lilley
+  - Ravi Prasher
+  - Boris Rubinsky
+  - Baptiste Journaux
+  - Matthew J. Powell-Palm
+  publisher: Cell Reports Physical Science
+  date: '2022-05-01'
+  link: https://www.cell.com/cell-reports-physical-science/fulltext/S2666-3864(22)00130-8
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1021/acs.jpclett.1c03911
+  title: "Host\u2013Guest Hydrogen Bonding in High-Pressure Acetone Clathrate Hydrates:\
+    \ <i>In Situ</i> Single-Crystal X-ray Diffraction Study"
+  authors:
+  - Anna Pakhomova
+  - Ines E. Collings
+  - Baptiste Journaux
+  - Sylvain Petitgirard
+  - Tiziana Boffa Ballaran
+  - Dongyang Huang
+  - Jason Ott
+  - Alexander Kurnosov
+  - Michael Hanfland
+  - Gaston Garbarino
+  - Davide Comboni
+  publisher: The Journal of Physical Chemistry Letters
+  date: '2022-02-16'
+  link: https://pubs.acs.org/doi/abs/10.1021/acs.jpclett.1c03911
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.3847/PSJ/ac1272
+  title: Exploration of Icy Ocean Worlds Using Geophysical Approaches
+  authors:
+  - Angela G Marusiak
+  - Steven Vance
+  - Mark P Panning
+  - "Marie B\u011Bhounkov\xE1"
+  - Paul K Byrne
+  - "Ga\xEBl Choblet"
+  - Mohit Melwani Daswani
+  - Kynan Hughson
+  - Baptiste Journaux
+  - Ana H Lobo
+  - Britney E Schmidt
+  - "Kate\u0159ina Pleiner Sl\xE1dkov\xE1"
+  - Krista M Soderlund
+  - WenZhan Song
+  - "Ond\u0159ej Sou\u010Dek"
+  - "Gregor Steinbr\xFCgge"
+  - Andrew F. Thompson
+  - Sili Wang
+  publisher: The Planetary Science Journal
+  date: '2021-08-01'
+  link: http://iopscience.iop.org/article/10.3847/PSJ/ac1272/pdf
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.3847/PSJ/abf7c9
+  title: 'Titan: Earth-like on the Outside, Ocean World on the Inside'
+  authors:
+  - Shannon M. MacKenzie
+  - Samuel P. D. Birch
+  - "Sarah H\xF6rst"
+  - Christophe Sotin
+  - Erika Barth
+  - Juan M. Lora
+  - Melissa G. Trainer
+  - Paul Corlies
+  - Michael J. Malaska
+  - "Ella Sciamma-O\u2019Brien"
+  - Alexander E. Thelen
+  - Elizabeth Turtle
+  - Jani Radebaugh
+  - Jennifer Hanley
+  - Anezina Solomonidou
+  - Claire Newman
+  - Leonardo Regoli
+  - "S\xE9bastien Rodriguez"
+  - "Ben\xF4it Seignovert"
+  - Alexander G. Hayes
+  - Baptiste Journaux
+  - Jordan Steckloff
+  - Delphine Nna-Mvondo
+  - Thomas Cornet
+  - Maureen Y. Palmer
+  - Rosaly M. C. Lopes
+  - Sandrine Vinatier
+  - Ralph Lorenz
+  - Conor Nixon
+  - Ellen Czaplinski
+  - Jason W. Barnes
+  - Ed Sittler
+  - Andrew Coates
+  publisher: The Planetary Science Journal
+  date: '2021-06-01'
+  link: https://iopscience.iop.org/article/10.3847/PSJ/abf7c9
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1029/2020JE006736
+  title: The Salty Secrets of Icy Ocean Worlds
+  authors:
+  - Steven D. Vance
+  - Baptiste Journaux
+  - Marc Hesse
+  - "Gregor Steinbr\xFCgge"
+  publisher: 'Journal of Geophysical Research: Planets'
+  date: '2021-01-01'
+  link: https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2020JE006736
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1029/2019JE006176
+  title: 'Holistic Approach for Studying Planetary Hydrospheres: Gibbs Representation
+    of Ices Thermodynamics, Elasticity, and the Water Phase Diagram to 2,300 MPa'
+  authors:
+  - B. Journaux
+  - J. M. Brown
+  - A. Pakhomova
+  - I. E. Collings
+  - S. Petitgirard
+  - P. Espinoza
+  - T. Boffa Ballaran
+  - S. D. Vance
+  - J. Ott
+  - F. Cova
+  - G. Garbarino
+  - M. Hanfland
+  publisher: 'Journal of Geophysical Research: Planets'
+  date: '2020-01-01'
+  link: https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2019JE006176
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.3390/min10020092
+  title: "Local-Basis-Function Equation of State for Ice VII\u2013X to 450 GPa at\
+    \ 300 K"
+  authors:
+  - J. Michael Brown
+  - Baptiste Journaux
+  publisher: Minerals
+  date: '2020-01-21'
+  link: https://www.mdpi.com/2075-163X/10/2/92
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1007/s11214-020-0635-5
+  title: Experimental and Simulation Efforts in the Astrobiological Exploration of
+    Exooceans
+  authors:
+  - Ruth-Sophie Taubner
+  - Karen Olsson-Francis
+  - Steven D. Vance
+  - Nisha K. Ramkissoon
+  - Frank Postberg
+  - Jean-Pierre de Vera
+  - "Andr\xE9 Antunes"
+  - Eloi Camprubi Casas
+  - Yasuhito Sekine
+  - Lena Noack
+  - Laura Barge
+  - Jason Goodman
+  - Mohamed Jebbar
+  - Baptiste Journaux
+  - "\xD6zg\xFCr Karatekin"
+  - Fabian Klenner
+  - Elke Rabbow
+  - Petra Rettberg
+  - "Tina R\xFCckriemen-Bez"
+  - Joachim Saur
+  - Takazo Shibuya
+  - Krista M. Soderlund
+  publisher: Space Science Reviews
+  date: '2020-01-20'
+  link: https://link.springer.com/article/10.1007/s11214-020-0635-5
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1007/s11214-019-0633-7
+  title: Large Ocean Worlds with High-Pressure Ices
+  authors:
+  - Baptiste Journaux
+  - "Kl\xE1ra Kalousov\xE1"
+  - Christophe Sotin
+  - Gabriel Tobie
+  - Steve Vance
+  - Joachim Saur
+  - Olivier Bollengier
+  - Lena Noack
+  - "Tina R\xFCckriemen-Bez"
+  - Tim Van Hoolst
+  - Krista M. Soderlund
+  - J. Michael Brown
+  publisher: Space Science Reviews
+  date: '2020-01-20'
+  link: https://link.springer.com/article/10.1007%2Fs11214-019-0633-7
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1016/j.actaastro.2020.01.030
+  title: 'QUEST: A New Frontiers Uranus orbiter mission concept study'
+  authors:
+  - S. Jarmak
+  - E. Leonard
+  - A. Akins
+  - E. Dahl
+  - D.R. Cremons
+  - S. Cofield
+  - A. Curtis
+  - C. Dong
+  - E.T. Dunham
+  - B. Journaux
+  - D. Murakami
+  - W. Ng
+  - M. Piquette
+  - A. Pradeepkumar Girija
+  - K. Rink
+  - L. Schurmeier
+  - N. Stein
+  - N. Tallarida
+  - M. Telus
+  - L. Lowes
+  - C. Budney
+  - K.L. Mitchell
+  publisher: Acta Astronautica
+  date: '2020-05-01'
+  link: https://www.sciencedirect.com/science/article/pii/S0094576520300412
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.5194/tc-13-1495-2019
+  title: Recrystallization processes, microstructure and crystallographic preferred
+    orientation evolution in polycrystalline ice during high-temperature simple shear
+  authors:
+  - Baptiste Journaux
+  - Thomas Chauve
+  - Maurine Montagnat
+  - Andrea Tommasi
+  - Fabrice Barou
+  - David Mainprice
+  - "L\xE9a Gest"
+  publisher: The Cryosphere
+  date: '2019-05-27'
+  link: https://www.the-cryosphere.net/13/1495/2019/tc-13-1495-2019.html
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.2138/am-2018-6554
+  title: Carbonic acid monohydrate
+  authors:
+  - Evan H. Abramson
+  - Olivier Bollengier
+  - J. Michael Brown
+  - Baptiste Journaux
+  - Werner Kaminsky
+  - Anna Pakhomova
+  publisher: American Mineralogist
+  date: '2018-09-01'
+  link: https://www.degruyter.com/view/j/ammin.2018.103.issue-9/am-2018-6554/am-2018-6554.xml
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1103/PhysRevLett.119.215701
+  title: "SiO\u2082 glass density to lower-mantle pressures"
+  authors:
+  - Sylvain Petitgirard
+  - Wim J. Malfait
+  - Baptiste Journaux
+  - Ines E. Collings
+  - Eleanor S. Jennings
+  - Ingrid Blanchard
+  - Innokenty Kantor
+  - Alexander Kurnosov
+  - Marine Cotte
+  - Thomas Dane
+  - Manfred Burghammer
+  - David C. Rubie
+  publisher: Physical Review Letters
+  date: '2017-11-21'
+  link: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.119.215701
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1016/j.epsl.2017.06.020
+  title: Non-basal dislocations should be accounted for in simulating ice mass flow
+  authors:
+  - T. Chauve
+  - M. Montagnat
+  - S. Piazolo
+  - B. Journaux
+  - J. Wheeler
+  - F. Barou
+  - D. Mainprice
+  - A. Tommasi
+  publisher: Earth and Planetary Science Letters
+  date: '2017-09-01'
+  link: http://www.sciencedirect.com/science/article/pii/S0012821X17303308
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1016/j.epsl.2017.01.017
+  title: Salt partitioning between water and high-pressure ices. Implication for the
+    dynamics and habitability of icy moons and water-rich planetary bodies
+  authors:
+  - Baptiste Journaux
+  - Isabelle Daniel
+  - Sylvain Petitgirard
+  - "Herv\xE9 Cardon"
+  - Jean-Philippe Perrillat
+  - Razvan Caracas
+  - Mohamed Mezouar
+  publisher: Earth and Planetary Science Letters
+  date: '2017-04-01'
+  link: http://www.sciencedirect.com/science/article/pii/S0012821X17300237
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1016/j.icarus.2016.05.009
+  title: 'Water-rich planets: How habitable is a water layer deeper than on Earth?'
+  authors:
+  - L. Noack
+  - "D. H\xF6ning"
+  - A. Rivoldini
+  - C. Heistracher
+  - N. Zimov
+  - B. Journaux
+  - H. Lammer
+  - T. Van Hoolst
+  - "J.H. Bredeh\xF6ft"
+  publisher: Icarus
+  date: '2016-10-01'
+  link: http://www.sciencedirect.com/science/article/pii/S001910351630149X
+  type: paper
+  buttons:
+  - type: external
+    text: Nature Physics research highlight
+    link: http://www.nature.com/nphys/journal/v12/n7/full/nphys3822.html
+  - type: external
+    text: New Scientist
+    link: https://www.newscientist.com/article/2093631-ocean-worlds-could-host-life-under-layers-of-high-pressure-ice/
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1063/1.4894421
+  title: Equations of state of ice VI and ice VII at high pressure and high temperature
+  authors:
+  - Lucile Bezacier
+  - Baptiste Journaux
+  - Jean-Philippe Perrillat
+  - "Herv\xE9 Cardon"
+  - Michael Hanfland
+  - Isabelle Daniel
+  publisher: The Journal of Chemical Physics
+  date: '2014-09-10'
+  link: http://scitation.aip.org/content/aip/journal/jcp/141/10/10.1063/1.4894421
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1016/j.pepi.2014.08.002
+  title: Elasticity and dislocations in ice X under pressure
+  authors:
+  - B. Journaux
+  - R. Caracas
+  - P. Carrez
+  - K. Gouriet
+  - P. Cordier
+  - I. Daniel
+  publisher: Physics of the Earth and Planetary Interiors
+  date: '2014-11-01'
+  link: http://www.sciencedirect.com/science/article/pii/S0031920114001885
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- id: doi:10.1016/j.icarus.2013.05.039
+  title: Influence of NaCl on ice VI and ice VII melting curves up to 6GPa, implications
+    for large icy moons
+  authors:
+  - B. Journaux
+  - I. Daniel
+  - R. Caracas
+  - G. Montagnac
+  - H. Cardon
+  publisher: Icarus
+  date: '2013-09-01'
+  link: http://www.sciencedirect.com/science/article/pii/S001910351300239X
+  type: paper
+  plugin: sources.py
+  file: sources.yaml
+- title: 'Chapter 13: Exchange processes between surface, atmosphere, and interior'
+  authors:
+  - S. Vance
+  - "A. Cr\xF3sta"
+  - M. Melwani Daswani
+  - S. A. Fagents
+  - B. Journaux
+  - C. D. Neish
+  - C. Jamieson
+  - M. Choukroun
+  publisher: Titan After Cassini-Huygens, Elsevier
+  date: '2024-01-01'
+  link: https://shop.elsevier.com/books/titan-after-cassini-huygens/lopes/978-0-323-99161-2
+  type: book
+  plugin: sources.py
+  file: sources.yaml
+- title: Large ocean worlds with high-pressure ices
+  authors:
+  - B. Journaux
+  - "K. Kalousov\xE1"
+  - C. Sotin
+  - G. Tobie
+  - S. Vance
+  - J. Saur
+  - O. Bollengier
+  - L. Noack
+  - "T. R\xFCckriemen-Bez"
+  - T. Van Hoolst
+  - K. M. Soderlund
+  - J. M. Brown
+  publisher: Ocean Worlds, ISSI Books, Springer
+  date: '2020-01-01'
+  link: https://link.springer.com/article/10.1007%2Fs11214-019-0633-7
+  type: book
+  plugin: sources.py
+  file: sources.yaml
+- title: Experimental and simulation efforts in the astrobiological exploration of
+    exooceans
+  authors:
+  - R.-S. Taubner
+  - K. Olsson-Francis
+  - S. Vance
+  - A. Antunes
+  - E. Camprubi Casas
+  - J. P. de Vera
+  - J. Goodman
+  - B. Journaux
+  - F. Klenner
+  - L. Noack
+  - F. Postberg
+  - E. Rabbow
+  - N. Ramkissoon
+  - "T. R\xFCckriemen-Bez"
+  - J. Saur
+  - Y. Sekine
+  - K. Soderlund
+  publisher: Ocean Worlds, ISSI Books, Springer
+  date: '2020-01-01'
+  link: https://link.springer.com/article/10.1007/s11214-020-0635-5
+  type: book
+  plugin: sources.py
+  file: sources.yaml
+- title: 'Chapter 3: Solids and fluids at low temperatures'
+  authors:
+  - S. Vance
+  - T. Loerting
+  - J. Stern
+  - M. Kropf
+  - B. Journaux
+  - C. Jamieson
+  - M. L. Cable
+  - O. Bollengier
+  publisher: Low Temperature Materials and Mechanisms (ed. Y. Bar-Cohen), CRC Press
+  date: '2016-01-01'
+  link: https://www.taylorfrancis.com/chapters/edit/10.1201/9781315371962-11/solids-fluids-low-temperatures-steve-vance-thomas-loerting-josef-stern-matt-kropf-baptiste-journaux-corey-jamieson-morgan-cable-olivier-bollengier
+  type: book
+  plugin: sources.py
+  file: sources.yaml

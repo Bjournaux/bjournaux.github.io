@@ -1,0 +1,10 @@
+# Local preview only (not used by GitHub, which uses Gemfile + Gemfile.lock).
+# Same gems as Gemfile, without the version lock, plus libraries that newer
+# Ruby versions no longer bundle. Used by ./preview.sh
+eval_gemfile File.join(__dir__, "Gemfile")
+
+gem "csv"
+gem "logger"
+gem "base64"
+gem "bigdecimal"
+gem "ostruct"
