@@ -712,3 +712,93 @@ details summary {
     animation: none;
   }
 }
+
+// ---------- SeaFreeze interactive 3D plot ----------
+
+.sf3d {
+  margin: 24px 0;
+  text-align: left;
+}
+
+.sf3d-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.sf3d-controls button {
+  padding: 7px 14px;
+  border: 1.5px solid var(--light-gray);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.sf3d-controls button:hover {
+  border-color: var(--primary);
+}
+
+.sf3d-controls button[aria-pressed="true"] {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--background);
+}
+
+.sf3d-plot {
+  position: relative;
+  height: min(620px, 75vh);
+  border: 1px solid var(--light-gray);
+  border-radius: 12px;
+  background: var(--background);
+  overflow: hidden;
+}
+
+.sf3d-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  color: var(--gray);
+  text-align: center;
+}
+
+.sf3d-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 12px;
+  font-size: 0.88rem;
+}
+
+.sf3d-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sf3d-legend i {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.sf3d-caption {
+  color: var(--gray);
+  font-size: 0.88rem;
+}
+
+.sf3d-more {
+  margin: 18px 0 6px;
+  font-weight: var(--semi-bold);
+}
+
+.sf3d .button-wrapper .button {
+  margin-left: 0;
+}

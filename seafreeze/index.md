@@ -27,18 +27,27 @@ The formalism is described in [Journaux et al. (2020)](https://agupubs.onlinelib
 SeaFreeze is open source (GPL-3.0) and available as Python and MATLAB packages.
 You can also try it directly in your browser with the [SeaFreeze online app](https://seafreeze.streamlit.app/) (beta; for research use, please install the Python or MATLAB package).
 
-{% capture content %}
-{% include figure.html image="images/seafreeze/gibbs.png" link="images/seafreeze/gibbs.png" caption="Gibbs energy surfaces and phase stability of liquid water (light blue), ice Ih (dark blue), ice III (yellow), ice II (orange), ice V (purple) and ice VI (green)." %}
-{% include figure.html image="images/seafreeze/properties.png" link="images/seafreeze/properties.png" caption="Thermodynamic properties of liquid water and ice polymorphs computed with SeaFreeze." %}
-{% include figure.html image="images/seafreeze/phase-diagram.png" link="images/seafreeze/phase-diagram.png" caption="Phase transitions predicted by SeaFreeze compared with experimental data. Triple point predictions are also indicated." %}
-{% endcapture %}
+{% include section.html %}
 
-{% include grid.html content=content %}
+## Explore water and ices in 3D
+
+Density, sound speed, heat capacity, thermal expansivity and bulk modulus of liquid water and ices across the phase diagram, as computed by SeaFreeze.
+
+{% include seafreeze-3d.html %}
+
+{% include section.html %}
+
+## Phase diagram
+
+{% include figure.html image="images/seafreeze/phase-diagram.png" link="images/seafreeze/phase-diagram.png" caption="Phase transitions predicted by SeaFreeze compared with experimental data. Triple point predictions are also indicated. Click to enlarge." %}
 
 {% include section.html %}
 
 ## Credits
 
-SeaFreeze was developed by J. Michael Brown, Penny Espinoza and Baptiste Journaux in the Department of Earth and Space Sciences at the University of Washington, with support from the NASA Astrobiology Institute (Icy Worlds and Titan nodes), the NASA Postdoctoral Program and the NASA Solar System Workings program.
+SeaFreeze is developed by Baptiste Journaux (main developer) with J. Michael Brown.
+It is based on the [Local Basis Function (LBF)](https://github.com/jmichaelb/LocalBasisFunction) code developed by J. Michael Brown (University of Washington).
+Penny Espinoza and Ula Jones co-developed the first Python version, with Penny Espinoza also contributing to the equation-of-state development.
+SeaFreeze was developed with support from the NASA Astrobiology Institute (Icy Worlds and Titan nodes), the NASA Postdoctoral Program and the NASA Solar System Workings program.
 
 If you use SeaFreeze, please cite [Journaux et al. (2020)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JE006176) and the references given in the [README](https://github.com/Bjournaux/SeaFreeze#readme).

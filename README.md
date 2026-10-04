@@ -24,6 +24,7 @@ To add an image, open its folder and use **Add file → Upload files**.
 | Change layout details              | `_styles/zz-lab-design.scss`                |
 | Footer links (email, Scholar…)     | `_config.yaml` → `links:`                   |
 | Logo / browser-tab icon            | `images/logo.svg`, `images/icon.svg`        |
+| SeaFreeze 3D plot data             | run `tools/seafreeze_3d_data.py` (needs `pip install SeaFreeze scipy`) |
 
 ### Add a lab member
 
