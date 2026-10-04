@@ -1,0 +1,46 @@
+[data-dark=false] {
+  --primary: #0f766e;
+  --secondary: #a7e3dc;
+  --on-dark-accent: #a7e3dc;
+  --text: #1c1917;
+  --background: #fbfaf7;
+  --background-alt: #f2efe8;
+  --light-gray: #e4dfd5;
+  --gray: #8a847a;
+  --dark-gray: #44403c;
+  --overlay: #1c191720;
+}
+
+[data-dark=true] {
+  --primary: #4fd1c0;
+  --secondary: #134e48;
+  --on-dark-accent: #4fd1c0;
+  --text: #f2efe8;
+  --background: #141312;
+  --background-alt: #1c1a18;
+  --light-gray: #35312c;
+  --gray: #8a847a;
+  --dark-gray: #c9c3b8;
+  --overlay: #ffffff12;
+}
+
+:root {
+  --title: "Inter Tight", sans-serif;
+  --heading: "Inter Tight", sans-serif;
+  --body: "Inter Tight", sans-serif;
+  --code: "Roboto Mono", monospace;
+  --large: 1.2rem;
+  --xl: 1.4rem;
+  --xxl: 1.6rem;
+  --thin: 300;
+  --regular: 400;
+  --semi-bold: 500;
+  --bold: 600;
+  --spacing: 1.7;
+  --compact: 1.5;
+  --rounded: 6px;
+  --shadow: 0 2px 14px 0 var(--overlay);
+  --transition: 0.2s ease;
+}
+
+/*# sourceMappingURL=-theme.css.map */
