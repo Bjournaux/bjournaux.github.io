@@ -495,6 +495,73 @@ section {
   font-size: 0.85rem;
 }
 
+.funders {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 100%;
+}
+
+.funders-label {
+  color: var(--gray);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.funders-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 18px 30px;
+}
+
+.funder {
+  display: flex;
+  align-items: center;
+  line-height: 0;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.funder img {
+  width: auto;
+  max-width: 260px;
+}
+
+.funders[data-style=mono] .funder {
+  opacity: 0.7;
+}
+
+.funders[data-style=mono] .funder:hover {
+  opacity: 1;
+}
+
+.funder-white {
+  filter: brightness(0) invert(1);
+}
+
+.funders[data-style=color] .funders-logos {
+  gap: 16px 26px;
+}
+
+.funders[data-style=color] .funder {
+  padding: 6px 9px;
+  border-radius: 7px;
+  background: #fff;
+}
+
+.funders[data-style=color] .funder:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 500px) {
+  .funders-logos {
+    zoom: 0.8;
+  }
+}
 .alumni {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -581,6 +648,29 @@ h3 + .alumni {
   border-radius: 8px;
 }
 
+.grid[data-style=row] {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.grid[data-style=row] > .figure {
+  flex: var(--ar, 1) 1 0;
+}
+
+.grid[data-style=row] .figure-image img {
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 700px) {
+  .grid[data-style=row] {
+    flex-wrap: wrap;
+  }
+  .grid[data-style=row] > .figure {
+    flex-basis: 40%;
+  }
+}
 .figure-caption {
   width: 100%;
   margin-top: 8px;
