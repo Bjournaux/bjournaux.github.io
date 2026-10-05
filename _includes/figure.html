@@ -1,4 +1,4 @@
-<figure class="figure">
+<figure class="figure"{% if include.ratio %} style="--ar: {{ include.ratio }}"{% endif %}>
   <a
     {% if include.link %}
       href="{{ include.link | relative_url | uri_escape }}"

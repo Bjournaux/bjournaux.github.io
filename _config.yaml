@@ -7,6 +7,8 @@ footer: images/hero.jpg
 proofer: false
 # the logo (images/logo.svg) already contains the lab name, so hide the text title
 logo-text: false
+# footer logos (listed in _data/funders.yaml): "mono" (one color) or "color"
+footer-logos: color
 
 # site social media and other links (shown as icons in the footer)
 links:

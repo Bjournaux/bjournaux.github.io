@@ -1,0 +1,43 @@
+# Logos shown in the footer of every page ("Supported by"), in this order.
+#
+#   name:   shown when hovering the logo, and read by screen readers
+#   link:   where the logo links to
+#   logo:   file name in images/funders/color/ (PNG with a transparent background)
+#   height: optional, logo height in pixels (default 36); smaller for wide logos
+#
+# The footer shows the logos in color or in one color (white): set
+# footer-logos in _config.yaml. One-color versions are in images/funders/mono/;
+# make them with: python tools/funder_logos.py
+
+- name: University of Washington
+  link: https://www.washington.edu/
+  logo: uw.png
+  height: 18
+
+- name: UW Astrobiology
+  link: https://depts.washington.edu/astrobio/wordpress/
+  logo: uw-astrobiology.png
+  height: 20
+
+- name: NASA
+  link: https://www.nasa.gov/
+  logo: nasa.png
+  height: 38
+
+- name: National Science Foundation
+  link: https://www.nsf.gov/
+  logo: nsf.png
+
+- name: European Synchrotron Radiation Facility (ESRF)
+  link: https://www.esrf.fr/
+  logo: esrf.png
+  height: 42
+
+- name: PETRA III at DESY
+  link: https://www.desy.de/research/facilities__projects/petra_iii/index_eng.html
+  logo: desy.png
+
+- name: Advanced Photon Source, Argonne National Laboratory
+  link: https://www.aps.anl.gov/
+  logo: argonne.png
+  height: 26

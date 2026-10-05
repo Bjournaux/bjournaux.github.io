@@ -24,6 +24,36 @@
     {% endfor %}
   </div>
 
+  {% if site.data.funders.size > 0 %}
+    {% assign logo-style = site.footer-logos | default: "mono" %}
+    <div class="funders" data-style="{{ logo-style }}">
+      <span class="funders-label">Supported by</span>
+      <div class="funders-logos">
+        {% for funder in site.data.funders %}
+          {% assign file = "images/funders/" | append: logo-style | append: "/" | append: funder.logo %}
+          {% assign found = file | file_exists %}
+          {% unless found %}
+            {% assign file = "images/funders/color/" | append: funder.logo %}
+          {% endunless %}
+          <a
+            href="{{ funder.link }}"
+            class="funder"
+            aria-label="{{ funder.name }}"
+            data-tooltip="{{ funder.name }}"
+          >
+            <img
+              src="{{ file | relative_url }}"
+              alt="{{ funder.name }}"
+              style="height: {{ funder.height | default: 36 }}px"
+              {% if logo-style == "mono" and found == nil %}class="funder-white"{% endif %}
+              loading="lazy"
+            >
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
   <div class="footer-small">
     &copy; {{ site.time | date: "%Y" }}
     {{ site.title }}

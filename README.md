@@ -23,6 +23,8 @@ To add an image, open its folder and use **Add file → Upload files**.
 | Change colors or fonts             | `_styles/-theme.scss`                       |
 | Change layout details              | `_styles/zz-lab-design.scss`                |
 | Footer links (email, Scholar…)     | `_config.yaml` → `links:`                   |
+| Footer "Supported by" logos        | `_data/funders.yaml` + logo (transparent PNG) in `images/funders/color/`; color or one color: `_config.yaml` → `footer-logos:`; one-color files: run `tools/funder_logos.py` |
+| Research page figures in one row   | `style="row"` on the grid and `ratio="width/height"` on each figure (see section 01 of `research/index.md`) |
 | Logo / browser-tab icon            | `images/logo.svg`, `images/icon.svg`        |
 | SeaFreeze 3D plot data             | run `tools/seafreeze_3d_data.py` (needs `pip install SeaFreeze scipy`) |
 
