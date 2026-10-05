@@ -47,7 +47,7 @@ Density, sound speed, heat capacity, thermal expansivity and bulk modulus of liq
 
 SeaFreeze is developed by Baptiste Journaux (main developer) with J. Michael Brown.
 It is based on the [Local Basis Function (LBF)](https://github.com/jmichaelb/LocalBasisFunction) code developed by J. Michael Brown (University of Washington).
-Penny Espinoza and Ula Jones co-developed the first Python version, with Penny Espinoza also contributing to the equation-of-state development.
+Penny Espinoza and Ula Jones co-developed the first Python version.
 SeaFreeze was developed with support from the NASA Astrobiology Institute (Icy Worlds and Titan nodes), the NASA Postdoctoral Program and the NASA Solar System Workings program.
 
 If you use SeaFreeze, please cite [Journaux et al. (2020)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JE006176) and the references given in the [README](https://github.com/Bjournaux/SeaFreeze#readme).

@@ -8,6 +8,6 @@ links:
   # orcid: 0000-0000-0000-0000
 ---
 
-PhD student since winter 2025. Lauren measures the ultrasonic and thermodynamic properties of icy moon oceans at elevated pressures.
+PhD student since Winter 2025. Lauren measures the ultrasonic and thermodynamic properties of icy moon oceans at elevated pressures.
 
 Awards: NASA FINESST fellowship, ESS research award.

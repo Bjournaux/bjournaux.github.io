@@ -157,12 +157,12 @@ Planetary science, experimental high-pressure mineral physics, astrobiology, the
 <summary>University and department</summary>
 
 - ESS graduate admission committee: 2023, 2025, 2026
-- ESS laboratory safety committee, since fall 2025
+- ESS laboratory safety committee, since Fall 2025
 - ESS renovation committee, 2024
 - ESS graduate preliminary exams, 2024
 - ESS open house solar observation activity: 2024, 2025
 - ESS graduate student trip for the 2024 total solar eclipse; text, image and video content for ESS and the College of the Environment, 2024
-- UW Astrobiology seminar program committee, spring 2017
+- UW Astrobiology seminar program committee, Spring 2017
 
 </details>
 

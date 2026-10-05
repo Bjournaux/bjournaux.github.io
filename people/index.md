@@ -9,15 +9,15 @@ nav:
 
 {% include section.html %}
 
-## Principal investigator
+## Principal Investigator
 
 {% include list.html data="members" component="portrait" filter="role == 'principal-investigator'" %}
 
-## Graduate students
+## Graduate Students
 
 {% include list.html data="members" component="portrait" filter="role == 'grad-student'" %}
 
-## Undergraduate researchers
+## Undergraduate Researchers
 
 {% include list.html data="members" component="portrait" filter="role == 'undergrad'" %}
 
@@ -25,11 +25,11 @@ nav:
 
 ## Alumni
 
-### Former graduate students
+### Former Graduate Students
 
 {% include alumni-list.html level="graduate" %}
 
-### Former undergraduate researchers
+### Former Undergraduate Researchers
 
 {% include alumni-list.html level="undergraduate" %}
 
