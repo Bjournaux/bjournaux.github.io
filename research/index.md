@@ -61,11 +61,12 @@ This is done in collaboration with NASA JPL through the [PlanetProfile](https://
 This has enabled significant advances in modeling icy moons such as Titan, its [geodynamic evolution](https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2021GL097602) and [seismic response](https://iopscience.iop.org/article/10.3847/PSJ/ac787e), as well as [exoplanet habitability](https://www.nature.com/articles/s41467-022-35187-4), among other examples.
 
 {% capture content %}
-{% include figure.html image="images/research/geophys-1.jpg" link="images/research/geophys-1.jpg" caption="Models of mixed clathrate–ice shells on ocean worlds such as Titan (Carnahan et al. 2022, Geophysical Research Letters)" %}
-{% include figure.html image="images/research/geophys-2.jpg" link="images/research/geophys-2.jpg" caption="Large ocean exoplanet: salts trapped in or released from the high-pressure ice mantle shape the ocean that telescopes like JWST may probe (Journaux 2022, Nature Communications)" %}
+{% include figure.html image="images/research/geophys-1.jpg" ratio="1.81" link="images/research/geophys-1.jpg" caption="Models of mixed clathrate–ice shells on ocean worlds such as Titan (Carnahan et al. 2022, Geophysical Research Letters)" %}
+{% include figure.html image="images/research/geophys-2.jpg" ratio="1.23" link="images/research/geophys-2.jpg" caption="Large ocean exoplanet: salts trapped in or released from the high-pressure ice mantle shape the ocean that telescopes like JWST may probe (Journaux 2022, Nature Communications)" %}
+{% include figure.html image="images/research/geophys-3.jpg" ratio="1.91" link="images/research/geophys-3.jpg" caption="Inside an icy moon: brines percolate through the ice shell, and as the hydrosphere freezes from above and below, the last liquid left is a cenotectic ocean (Zarriz, Journaux & Powell-Palm 2024, Nature Communications, CC BY 4.0)" %}
 {% endcapture %}
 
-{% include grid.html content=content %}
+{% include grid.html content=content style="row" %}
 
 {% include section.html %}
 
@@ -79,11 +80,12 @@ Density and crystallography data support the gravimetry and near-infrared surfac
 Our data also support the development of transformative organ cryopreservation technologies, in collaboration with the [Public Thermo Lab at Texas A&M](https://publicthermo.com/).
 
 {% capture content %}
-{% include figure.html image="images/research/missions-1.jpg" link="images/research/missions-1.jpg" caption="NASA's Dragonfly rotorcraft on Titan (artist's concept, NASA/Johns Hopkins APL)" %}
-{% include figure.html image="images/research/missions-2.jpg" link="images/research/missions-2.jpg" caption="NASA's Europa Clipper over Europa (artist's concept, NASA/JPL-Caltech)" %}
+{% include figure.html image="images/research/missions-1.jpg" ratio="1.0" link="images/research/missions-1.jpg" caption="NASA's Dragonfly rotorcraft on Titan (artist's concept, NASA/Johns Hopkins APL)" %}
+{% include figure.html image="images/research/missions-2.jpg" ratio="1.5" link="images/research/missions-2.jpg" caption="NASA's Europa Clipper over Europa (artist's concept, NASA/JPL-Caltech)" %}
+{% include figure.html image="images/research/missions-juice.jpg" ratio="1.77" link="images/research/missions-juice.jpg" caption="ESA's Juice spacecraft at Jupiter (artist's impression, ESA)" %}
 {% endcapture %}
 
-{% include grid.html content=content %}
+{% include grid.html content=content style="row" %}
 
 {% include section.html %}
 
