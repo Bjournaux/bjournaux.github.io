@@ -9,6 +9,8 @@ proofer: false
 logo-text: false
 # footer logos (listed in _data/funders.yaml): "mono" (one color) or "color"
 footer-logos: color
+# visitor statistics: your GoatCounter code (dashboard at https://CODE.goatcounter.com)
+goatcounter: uwpmpl
 
 # site social media and other links (shown as icons in the footer)
 links:
