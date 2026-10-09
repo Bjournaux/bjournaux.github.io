@@ -555,6 +555,59 @@ You can also try it directly in your browser with the <a href="https://seafreeze
   <size></size>
 -->
 
+<h2 id="interactive-phase-diagram">Interactive phase diagram</h2>
+
+<p>The stable phase of H<sub>2</sub>O from 0.1 MPa to 2 GPa and 150 to 400 K, computed with SeaFreeze.
+Click anywhere to read off the density, heat capacities, thermal expansivity, bulk modulus and sound speeds; scroll or use the buttons to zoom.</p>
+
+<div class="sfpd">
+  <iframe class="sfpd-frame" id="sfpd-frame" title="Interactive water phase diagram computed with SeaFreeze" loading="lazy" data-src="/files/seafreeze/phase-diagram.html?embed=1"></iframe>
+  <p class="sfpd-open">
+    <a href="/files/seafreeze/phase-diagram.html">Open the phase diagram on its own page</a>
+  </p>
+</div>
+
+<script>
+  (() => {
+    const frame = document.getElementById("sfpd-frame");
+    if (!frame) return;
+    const dark = () => document.documentElement.getAttribute("data-dark") === "true";
+    const src = frame.dataset.src;
+    frame.src = src + "&theme=" + (dark() ? "dark" : "light");
+
+    // follow the site's dark/light switch
+    const theme = () => {
+      try { frame.contentDocument.documentElement.dataset.theme = dark() ? "dark" : "light"; } catch (e) {}
+    };
+    new MutationObserver(theme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-dark"] });
+
+    // make the frame as tall as the diagram, its side panel and the pinned points
+    const fit = () => {
+      try {
+        const wrap = frame.contentDocument.querySelector(".wrap");
+        if (wrap) frame.style.height = Math.ceil(wrap.getBoundingClientRect().height) + "px";
+      } catch (e) {}
+    };
+    frame.addEventListener("load", () => {
+      theme();
+      fit();
+      try { new ResizeObserver(fit).observe(frame.contentDocument.querySelector(".wrap")); } catch (e) {}
+    });
+  })();
+</script>
+  </section>
+
+  
+  
+  
+
+  <section class="background" data-size="page">
+    <!--
+  <background></background>
+  <dark></dark>
+  <size></size>
+-->
+
 <h2 id="explore-water-and-ices-in-3d">Explore water and ices in 3D</h2>
 
 <p>Density, sound speed, heat capacity, thermal expansivity and bulk modulus of liquid water and ices across the phase diagram, as computed by SeaFreeze.</p>
