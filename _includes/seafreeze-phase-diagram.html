@@ -1,0 +1,49 @@
+{% comment %}
+  Interactive water phase diagram computed with SeaFreeze (files/seafreeze/phase-diagram.html
+  and its data file). Shown in a frame that follows the site's dark/light mode and grows with
+  its content. Rebuild it with the scripts in tools/phase_diagram.
+  {% include seafreeze-phase-diagram.html %}
+  Optional: skin="original" (first design's fonts and colors), map=false (no "Color by" maps)
+{% endcomment %}
+{% assign page-url = "files/seafreeze/phase-diagram.html" | relative_url %}
+<div class="sfpd">
+  <iframe
+    class="sfpd-frame"
+    id="sfpd-frame"
+    title="Interactive water phase diagram computed with SeaFreeze"
+    loading="lazy"
+    data-src="{{ page-url }}?embed=1{% if include.skin == "original" %}&amp;skin=original{% endif %}{% if include.map == false %}&amp;map=0{% endif %}"
+  ></iframe>
+  <p class="sfpd-open">
+    <a href="{{ page-url }}">Open the phase diagram on its own page</a>
+  </p>
+</div>
+
+<script>
+  (() => {
+    const frame = document.getElementById("sfpd-frame");
+    if (!frame) return;
+    const dark = () => document.documentElement.getAttribute("data-dark") === "true";
+    const src = frame.dataset.src;
+    frame.src = src + "&theme=" + (dark() ? "dark" : "light");
+
+    // follow the site's dark/light switch
+    const theme = () => {
+      try { frame.contentDocument.documentElement.dataset.theme = dark() ? "dark" : "light"; } catch (e) {}
+    };
+    new MutationObserver(theme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-dark"] });
+
+    // make the frame as tall as the diagram, its side panel and the pinned points
+    const fit = () => {
+      try {
+        const wrap = frame.contentDocument.querySelector(".wrap");
+        if (wrap) frame.style.height = Math.ceil(wrap.getBoundingClientRect().height) + "px";
+      } catch (e) {}
+    };
+    frame.addEventListener("load", () => {
+      theme();
+      fit();
+      try { new ResizeObserver(fit).observe(frame.contentDocument.querySelector(".wrap")); } catch (e) {}
+    });
+  })();
+</script>

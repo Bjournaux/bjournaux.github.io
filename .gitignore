@@ -17,3 +17,4 @@ Gemfile.local*.lock
 
 # macOS
 .DS_Store
+tools/phase_diagram/work/

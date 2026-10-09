@@ -1,0 +1,1010 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SeaFreeze Water Phase Diagram</title>
+<meta name="description" content="Interactive P–T phase diagram of H2O from 0.1 MPa to 2 GPa computed with SeaFreeze 1.2.0b1, with density, heat capacities, thermal expansivity, bulk modulus and sound speeds.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script>
+// Options from the address: ?embed=1 (shown inside the lab website), skin=original (the first
+// design's fonts and colours instead of the website's), map=0 (no "Color by" property maps),
+// color=Cp etc. (start with that map), theme=dark|light.
+(() => {
+  const q = new URLSearchParams(location.search), r = document.documentElement;
+  if (q.has('embed')) r.dataset.embed = '';
+  r.dataset.skin = q.get('skin') === 'original' ? 'original' : 'site';
+  if (q.get('map') !== '0') r.dataset.map = '';
+  if (q.get('theme') === 'dark' || q.get('theme') === 'light') r.dataset.theme = q.get('theme');
+  const f = document.createElement('link'); f.rel = 'stylesheet';
+  f.href = r.dataset.skin === 'site'
+    ? 'https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap'
+    : 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap';
+  document.head.append(f);
+})();
+</script>
+<style>
+/* Layout: instrument panel. Diagram on the left, readout of the selected point on the right, log of pinned points below. */
+:root {
+  --bg: #f1f4f4;
+  --surface: #fcfdfd;
+  --ink: #10181b;
+  --ink-2: #4a565b;
+  --muted: #7b878b;
+  --border: #d4dadc;
+  --grid: #d2d8da;
+  --accent: #1c5cab;
+  --accent-ink: #ffffff;
+  --hl: #2a78d6;
+  --chip: #e6ebec;
+  --ph-vap: #4a3aa7; --ph-liq: #2a78d6; --ph-Ih: #eb6834; --ph-II: #1baf7a;
+  --ph-III: #eda100; --ph-V: #e87ba4; --ph-VI: #008300;
+  --tint: 0.17;
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1314; --surface: #161b1d; --ink: #edf1f2; --ink-2: #b1bcc0; --muted: #84908f;
+    --border: #2a3336; --grid: #2e373a; --accent: #6da7ec; --accent-ink: #0a1320; --hl: #86b6ef;
+    --chip: #212a2d;
+    --ph-vap: #9085e9; --ph-liq: #3987e5; --ph-Ih: #d95926; --ph-II: #199e70;
+    --ph-III: #c98500; --ph-V: #d55181; --ph-VI: #008300;
+    --tint: 0.26;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1314; --surface: #161b1d; --ink: #edf1f2; --ink-2: #b1bcc0; --muted: #84908f;
+  --border: #2a3336; --grid: #2e373a; --accent: #6da7ec; --accent-ink: #0a1320; --hl: #86b6ef;
+  --chip: #212a2d;
+  --ph-vap: #9085e9; --ph-liq: #3987e5; --ph-Ih: #d95926; --ph-II: #199e70;
+  --ph-III: #c98500; --ph-V: #d55181; --ph-VI: #008300;
+  --tint: 0.26;
+  color-scheme: dark;
+}
+/* skin=site: fonts and colours of the lab website; phase colours match its 3D plot */
+:root[data-skin="site"] {
+  --bg: #fbfaf7; --surface: #ffffff; --ink: #1c1917; --ink-2: #44403c; --muted: #8a847a;
+  --border: #e4dfd5; --grid: #e4dfd5; --accent: #0b6e66; --accent-ink: #ffffff; --hl: #a16207;
+  --chip: #f2efe8;
+  --ph-vap: #8f9bb3; --ph-liq: #3fa9f5; --ph-Ih: #1f4fa3; --ph-II: #f08a24;
+  --ph-III: #f2d024; --ph-V: #8b5cc8; --ph-VI: #2e9e5b;
+  --tint: 0.24;
+  --font-sans: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-skin="site"]:not([data-theme="light"]) {
+    --bg: #141312; --surface: #1c1a18; --ink: #f2efe8; --ink-2: #c9c3b8; --muted: #8a847a;
+    --border: #35312c; --grid: #2e2a26; --accent: #2a9d8f; --accent-ink: #ffffff; --hl: #f2c14e;
+    --chip: #2a2723; --tint: 0.32; color-scheme: dark;
+  }
+}
+:root[data-skin="site"][data-theme="dark"] {
+  --bg: #141312; --surface: #1c1a18; --ink: #f2efe8; --ink-2: #c9c3b8; --muted: #8a847a;
+  --border: #35312c; --grid: #2e2a26; --accent: #2a9d8f; --accent-ink: #ffffff; --hl: #f2c14e;
+  --chip: #2a2723; --tint: 0.32; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-sans); font-size: 14px; line-height: 1.45; margin: 0; }
+.wrap { max-width: 1280px; margin: 0 auto; padding-inline: 20px; padding-block: 22px 36px; display: grid; gap: 14px; }
+header h1 { font-size: 1.55rem; font-weight: 600; letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+header p { margin: 4px 0 0; color: var(--ink-2); max-width: 82ch; }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+.group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.group > .lbl { font-size: 12px; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 2px; }
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 7px; overflow: hidden; background: var(--surface); }
+.seg button { border: 0; border-radius: 0; background: transparent; }
+.seg button + button { border-left: 1px solid var(--border); }
+button { font: inherit; font-size: 13px; color: var(--ink); background: var(--surface); border: 1px solid var(--border); border-radius: 7px; padding: 5px 11px; cursor: pointer; min-height: 32px; }
+button:hover { background: var(--chip); }
+button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+button:focus-visible, input:focus-visible, canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chk { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink); cursor: pointer; }
+.chk input { accent-color: var(--accent); width: 15px; height: 15px; }
+.hint { font-size: 12.5px; color: var(--muted); }
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 14px; align-items: start; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
+.plotcard { padding: 6px; min-width: 0; }
+#plot { position: relative; width: 100%; height: min(72vh, 700px); min-height: 400px; }
+#plot canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#over { cursor: crosshair; touch-action: none; }
+#over.panning { cursor: grabbing; }
+#tip { position: absolute; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--border); border-radius: 8px; padding: 7px 9px; font-size: 12.5px; box-shadow: 0 4px 14px rgba(0,0,0,0.12); min-width: 150px; max-width: 260px; z-index: 2; }
+#tip .t-head { display: flex; align-items: center; gap: 7px; font-weight: 600; margin-bottom: 3px; }
+#tip .t-row { display: flex; justify-content: space-between; gap: 12px; font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+#tip .t-row span:first-child { color: var(--ink-2); font-family: var(--font-sans); }
+.key { display: inline-block; width: 14px; height: 3px; border-radius: 2px; flex: none; }
+.swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; flex: none; }
+#msg { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-2); font-size: 14px; text-align: center; padding: 20px; }
+.side { display: grid; gap: 14px; min-width: 0; }
+.readout { padding: 14px 16px 16px; display: grid; gap: 12px; }
+.ro-kind { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-2); display: flex; gap: 8px; align-items: center; }
+.ro-kind .tag { background: var(--chip); color: var(--ink-2); border-radius: 999px; padding: 1px 8px; letter-spacing: 0.04em; }
+.readout h2 { font-size: 1.2rem; margin: 2px 0 0; font-weight: 600; text-wrap: balance; }
+.example { font-size: 12.5px; color: var(--ink-2); background: var(--chip); border-radius: 7px; padding: 6px 9px; }
+dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; }
+dt { color: var(--ink-2); font-size: 12.5px; }
+dd { margin: 0; text-align: right; font-family: var(--font-mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+dd .sub { display: block; color: var(--muted); font-size: 11.5px; }
+dd.txt { font-family: var(--font-sans); }
+.ph { border-top: 1px solid var(--border); padding-top: 10px; display: grid; gap: 6px; }
+.ph-name { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.sg sub { font-size: 0.72em; }
+.ov { text-decoration: overline; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.flash { font-size: 12px; color: var(--ink-2); }
+.lookup { padding: 12px 16px 14px; display: grid; gap: 8px; }
+.lookup h3, .log h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-2); margin: 0; font-weight: 600; }
+.lookup form { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
+.lookup label { display: grid; gap: 3px; font-size: 12px; color: var(--ink-2); }
+.lookup input { font: inherit; font-family: var(--font-mono); font-size: 13px; width: 96px; padding: 5px 7px; border: 1px solid var(--border); border-radius: 7px; background: var(--bg); color: var(--ink); }
+.lookup .err { color: #c03a39; font-size: 12px; min-height: 0; }
+.log { padding: 12px 16px 14px; display: grid; gap: 10px; }
+.log-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th { text-align: left; font-weight: 500; color: var(--ink-2); font-size: 12px; padding: 6px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+td { padding: 6px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: var(--chip); }
+tbody tr.sel { background: var(--chip); }
+.empty { color: var(--muted); font-size: 13px; padding: 10px 0 4px; }
+footer { color: var(--ink-2); font-size: 12.5px; display: grid; gap: 6px; max-width: 95ch; }
+footer p { margin: 0; }
+footer strong { color: var(--ink); font-weight: 600; }
+footer a { color: var(--accent); }
+dt sub, th sub { font-size: 0.75em; }
+dd .na { color: var(--muted); font-family: var(--font-sans); font-size: 12px; }
+.ph-props { border-top: 1px dashed var(--border); padding-top: 6px; margin-top: 2px; }
+:root:not([data-map]) #colorby-group { display: none; }
+/* embed=1: inside the SeaFreeze page of the lab website */
+:root[data-embed] body { background: transparent; }
+:root[data-embed] .wrap { max-width: none; padding: 0 0 4px; }
+:root[data-embed] .wrap > header { display: none; }
+:root[data-embed] #plot { height: 600px; min-height: 0; }
+@media (max-width: 960px) {
+  :root[data-embed] #plot { height: 460px; }
+}
+@media (max-width: 520px) {
+  :root[data-embed] #plot { height: 380px; }
+}
+@media (max-width: 960px) {
+  .main { grid-template-columns: minmax(0, 1fr); }
+  #plot { height: 460px; min-height: 0; }
+}
+@media (max-width: 520px) {
+  .wrap { padding-inline: 16px; }
+  #plot { height: 400px; }
+  .hint { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>SeaFreeze Water Phase Diagram</h1>
+    <p>Stable phases of H<sub>2</sub>O from 0.1&nbsp;MPa (1&nbsp;bar) to 2&nbsp;GPa and 150 to 400&nbsp;K, from SeaFreeze 1.2.0b1: the water3 fluid and ices Ih, II, III, V and VI. Hover for a crosshair, click to read off a point and its properties. Clicks near a phase boundary or triple point snap onto it.</p>
+  </header>
+
+  <div class="toolbar" role="toolbar" aria-label="Diagram controls">
+    <div class="group">
+      <span class="lbl">Pressure axis</span>
+      <div class="seg">
+        <button id="m-lin" type="button" aria-pressed="true">Linear</button>
+        <button id="m-log" type="button" aria-pressed="false">Log</button>
+      </div>
+    </div>
+    <div class="group">
+      <span class="lbl">Zoom</span>
+      <button id="z-out" type="button" aria-label="Zoom out" title="Zoom out (−)">−</button>
+      <button id="z-in" type="button" aria-label="Zoom in" title="Zoom in (+)">+</button>
+      <button id="z-box" type="button" aria-pressed="false" title="Drag a box to zoom (or hold Shift while dragging)">Box zoom</button>
+      <button id="z-reset" type="button" title="Show the full diagram (0)">Reset view</button>
+    </div>
+    <div class="group" id="colorby-group">
+      <span class="lbl">Color by</span>
+      <div class="seg" id="colorby"></div>
+    </div>
+    <label class="chk"><input id="snap" type="checkbox" checked> Snap to boundaries</label>
+    <span class="hint">Scroll to zoom · drag to pan · Shift-drag to zoom to a box</span>
+  </div>
+
+  <div class="main">
+    <div class="card plotcard">
+      <div id="plot">
+        <canvas id="base" aria-hidden="true"></canvas>
+        <canvas id="over" tabindex="0" role="img" aria-label="Interactive water phase diagram, pressure on the horizontal axis and temperature on the vertical axis. Use the point lookup form to read values with the keyboard; plus, minus, arrows and 0 zoom and pan."></canvas>
+        <div id="tip" hidden></div>
+        <div id="msg">Loading SeaFreeze data…</div>
+      </div>
+    </div>
+
+    <div class="side">
+      <section class="card readout" id="readout" aria-live="polite"></section>
+      <section class="card lookup">
+        <h3>Point lookup</h3>
+        <form id="lk" novalidate>
+          <label for="lk-p">Pressure (MPa)<input id="lk-p" type="number" step="any" min="0.1" max="2000" value="0.101325" inputmode="decimal"></label>
+          <label for="lk-t">Temperature (K)<input id="lk-t" type="number" step="any" min="150" max="400" value="263.15" inputmode="decimal"></label>
+          <button type="submit">Show</button>
+        </form>
+        <div class="err" id="lk-err"></div>
+      </section>
+    </div>
+  </div>
+
+  <section class="card log">
+    <div class="log-head">
+      <h3>Pinned points</h3>
+      <div class="actions">
+        <button id="csv" type="button">Copy as CSV</button>
+        <button id="clear" type="button">Clear</button>
+        <span class="flash" id="csv-flash"></span>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr id="thead"></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="empty">Your last 5 points are listed here. Click a row to show it again.</div>
+    <textarea id="fallback" readonly hidden style="width:100%;height:120px;font-family:var(--font-mono);font-size:12px"></textarea>
+  </section>
+
+  <footer>
+    <p><strong>How it is computed.</strong> SeaFreeze 1.2.0b1 (liquid and vapour: water3; ices: <a href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JE006176">Journaux et al. 2020</a>) evaluated on a 583 × 251 pressure–temperature grid, then interpolated; boundaries and triple points are solved directly. Against direct SeaFreeze calls the stable phase always matches, density agrees within 2 × 10<sup>−5</sup> and the other properties within 5 × 10<sup>−4</sup> (thermal expansivity within 2 × 10<sup>−3</sup>). For the fluid, V<sub>p</sub> is the sound speed. Ices VII and VIII (above 2&nbsp;GPa) are not included.</p>
+  </footer>
+</div>
+
+<script>
+/*CORE-START*/
+const PH = [
+  { id: 'vap', name: 'Water vapour', long: 'Vapour', short: 'Vap', fluid: true, struct: 'Gas, no long-range order' },
+  { id: 'liq', name: 'Liquid water', long: 'Liquid', short: 'L', fluid: true, struct: 'Liquid, no long-range order' },
+  { id: 'Ih', name: 'Ice Ih', long: 'Ice Ih', short: 'Ih', sys: 'Hexagonal', sg: ['P6', { sub: '3' }, '/mmc'], sgText: 'P6_3/mmc', sgNo: 194, protons: 'Disordered' },
+  { id: 'II', name: 'Ice II', long: 'Ice II', short: 'II', sys: 'Rhombohedral', sg: ['R', { bar: '3' }], sgText: 'R-3', sgNo: 148, protons: 'Ordered' },
+  { id: 'III', name: 'Ice III', long: 'Ice III', short: 'III', sys: 'Tetragonal', sg: ['P4', { sub: '1' }, '2', { sub: '1' }, '2'], sgText: 'P4_12_12', sgNo: 92, protons: 'Disordered (partly ordered)' },
+  { id: 'V', name: 'Ice V', long: 'Ice V', short: 'V', sys: 'Monoclinic', sg: ['A2/a'], sgText: 'A2/a', sgNo: 15, protons: 'Disordered (partly ordered)' },
+  { id: 'VI', name: 'Ice VI', long: 'Ice VI', short: 'VI', sys: 'Tetragonal', sg: ['P4', { sub: '2' }, '/nmc'], sgText: 'P4_2/nmc', sgNo: 137, protons: 'Disordered' },
+];
+const IDX = Object.fromEntries(PH.map((p, i) => [p.id, i]));
+const NPH = PH.length;
+let DATA = null, g = null, nS = 0, nT = 0;
+// properties shown for each point; Kt is stored in MPa, alpha in 1/K
+const PROPS = [
+  { id: 'rho', sym: 'ρ', name: 'Density', unit: 'kg/m³' },
+  { id: 'Cp', sym: 'C<sub>p</sub>', name: 'Heat capacity', unit: 'J/(kg·K)', csv: 'Cp_J_kgK' },
+  { id: 'Cv', sym: 'C<sub>v</sub>', name: 'Heat capacity', unit: 'J/(kg·K)', csv: 'Cv_J_kgK' },
+  { id: 'alpha', sym: 'α', name: 'Thermal expansivity', unit: '10⁻⁶ K⁻¹', k: 1e6, csv: 'alpha_1_K' },
+  { id: 'Kt', sym: 'K<sub>T</sub>', name: 'Bulk modulus', unit: 'GPa', k: 1e-3, csv: 'Kt_MPa' },
+  { id: 'Vp', sym: 'V<sub>p</sub>', name: 'P-wave speed', fluidName: 'Sound speed', unit: 'm/s', csv: 'Vp_m_s' },
+  { id: 'Vs', sym: 'V<sub>s</sub>', name: 'S-wave speed', unit: 'm/s', csv: 'Vs_m_s' },
+];
+const PROP = Object.fromEntries(PROPS.map(p => [p.id, p]));
+
+function b64bytes(b64) {
+  const bin = atob(b64); const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+async function gunzip(ref) {
+  const stream = new Blob([new Uint8Array(DATA.buf, DATA.base + ref[0], ref[1])]).stream().pipeThrough(new DecompressionStream('gzip'));
+  return new Uint8Array(await new Response(stream).arrayBuffer());
+}
+async function decode(ref) {
+  // gzip -> byte-shuffled little-endian float32
+  const src = await gunzip(ref);
+  const n = src.length / 4, out = new Uint8Array(src.length);
+  for (let k = 0; k < 4; k++) { const o = k * n; for (let i = 0; i < n; i++) out[i * 4 + k] = src[o + i]; }
+  return new Float32Array(out.buffer);
+}
+async function decode16(e) {
+  // gzip -> byte-shuffled little-endian uint16, scaled between the phase's min and max (0 = no value)
+  if (!e) return null;
+  const src = await gunzip(e.at), n = src.length / 2, out = new Float32Array(n), f = (e.hi - e.lo) / 65534;
+  for (let i = 0; i < n; i++) { const q = src[i] | src[n + i] << 8; out[i] = q ? e.lo + (q - 1) * f : NaN; }
+  return out;
+}
+async function loadData() {
+  const res = await fetch(new URL('phase-diagram-data.bin', location.href));
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const buf = await res.arrayBuffer(), n = new DataView(buf).getUint32(0, true);
+  DATA = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 4, n)));
+  DATA.buf = buf; DATA.base = 4 + n;
+  g = DATA.grid; nS = g.nS; nT = g.nT;
+}
+
+let GK = null, LK = null, PK = {}, CAND = null, SINGLE = null;
+async function loadModel() {
+  GK = await Promise.all(DATA.G.map(decode));
+  LK = await Promise.all(DATA.L.map(decode));
+  for (const [id, arr] of Object.entries(DATA.props)) PK[id] = await Promise.all(arr.map(decode16));
+  const NC = (nS - 1) * (nT - 1);
+  CAND = new Uint8Array(NC); SINGLE = new Int8Array(NC);
+  for (let i = 0; i < nS - 1; i++) {
+    for (let j = 0; j < nT - 1; j++) {
+      const b = i * nT + j; let m = 0, cnt = 0, last = -1;
+      for (let k = 0; k < NPH; k++) {
+        const a = GK[k];
+        if (a[b] === a[b] && a[b + 1] === a[b + 1] && a[b + nT] === a[b + nT] && a[b + nT + 1] === a[b + nT + 1]) { m |= 1 << k; cnt++; last = k; }
+      }
+      const c = i * (nT - 1) + j;
+      CAND[c] = m; SINGLE[c] = cnt === 1 ? last : (cnt === 0 ? -1 : -2);
+    }
+  }
+}
+function sOfP(P) { return Math.log(P) + P / g.PK; }
+function loc(P, T) {
+  const fi = (sOfP(P) - g.s0) / g.ds, fj = (T - g.T0) / g.dT;
+  const i = Math.min(Math.max(Math.floor(fi), 0), nS - 2), j = Math.min(Math.max(Math.floor(fj), 0), nT - 2);
+  return { i, j, u: fi - i, w: fj - j };
+}
+function bil(A, L) {
+  const b = L.i * nT + L.j, u = L.u, w = L.w;
+  return (1 - u) * (1 - w) * A[b] + u * (1 - w) * A[b + nT] + (1 - u) * w * A[b + 1] + u * w * A[b + nT + 1];
+}
+function inRange(P, T) { return P >= g.Pmin && P <= g.Pmax && T >= g.Tmin && T <= g.Tmax; }
+function classify(P, T) {
+  if (!inRange(P, T)) return -1;
+  const L = loc(P, T), c = L.i * (nT - 1) + L.j, sg = SINGLE[c];
+  if (sg !== -2) return sg;
+  const m = CAND[c]; let best = -1, bg = Infinity;
+  for (let k = 0; k < NPH; k++) if (m >> k & 1) { const v = bil(GK[k], L); if (v < bg) { bg = v; best = k; } }
+  return best;
+}
+function rhoAt(k, P, T) {
+  const L = loc(P, T), A = LK[k], b = L.i * nT + L.j, u = L.u, w = L.w;
+  const c = [[A[b], (1 - u) * (1 - w)], [A[b + nT], u * (1 - w)], [A[b + 1], (1 - u) * w], [A[b + nT + 1], u * w]];
+  let s = 0, ws = 0;
+  for (const [v, wt] of c) if (v === v) { s += v * wt; ws += wt; }
+  return ws > 0 ? Math.exp(s / ws) : NaN;   // corners outside the stored region are skipped
+}
+function propAt(k, id, P, T) {
+  if (id === 'rho') return rhoAt(k, P, T);
+  const A = PK[id] && PK[id][k];
+  if (!A) return NaN;
+  const L = loc(P, T), b = L.i * nT + L.j, u = L.u, w = L.w;
+  const c = [[A[b], (1 - u) * (1 - w)], [A[b + nT], u * (1 - w)], [A[b + 1], (1 - u) * w], [A[b + nT + 1], u * w]];
+  let s = 0, ws = 0;
+  for (const [v, wt] of c) if (v === v) { s += v * wt; ws += wt; }
+  return ws > 0 ? s / ws : NaN;
+}
+/*CORE-END*/
+
+/* ---------- formatting ---------- */
+const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+const minus = s => s.replace(/^-/, '−');
+const fmtP = P => P < 1 ? P.toFixed(4) : P < 100 ? P.toFixed(3) : P.toFixed(2);
+const fmtP2 = P => P < 100 ? `${(P * 10).toFixed(P < 1 ? 3 : 2)} bar` : `${(P / 1000).toFixed(4)} GPa`;
+const fmtT = T => T.toFixed(2);
+const fmtC = T => minus((T - 273.15).toFixed(2)) + ' °C';
+const fmtRho = r => !isFinite(r) ? '—' : r >= 100 ? r.toFixed(2) : r >= 1 ? r.toFixed(4) : r.toPrecision(5);
+const fmtV = r => !isFinite(r) ? '—' : (1000 / r).toPrecision(6);
+function fmtSI(r) {
+  if (!isFinite(r)) return '—';
+  const [m, e] = (1 / r).toExponential(5).split('e');
+  const ex = String(parseInt(e, 10)).split('').map(ch => SUP[ch]).join('');
+  return `${m} × 10${ex} m³/kg`;
+}
+function sgNode(p) {
+  const span = document.createElement('span'); span.className = 'sg';
+  for (const part of p.sg) {
+    if (typeof part === 'string') span.append(part);
+    else if (part.sub) { const s = document.createElement('sub'); s.textContent = part.sub; span.append(s); }
+    else if (part.bar) { const s = document.createElement('span'); s.className = 'ov'; s.textContent = part.bar; span.append(s); }
+  }
+  span.append(` (No. ${p.sgNo})`);
+  return span;
+}
+function fmtProp(id, v) {
+  if (!isFinite(v)) return '—';
+  if (id === 'rho') return fmtRho(v) + ' kg/m³';
+  if (id === 'Kt') return v >= 100 ? (v / 1000).toFixed(3) + ' GPa' : v.toPrecision(4) + ' MPa';
+  if (id === 'alpha') return minus((v * 1e6).toFixed(2)) + ' × 10⁻⁶ K⁻¹';
+  return v.toFixed(1) + ' ' + PROP[id].unit;
+}
+const fmtNum = (id, v) => !isFinite(v) ? '—' : id === 'rho' ? fmtRho(v) : id === 'Kt' ? (v / 1000).toPrecision(5) : id === 'alpha' ? minus((v * 1e6).toFixed(2)) : v.toFixed(1);
+const propLabel = (p, k) => (k != null && PH[k].fluid && p.fluidName ? p.fluidName : p.name) + ' ' + p.sym;
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+const orderPhases = ks => [...ks].sort((a, b) => (PH[a].fluid ? 10 + a : a) - (PH[b].fluid ? 10 + b : b));
+function placeName(h) {
+  const names = orderPhases(h.phases).map(k => PH[k].long);
+  if (h.type === 'triple') return names.join(' – ') + ' triple point';
+  if (h.type === 'boundary') return names.join(' – ') + ' boundary';
+  return PH[h.phases[0]].name;
+}
+const KIND = { field: 'Phase field', boundary: 'Phase boundary', triple: 'Triple point' };
+
+/* ---------- state ---------- */
+const $ = s => document.querySelector(s);
+const plotEl = $('#plot'), base = $('#base'), over = $('#over'), tip = $('#tip');
+const bctx = base.getContext('2d'), octx = over.getContext('2d');
+const M = { l: 66, r: 16, t: 14, b: 50 };
+let cssW = 0, cssH = 0, dpr = 1, pw = 0, ph = 0;
+let mode = 'lin';
+let EXT = null, view = null;      // set once the data is loaded
+const MINSPAN = { lin: 0.5, log: 0.002, T: 0.2 };
+let colorBy = 'phase';
+let C = null;               // theme colours
+let polyScr = [];
+let hover = null, pin = null, pinExample = true, history = [], selId = null, nextId = 1;
+let drag = null, boxMode = false, snapOn = true, fullTimer = null, ready = false;
+const fieldCanvas = document.createElement('canvas');
+
+const xOfP = P => mode === 'log' ? Math.log10(P) : P;
+const PofX = x => mode === 'log' ? Math.pow(10, x) : x;
+const sx = P => M.l + (xOfP(P) - view.x0) / (view.x1 - view.x0) * pw;
+const sy = T => M.t + (view.y1 - T) / (view.y1 - view.y0) * ph;
+const PofSx = px => PofX(view.x0 + (px - M.l) / pw * (view.x1 - view.x0));
+const TofSy = py => view.y1 - (py - M.t) / ph * (view.y1 - view.y0);
+const insidePlot = (x, y) => x >= M.l && x <= M.l + pw && y >= M.t && y <= M.t + ph;
+
+/* ---------- theme ---------- */
+function hexRGB(h) { h = h.trim().replace('#', ''); return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)); }
+function readColors() {
+  const cs = getComputedStyle(document.documentElement), v = n => cs.getPropertyValue(n).trim();
+  const surface = hexRGB(v('--surface')), a = parseFloat(v('--tint')) || 0.17;
+  C = { surface: v('--surface'), ink: v('--ink'), ink2: v('--ink-2'), muted: v('--muted'), grid: v('--grid'), hl: v('--hl'), bg: v('--bg'),
+        ph: PH.map(p => v('--ph-' + p.id)), tint: [] };
+  C.tintRGB = C.ph.map(hx => { const c = hexRGB(hx); return surface.map((s, i) => Math.round(s + a * (c[i] - s))); });
+  C.tint = C.tintRGB.map(c => `rgb(${c[0]},${c[1]},${c[2]})`);
+  C.surfaceRGB = surface;
+}
+
+const VIRIDIS = ['#440154', '#482878', '#3e4989', '#31688e', '#26828e', '#1f9e89', '#35b779', '#6ece58', '#b5de2b', '#fde725'].map(hexRGB);
+const LUT = Array.from({ length: 256 }, (_, i) => {
+  const x = i / 255 * (VIRIDIS.length - 1), a = Math.min(Math.floor(x), VIRIDIS.length - 2), f = x - a;
+  return VIRIDIS[a].map((c, n) => Math.round(c + f * (VIRIDIS[a + 1][n] - c)));
+});
+function scaleOf(id) {
+  // colour-bar range and ticks in display units; liquid and ices set the range, vapour is off scale
+  const p = PROP[id], k = p.k || 1, r = DATA.range[id];
+  return { lo: r[0], hi: r[1], dlo: r[0] * k, dhi: r[1] * k, k };
+}
+
+/* ---------- view ---------- */
+function clampView(v) {
+  const ex = EXT[mode], et = EXT.T;
+  let w = Math.min(Math.max(v.x1 - v.x0, MINSPAN[mode]), ex[1] - ex[0]);
+  let h = Math.min(Math.max(v.y1 - v.y0, MINSPAN.T), et[1] - et[0]);
+  let cx = (v.x0 + v.x1) / 2, cy = (v.y0 + v.y1) / 2;
+  cx = Math.min(Math.max(cx, ex[0] + w / 2), ex[1] - w / 2);
+  cy = Math.min(Math.max(cy, et[0] + h / 2), et[1] - h / 2);
+  return { x0: cx - w / 2, x1: cx + w / 2, y0: cy - h / 2, y1: cy + h / 2 };
+}
+function zoomAt(px, py, f) {
+  const ax = view.x0 + (px - M.l) / pw * (view.x1 - view.x0), ay = TofSy(py);
+  view = clampView({ x0: ax - (ax - view.x0) * f, x1: ax + (view.x1 - ax) * f, y0: ay - (ay - view.y0) * f, y1: ay + (view.y1 - ay) * f });
+  render('fast');
+}
+function resetView() { view = { x0: EXT[mode][0], x1: EXT[mode][1], y0: EXT.T[0], y1: EXT.T[1] }; render('full'); }
+function setMode(m) {
+  if (m === mode) return;
+  const P0 = Math.max(PofX(view.x0), g.Pmin), P1 = PofX(view.x1);
+  const full = Math.abs(view.x0 - EXT[mode][0]) < 1e-9 && Math.abs(view.x1 - EXT[mode][1]) < 1e-9;
+  mode = m;
+  view = full ? { ...view, x0: EXT[m][0], x1: EXT[m][1] } : clampView({ ...view, x0: xOfP(m === 'lin' ? P0 : Math.max(P0, g.Pmin)), x1: xOfP(P1) });
+  $('#m-lin').setAttribute('aria-pressed', m === 'lin'); $('#m-log').setAttribute('aria-pressed', m === 'log');
+  render('full');
+}
+
+/* ---------- ticks ---------- */
+function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / p; return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * p; }
+function decimals(step) { return Math.max(0, -Math.floor(Math.log10(step) + 1e-9)); }
+function linTicks(a, b, n) {
+  const st = niceStep((b - a) / Math.max(n, 2)), d = decimals(st), out = [];
+  for (let v = Math.ceil(a / st - 1e-9) * st; v <= b + st * 1e-9; v += st) out.push({ v, label: minus((Math.abs(v) < st * 1e-9 ? 0 : v).toFixed(d)) });
+  return out;
+}
+function computeTicks() {
+  const y = linTicks(view.y0, view.y1, Math.max(3, Math.round(ph / 56)));
+  let x = [];
+  if (mode === 'lin') x = linTicks(view.x0, view.x1, Math.max(3, Math.round(pw / 95)));
+  else {
+    const span = view.x1 - view.x0;
+    if (span > 1.2) {
+      for (let d = Math.floor(view.x0); d <= Math.ceil(view.x1); d++) {
+        for (let m = 1; m < 10; m++) {
+          const P = m * Math.pow(10, d), xv = Math.log10(P);
+          if (xv < view.x0 - 1e-9 || xv > view.x1 + 1e-9) continue;
+          const major = m === 1, lab = major || (span < 2.6 && (m === 2 || m === 5));
+          x.push({ v: xv, minor: !major, label: lab ? +P.toPrecision(3) + '' : null });
+        }
+      }
+    } else {
+      x = linTicks(Math.pow(10, view.x0), Math.pow(10, view.x1), Math.max(3, Math.round(pw / 110))).filter(t => t.v > 0).map(t => ({ v: Math.log10(t.v), label: t.label }));
+    }
+  }
+  return { x, y };
+}
+const crisp = px => (Math.round(px * dpr) + (dpr % 2 === 1 ? 0.5 : 0)) / dpr;
+
+/* ---------- rendering ---------- */
+let raster = null, rW = 0, rH = 0, rScale = 1;
+function drawFields(scale) {
+  const W = Math.max(1, Math.round(pw * scale)), H = Math.max(1, Math.round(ph * scale));
+  if (fieldCanvas.width !== W || fieldCanvas.height !== H) { fieldCanvas.width = W; fieldCanvas.height = H; }
+  const fctx = fieldCanvas.getContext('2d'), img = fctx.createImageData(W, H), d = img.data;
+  const ci = new Int32Array(W), cu = new Float64Array(W), cok = new Uint8Array(W);
+  for (let c = 0; c < W; c++) {
+    const P = PofX(view.x0 + (c + 0.5) / W * (view.x1 - view.x0));
+    cok[c] = P >= g.Pmin && P <= g.Pmax ? 1 : 0;
+    const fi = (sOfP(Math.max(P, g.Pmin)) - g.s0) / g.ds, i = Math.min(Math.max(Math.floor(fi), 0), nS - 2);
+    ci[c] = i; cu[c] = fi - i;
+  }
+  if (!raster || raster.length !== W * H) raster = new Int8Array(W * H);
+  const bgc = C.surfaceRGB, tc = C.tintRGB;
+  const map = colorBy !== 'phase', sc = map ? scaleOf(colorBy) : null;
+  const VA = map ? (colorBy === 'rho' ? LK : PK[colorBy]) : null;
+  for (let r = 0; r < H; r++) {
+    const T = view.y1 - (r + 0.5) / H * (view.y1 - view.y0);
+    const fj = (T - g.T0) / g.dT, j = Math.min(Math.max(Math.floor(fj), 0), nT - 2), w = fj - j;
+    for (let c = 0; c < W; c++) {
+      const p = r * W + c; let k = -1;
+      if (cok[c]) {
+        const cell = ci[c] * (nT - 1) + j; k = SINGLE[cell];
+        if (k === -2) {
+          const m = CAND[cell], b = ci[c] * nT + j, u = cu[c];
+          const w00 = (1 - u) * (1 - w), w10 = u * (1 - w), w01 = (1 - u) * w, w11 = u * w;
+          let bg = Infinity; k = -1;
+          for (let q = 0; q < NPH; q++) if (m >> q & 1) {
+            const A = GK[q], v = w00 * A[b] + w10 * A[b + nT] + w01 * A[b + 1] + w11 * A[b + nT + 1];
+            if (v < bg) { bg = v; k = q; }
+          }
+        }
+      }
+      raster[p] = k;
+      let col = k >= 0 ? tc[k] : bgc;
+      if (map && k >= 0 && VA[k]) {
+        const A = VA[k], b = ci[c] * nT + j, u = cu[c];
+        let s = 0, ws = 0;
+        const add = (v, wt) => { if (v === v) { s += v * wt; ws += wt; } };
+        add(A[b], (1 - u) * (1 - w)); add(A[b + nT], u * (1 - w)); add(A[b + 1], (1 - u) * w); add(A[b + nT + 1], u * w);
+        if (ws > 0) {
+          let v = s / ws; if (colorBy === 'rho') v = Math.exp(v);
+          const t = Math.min(Math.max((v - sc.lo) / (sc.hi - sc.lo), 0), 1);
+          col = LUT[Math.round(t * 255)];
+        }
+      }
+      const o = p * 4;
+      d[o] = col[0]; d[o + 1] = col[1]; d[o + 2] = col[2]; d[o + 3] = 255;
+    }
+  }
+  fctx.putImageData(img, 0, 0);
+  rW = W; rH = H; rScale = scale;
+}
+
+function labelSpots() {
+  // largest empty disc inside each visible field (chamfer distance on a coarse grid)
+  const cs = Math.max(2, Math.round(5 * rScale)), gw = Math.floor(rW / cs), gh = Math.floor(rH / cs);
+  if (gw < 3 || gh < 3) return [];
+  const cls = new Int8Array(gw * gh), dist = new Float32Array(gw * gh);
+  for (let y = 0; y < gh; y++) for (let x = 0; x < gw; x++) cls[y * gw + x] = raster[(y * cs + (cs >> 1)) * rW + x * cs + (cs >> 1)];
+  const INF = 1e9;
+  for (let y = 0; y < gh; y++) for (let x = 0; x < gw; x++) {
+    const i = y * gw + x, k = cls[i];
+    const edge = x === 0 || y === 0 || x === gw - 1 || y === gh - 1 || cls[i - 1] !== k || cls[i + 1] !== k || cls[i - gw] !== k || cls[i + gw] !== k;
+    dist[i] = edge ? 0.5 : INF;
+  }
+  const R2 = Math.SQRT2;
+  for (let y = 1; y < gh; y++) for (let x = 1; x < gw - 1; x++) {
+    const i = y * gw + x;
+    dist[i] = Math.min(dist[i], dist[i - 1] + 1, dist[i - gw] + 1, dist[i - gw - 1] + R2, dist[i - gw + 1] + R2);
+  }
+  for (let y = gh - 2; y >= 0; y--) for (let x = gw - 2; x >= 1; x--) {
+    const i = y * gw + x;
+    dist[i] = Math.min(dist[i], dist[i + 1] + 1, dist[i + gw] + 1, dist[i + gw + 1] + R2, dist[i + gw - 1] + R2);
+  }
+  const best = new Map();
+  for (let i = 0; i < gw * gh; i++) { const k = cls[i]; if (k < 0) continue; const b = best.get(k); if (!b || dist[i] > b.d) best.set(k, { d: dist[i], i }); }
+  const out = [];
+  for (const [k, b] of best) {
+    const x = b.i % gw, y = (b.i / gw) | 0;
+    out.push({ k, x: M.l + (x * cs + cs / 2) / rScale, y: M.t + (y * cs + cs / 2) / rScale, r: b.d * cs / rScale });
+  }
+  return out;
+}
+
+function render(q) {
+  if (!ready || !pw || !ph) return;
+  const scale = q === 'fast' ? Math.min(dpr, 1) : dpr;
+  drawFields(scale);
+  const ctx = bctx;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssW, cssH);
+  ctx.fillStyle = C.surface; ctx.fillRect(0, 0, cssW, cssH);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(fieldCanvas, 0, 0, rW, rH, M.l, M.t, pw, ph);
+  const tk = computeTicks();
+  // grid (behind the boundaries and labels)
+  ctx.save(); ctx.beginPath(); ctx.rect(M.l, M.t, pw, ph); ctx.clip();
+  ctx.lineWidth = 1;
+  for (const t of tk.x) { const X = crisp(M.l + (t.v - view.x0) / (view.x1 - view.x0) * pw); ctx.strokeStyle = C.grid; ctx.globalAlpha = t.minor ? 0.55 : 1; ctx.beginPath(); ctx.moveTo(X, M.t); ctx.lineTo(X, M.t + ph); ctx.stroke(); }
+  ctx.globalAlpha = 1;
+  for (const t of tk.y) { const Y = crisp(sy(t.v)); ctx.strokeStyle = C.grid; ctx.beginPath(); ctx.moveTo(M.l, Y); ctx.lineTo(M.l + pw, Y); ctx.stroke(); }
+  // boundaries
+  polyScr = DATA.boundaries.map(b => ({ X: b.P.map(sx), Y: b.T.map(sy) }));
+  ctx.strokeStyle = C.ink; ctx.lineWidth = 1.5; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  for (const p of polyScr) { ctx.beginPath(); for (let i = 0; i < p.X.length; i++) i ? ctx.lineTo(p.X[i], p.Y[i]) : ctx.moveTo(p.X[i], p.Y[i]); ctx.stroke(); }
+  // triple points
+  for (const t of DATA.triple) { ctx.beginPath(); ctx.arc(sx(t.P), sy(t.T), 3.2, 0, 2 * Math.PI); ctx.fillStyle = C.ink; ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = C.surface; ctx.stroke(); }
+  // field labels
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+  for (const s of labelSpots()) {
+    const p = PH[s.k];
+    for (const [txt, fs, isLong] of [[p.long, 14, true], [p.short, 13, false]]) {
+      ctx.font = `600 ${fs}px ${getFont()}`;
+      const w = ctx.measureText(txt).width;
+      // full name needs clear room; the short name may use a tight fit so small fields (ice III) stay labelled
+      const fits = isLong ? (s.r >= w / 2 + 4 && s.r >= fs * 0.75) : (s.r >= Math.max(w * 0.4, fs * 0.5));
+      if (fits) {
+        ctx.lineWidth = 4; ctx.strokeStyle = colorBy === 'phase' ? C.tint[s.k] : C.surface; ctx.strokeText(txt, s.x, s.y);
+        ctx.fillStyle = C.ink; ctx.fillText(txt, s.x, s.y); break;
+      }
+    }
+  }
+  ctx.restore();
+  // axes
+  ctx.strokeStyle = C.muted; ctx.lineWidth = 1;
+  ctx.strokeRect(crisp(M.l), crisp(M.t), Math.round(pw), Math.round(ph));
+  ctx.fillStyle = C.ink2; ctx.font = `12px ${getFont()}`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (const t of tk.x) {
+    const X = M.l + (t.v - view.x0) / (view.x1 - view.x0) * pw;
+    ctx.beginPath(); ctx.moveTo(crisp(X), M.t + ph); ctx.lineTo(crisp(X), M.t + ph + (t.minor ? 3 : 5)); ctx.stroke();
+    if (t.label) ctx.fillText(t.label, X, M.t + ph + 8);
+  }
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (const t of tk.y) { const Y = sy(t.v); ctx.beginPath(); ctx.moveTo(M.l - 5, crisp(Y)); ctx.lineTo(M.l, crisp(Y)); ctx.stroke(); ctx.fillText(t.label, M.l - 8, Y); }
+  ctx.fillStyle = C.ink; ctx.font = `500 13px ${getFont()}`; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText(mode === 'log' ? 'Pressure (MPa, log scale)' : 'Pressure (MPa)', M.l + pw / 2, cssH - 10);
+  ctx.save(); ctx.translate(17, M.t + ph / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle'; ctx.fillText('Temperature (K)', 0, 0); ctx.restore();
+  if (colorBy !== 'phase') drawColorBar(ctx);
+  drawOverlay();
+  clearTimeout(fullTimer);
+  if (q === 'fast' && dpr > 1) fullTimer = setTimeout(() => render('full'), 160);
+}
+function drawColorBar(ctx) {
+  const p = PROP[colorBy], sc = scaleOf(colorBy), x = M.l + pw + 16, w = 12, y0 = M.t, h = ph;
+  for (let i = 0; i < h; i++) { const c = LUT[Math.round((1 - i / h) * 255)]; ctx.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`; ctx.fillRect(x, y0 + i, w, 1.5); }
+  ctx.strokeStyle = C.muted; ctx.lineWidth = 1; ctx.strokeRect(crisp(x), crisp(y0), w, Math.round(h));
+  ctx.fillStyle = C.ink2; ctx.font = `11.5px ${getFont()}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  for (const t of linTicks(sc.dlo, sc.dhi, Math.max(3, Math.round(h / 60)))) {
+    const Y = y0 + (1 - (t.v - sc.dlo) / (sc.dhi - sc.dlo)) * h;
+    ctx.beginPath(); ctx.moveTo(x + w, crisp(Y)); ctx.lineTo(x + w + 4, crisp(Y)); ctx.stroke();
+    ctx.fillText(t.label, x + w + 7, Y);
+  }
+  ctx.save(); ctx.translate(cssW - 10, y0 + h / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center';
+  ctx.fillStyle = C.ink; ctx.font = `500 12.5px ${getFont()}`;
+  ctx.fillText(`${p.name} ${p.sym.replace(/<\/?sub>/g, '')} (${p.unit})`, 0, 0); ctx.restore();
+}
+let FONT = null;
+function getFont() { return FONT || (FONT = getComputedStyle(document.documentElement).getPropertyValue('--font-sans').trim()); }
+
+function drawOverlay() {
+  const ctx = octx;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssW, cssH);
+  if (!ready) return;
+  ctx.save(); ctx.beginPath(); ctx.rect(M.l, M.t, pw, ph); ctx.clip();
+  if (hover && hover.type === 'boundary') {
+    const p = polyScr[hover.bi];
+    ctx.strokeStyle = C.hl; ctx.lineWidth = 3.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath(); for (let i = 0; i < p.X.length; i++) i ? ctx.lineTo(p.X[i], p.Y[i]) : ctx.moveTo(p.X[i], p.Y[i]); ctx.stroke();
+  }
+  if (pin) {
+    const X = sx(pin.P), Y = sy(pin.T);
+    if (insidePlot(X, Y)) {
+      ctx.beginPath(); ctx.arc(X, Y, 6.5, 0, 2 * Math.PI); ctx.fillStyle = C.surface; ctx.fill();
+      ctx.lineWidth = 2; ctx.strokeStyle = C.ink; ctx.stroke();
+      ctx.beginPath(); ctx.arc(X, Y, 2.6, 0, 2 * Math.PI); ctx.fillStyle = C.hl; ctx.fill();
+    }
+  }
+  if (hover && hover.type !== 'out') {
+    const X = hover.X, Y = hover.Y;
+    ctx.strokeStyle = C.ink; ctx.globalAlpha = 0.55; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(crisp(X), M.t); ctx.lineTo(crisp(X), M.t + ph); ctx.moveTo(M.l, crisp(Y)); ctx.lineTo(M.l + pw, crisp(Y)); ctx.stroke();
+    ctx.globalAlpha = 1;
+    if (hover.type === 'triple') { ctx.beginPath(); ctx.arc(X, Y, 7, 0, 2 * Math.PI); ctx.lineWidth = 2.5; ctx.strokeStyle = C.hl; ctx.stroke(); }
+    else if (hover.type === 'boundary') { ctx.beginPath(); ctx.arc(X, Y, 4, 0, 2 * Math.PI); ctx.fillStyle = C.hl; ctx.fill(); }
+  }
+  if (drag && drag.box && drag.moved) {
+    const x = Math.min(drag.x0, drag.x), y = Math.min(drag.y0, drag.y), w = Math.abs(drag.x - drag.x0), h = Math.abs(drag.y - drag.y0);
+    ctx.fillStyle = C.hl; ctx.globalAlpha = 0.1; ctx.fillRect(x, y, w, h); ctx.globalAlpha = 1;
+    ctx.strokeStyle = C.hl; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]); ctx.strokeRect(x, y, w, h); ctx.setLineDash([]);
+  }
+  ctx.restore();
+  if (hover && hover.type !== 'out') {
+    // value tags on the axes
+    ctx.font = `500 11.5px ${getFont()}`; ctx.textBaseline = 'middle';
+    const tagP = fmtP(hover.P) + ' MPa', tagT = fmtT(hover.T) + ' K';
+    let w = ctx.measureText(tagP).width + 12, x = Math.min(Math.max(hover.X - w / 2, M.l), M.l + pw - w);
+    ctx.fillStyle = C.ink; roundRect(ctx, x, M.t + ph + 3, w, 19, 4); ctx.fill();
+    ctx.fillStyle = C.surface; ctx.textAlign = 'center'; ctx.fillText(tagP, x + w / 2, M.t + ph + 12.5);
+    w = ctx.measureText(tagT).width + 12; const y = Math.min(Math.max(hover.Y - 9.5, M.t), M.t + ph - 19);
+    ctx.fillStyle = C.ink; roundRect(ctx, M.l - w - 3, y, w, 19, 4); ctx.fill();
+    ctx.fillStyle = C.surface; ctx.fillText(tagT, M.l - 3 - w / 2, y + 9.5);
+  }
+}
+function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+
+/* ---------- probing ---------- */
+function probe(px, py) {
+  if (!insidePlot(px, py)) return null;
+  if (snapOn) {
+    let bt = null;
+    for (const t of DATA.triple) { const X = sx(t.P), Y = sy(t.T), d = Math.hypot(X - px, Y - py); if (d <= 10 && (!bt || d < bt.d)) bt = { d, t, X, Y }; }
+    if (bt) return { type: 'triple', P: bt.t.P, T: bt.t.T, phases: bt.t.phases.map(id => IDX[id]), X: bt.X, Y: bt.Y };
+    let bb = null;
+    polyScr.forEach((p, bi) => {
+      for (let i = 0; i < p.X.length - 1; i++) {
+        const ax = p.X[i], ay = p.Y[i], dx = p.X[i + 1] - ax, dy = p.Y[i + 1] - ay, L2 = dx * dx + dy * dy;
+        const t = L2 > 0 ? Math.min(Math.max(((px - ax) * dx + (py - ay) * dy) / L2, 0), 1) : 0;
+        const X = ax + t * dx, Y = ay + t * dy, d = Math.hypot(X - px, Y - py);
+        if (!bb || d < bb.d) bb = { d, bi, i, t, X, Y };
+      }
+    });
+    if (bb && bb.d <= 8 && insidePlot(bb.X, bb.Y)) {
+      const b = DATA.boundaries[bb.bi], i = bb.i, t = bb.t;
+      const x0 = xOfP(b.P[i]), x1 = xOfP(b.P[i + 1]);
+      const P = PofX(x0 + t * (x1 - x0)), T = b.T[i] + t * (b.T[i + 1] - b.T[i]);
+      return { type: 'boundary', P, T, phases: [IDX[b.a], IDX[b.b]], bi: bb.bi, X: bb.X, Y: bb.Y };
+    }
+  }
+  const P = PofSx(px), T = TofSy(py), k = classify(P, T);
+  if (k < 0) return { type: 'out', P, T, X: px, Y: py };
+  return { type: 'field', P, T, phases: [k], X: px, Y: py };
+}
+
+/* ---------- tooltip ---------- */
+function showTip(h, px, py) {
+  if (!h || h.type === 'out') { tip.hidden = true; return; }
+  tip.replaceChildren();
+  const head = el('div', 't-head');
+  if (h.type === 'field') { const k = el('span', 'key'); k.style.background = C.ph[h.phases[0]]; head.append(k); }
+  head.append(placeName(h)); tip.append(head);
+  const row = (a, b) => { const r = el('div', 't-row'); r.append(el('span', null, a), el('span', null, b)); tip.append(r); };
+  row('P', fmtP(h.P) + ' MPa'); row('T', fmtT(h.T) + ' K');
+  const id = colorBy === 'phase' ? 'rho' : colorBy, sym = PROP[id].sym.replace(/<\/?sub>/g, '');
+  for (const k of orderPhases(h.phases)) row(h.phases.length > 1 ? `${sym} ${PH[k].short}` : sym, fmtProp(id, propAt(k, id, h.P, h.T)));
+  tip.hidden = false;
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  let x = px + 16, y = py + 16;
+  if (x + tw > cssW - 4) x = px - tw - 16;
+  if (y + th > cssH - 4) y = py - th - 16;
+  tip.style.left = Math.max(4, x) + 'px'; tip.style.top = Math.max(4, y) + 'px';
+}
+
+/* ---------- readout + log ---------- */
+function setPin(h, record) {
+  pin = { type: h.type, P: h.P, T: h.T, phases: orderPhases(h.phases) };
+  pin.rho = pin.phases.map(k => rhoAt(k, pin.P, pin.T));
+  pin.v = Object.fromEntries(PROPS.map(p => [p.id, pin.phases.map(k => propAt(k, p.id, pin.P, pin.T))]));
+  if (record) {
+    pinExample = false;
+    pin.id = nextId++; history.push(pin); selId = pin.id;
+    if (history.length > 5) history.shift();   // keep the last 5 points
+    renderLog();
+  }
+  renderReadout(); drawOverlay();
+}
+function renderReadout() {
+  const ro = $('#readout'); ro.replaceChildren();
+  if (!pin) return;
+  const kind = el('div', 'ro-kind'); kind.append(el('span', 'tag', KIND[pin.type]));
+  const head = el('div'); head.append(kind, el('h2', null, placeName(pin))); ro.append(head);
+  if (pinExample) ro.append(el('div', 'example', 'Example point. Click the diagram or use the lookup below to choose your own.'));
+  const dl = el('dl');
+  const pair = (dt, main, sub, cls) => { dl.append(el('dt', null, dt)); const dd = el('dd', cls, main); if (sub) dd.append(el('span', 'sub', sub)); dl.append(dd); };
+  pair('Pressure', fmtP(pin.P) + ' MPa', fmtP2(pin.P));
+  pair('Temperature', fmtT(pin.T) + ' K', fmtC(pin.T));
+  ro.append(dl);
+  pin.phases.forEach((k, i) => {
+    const p = PH[k], box = el('div', 'ph'), nm = el('div', 'ph-name'), sw = el('span', 'swatch');
+    sw.style.background = C.ph[k]; nm.append(sw, p.name); box.append(nm);
+    const d = el('dl'); const add = (a, b, sub, cls) => { d.append(el('dt', null, a)); const dd = el('dd', cls); if (b instanceof Node) dd.append(b); else dd.textContent = b; if (sub) dd.append(el('span', 'sub', sub)); d.append(dd); };
+    if (p.fluid) add('Structure', p.struct, null, 'txt');
+    else { add('Crystal system', p.sys, null, 'txt'); add('Space group', sgNode(p), null, 'txt'); add('Proton order', p.protons, null, 'txt'); }
+    add('Density ρ', fmtRho(pin.rho[i]) + ' kg/m³');
+    add('Specific volume v', fmtV(pin.rho[i]) + ' cm³/g', fmtSI(pin.rho[i]));
+    for (const q of PROPS.slice(1)) {
+      const dt = el('dt'); dt.innerHTML = propLabel(q, k);
+      const dd = el('dd');
+      if (q.id === 'Vs' && p.fluid) dd.append(el('span', 'na', 'none in a fluid'));
+      else dd.textContent = fmtProp(q.id, pin.v[q.id][i]);
+      d.append(dt, dd);
+    }
+    box.append(d); ro.append(box);
+  });
+  const act = el('div', 'actions'), b = el('button', null, 'Copy values'), fl = el('span', 'flash');
+  b.type = 'button'; b.addEventListener('click', () => copyText(pinText(pin), fl));
+  act.append(b, fl); ro.append(act);
+}
+function pinText(p) {
+  const parts = p.phases.map((k, i) => {
+    const ph_ = PH[k], struct = ph_.fluid ? 'fluid' : `${ph_.sys.toLowerCase()}, ${ph_.sgText}`;
+    const extra = PROPS.slice(1).map(q => `${q.id} = ${q.id === 'Vs' && ph_.fluid ? 'n/a' : fmtProp(q.id, p.v[q.id][i]).replace('³', '3').replace('·', ' ')}`).join(', ');
+    return `${ph_.name} (${struct}): rho = ${fmtRho(p.rho[i])} kg/m3, v = ${fmtV(p.rho[i])} cm3/g, ${extra}`;
+  });
+  return `${KIND[p.type]} ${placeName(p)} | P = ${fmtP(p.P)} MPa, T = ${fmtT(p.T)} K | ` + parts.join('; ');
+}
+function renderHead() {
+  const tr = $('#thead'); tr.replaceChildren();
+  const th = (html, num) => { const e = el('th', num ? 'num' : null); e.innerHTML = html; tr.append(e); };
+  th('#'); th('Location'); th('Phase'); th('P (MPa)', 1); th('T (K)', 1); th('ρ (kg/m³)', 1); th('v (cm³/g)', 1);
+  for (const q of PROPS.slice(1)) th(`${q.sym} (${q.unit})`, 1);
+}
+function renderLog() {
+  const tb = $('#rows'); tb.replaceChildren();
+  $('#empty').hidden = history.length > 0;
+  for (const p of history) {
+    const tr = el('tr'); if (p.id === selId) tr.className = 'sel';
+    const ks = p.phases;
+    tr.append(el('td', 'num', String(p.id)), el('td', null, KIND[p.type]), el('td', null, ks.map(k => PH[k].long).join(' / ')),
+      el('td', 'num', fmtP(p.P)), el('td', 'num', fmtT(p.T)),
+      el('td', 'num', p.rho.map(fmtRho).join(' / ')), el('td', 'num', p.rho.map(fmtV).join(' / ')),
+      ...PROPS.slice(1).map(q => el('td', 'num', p.v[q.id].map((v, i) => q.id === 'Vs' && PH[ks[i]].fluid ? '—' : fmtNum(q.id, v)).join(' / '))));
+    tr.tabIndex = 0;
+    const show = () => { pin = p; selId = p.id; pinExample = false; ensureVisible(p.P, p.T); renderReadout(); renderLog(); drawOverlay(); };
+    tr.addEventListener('click', show); tr.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(); } });
+    tb.append(tr);
+  }
+}
+function csv() {
+  const lines = ['point,location,phase,crystal_system,space_group,P_MPa,T_K,rho_kg_m3,v_cm3_g,' + PROPS.slice(1).map(q => q.csv).join(',')];
+  for (const p of history) p.phases.forEach((k, i) => {
+    const q = PH[k];
+    lines.push([p.id, KIND[p.type], q.name, q.fluid ? '' : q.sys, q.fluid ? '' : q.sgText, p.P.toPrecision(8), p.T.toFixed(4),
+      isFinite(p.rho[i]) ? p.rho[i].toPrecision(7) : '', isFinite(p.rho[i]) ? (1000 / p.rho[i]).toPrecision(7) : '',
+      ...PROPS.slice(1).map(q => isFinite(p.v[q.id][i]) ? p.v[q.id][i].toPrecision(6) : '')].join(','));
+  });
+  return lines.join('\n');
+}
+function copyText(txt, flashEl) {
+  const ok = () => { flashEl.textContent = 'Copied'; setTimeout(() => flashEl.textContent = '', 1800); };
+  const fail = () => {
+    const ta = $('#fallback'); ta.hidden = false; ta.value = txt; ta.focus(); ta.select();
+    flashEl.textContent = 'Copying is blocked here. The text is selected below: press Ctrl+C or ⌘C.';
+  };
+  try { navigator.clipboard.writeText(txt).then(ok, fail); } catch (e) { fail(); }
+}
+function ensureVisible(P, T) {
+  const X = xOfP(P);
+  if (X >= view.x0 && X <= view.x1 && T >= view.y0 && T <= view.y1) return;
+  const w = view.x1 - view.x0, h = view.y1 - view.y0;
+  view = clampView({ x0: X - w / 2, x1: X + w / 2, y0: T - h / 2, y1: T + h / 2 });
+  render('full');
+}
+
+/* ---------- events ---------- */
+function pt(e) { const r = over.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+over.addEventListener('pointerdown', e => {
+  if (!ready || e.button > 0) return;
+  over.setPointerCapture(e.pointerId);
+  const p = pt(e);
+  drag = { x0: p.x, y0: p.y, x: p.x, y: p.y, moved: false, box: boxMode || e.shiftKey, view: { ...view } };
+});
+over.addEventListener('pointermove', e => {
+  if (!ready) return;
+  const p = pt(e);
+  if (drag) {
+    drag.x = p.x; drag.y = p.y;
+    if (!drag.moved && Math.hypot(p.x - drag.x0, p.y - drag.y0) > 4) { drag.moved = true; if (!drag.box) over.classList.add('panning'); }
+    if (drag.moved) {
+      hover = null; tip.hidden = true;
+      if (drag.box) drawOverlay();
+      else {
+        const dx = (p.x - drag.x0) / pw * (drag.view.x1 - drag.view.x0), dy = (p.y - drag.y0) / ph * (drag.view.y1 - drag.view.y0);
+        view = clampView({ x0: drag.view.x0 - dx, x1: drag.view.x1 - dx, y0: drag.view.y0 + dy, y1: drag.view.y1 + dy });
+        render('fast');
+      }
+      return;
+    }
+  }
+  hover = probe(p.x, p.y); showTip(hover, hover ? hover.X : p.x, hover ? hover.Y : p.y); drawOverlay();
+});
+over.addEventListener('pointerup', e => {
+  if (!drag) return;
+  const p = pt(e), d = drag; drag = null; over.classList.remove('panning');
+  if (!d.moved) { const h = probe(p.x, p.y); if (h && h.type !== 'out') setPin(h, true); }
+  else if (d.box) {
+    const xa = Math.max(Math.min(d.x0, p.x), M.l), xb = Math.min(Math.max(d.x0, p.x), M.l + pw);
+    const ya = Math.max(Math.min(d.y0, p.y), M.t), yb = Math.min(Math.max(d.y0, p.y), M.t + ph);
+    if (xb - xa > 6 && yb - ya > 6) {
+      const ax = x => view.x0 + (x - M.l) / pw * (view.x1 - view.x0);
+      view = clampView({ x0: ax(xa), x1: ax(xb), y0: TofSy(yb), y1: TofSy(ya) });
+      render('full');
+    }
+    if (boxMode) { boxMode = false; $('#z-box').setAttribute('aria-pressed', 'false'); }
+    drawOverlay();
+  } else render('full');
+});
+over.addEventListener('pointercancel', () => { drag = null; over.classList.remove('panning'); drawOverlay(); });
+over.addEventListener('pointerleave', () => { if (!drag) { hover = null; tip.hidden = true; drawOverlay(); } });
+over.addEventListener('wheel', e => {
+  if (!ready) return;
+  e.preventDefault();
+  const p = pt(e), dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1);
+  zoomAt(p.x, p.y, Math.exp(Math.max(-300, Math.min(300, dy)) * 0.0016));
+  hover = probe(p.x, p.y); showTip(hover, hover ? hover.X : p.x, hover ? hover.Y : p.y);
+}, { passive: false });
+over.addEventListener('keydown', e => {
+  const cx = M.l + pw / 2, cy = M.t + ph / 2, w = view.x1 - view.x0, h = view.y1 - view.y0;
+  const pan = (fx, fy) => { view = clampView({ x0: view.x0 + fx * w, x1: view.x1 + fx * w, y0: view.y0 + fy * h, y1: view.y1 + fy * h }); render('full'); };
+  if (e.key === '+' || e.key === '=') zoomAt(cx, cy, 1 / 1.6);
+  else if (e.key === '-' || e.key === '_') zoomAt(cx, cy, 1.6);
+  else if (e.key === '0') resetView();
+  else if (e.key === 'ArrowLeft') pan(-0.1, 0); else if (e.key === 'ArrowRight') pan(0.1, 0);
+  else if (e.key === 'ArrowUp') pan(0, 0.1); else if (e.key === 'ArrowDown') pan(0, -0.1);
+  else return;
+  e.preventDefault();
+  if (e.key === '+' || e.key === '=' || e.key === '-' || e.key === '_') setTimeout(() => render('full'), 0);
+});
+$('#m-lin').addEventListener('click', () => setMode('lin'));
+$('#m-log').addEventListener('click', () => setMode('log'));
+$('#z-in').addEventListener('click', () => { zoomAt(M.l + pw / 2, M.t + ph / 2, 1 / 1.6); render('full'); });
+$('#z-out').addEventListener('click', () => { zoomAt(M.l + pw / 2, M.t + ph / 2, 1.6); render('full'); });
+$('#z-reset').addEventListener('click', resetView);
+$('#z-box').addEventListener('click', () => { boxMode = !boxMode; $('#z-box').setAttribute('aria-pressed', String(boxMode)); });
+$('#snap').addEventListener('change', e => { snapOn = e.target.checked; });
+$('#csv').addEventListener('click', () => copyText(csv(), $('#csv-flash')));
+$('#clear').addEventListener('click', () => { history = []; selId = null; renderLog(); $('#fallback').hidden = true; });
+$('#lk').addEventListener('submit', e => {
+  e.preventDefault();
+  if (!ready) return;
+  const P = parseFloat($('#lk-p').value), T = parseFloat($('#lk-t').value), err = $('#lk-err');
+  if (!(P >= g.Pmin && P <= g.Pmax) || !(T >= g.Tmin && T <= g.Tmax)) { err.textContent = 'Enter a pressure from 0.1 to 2000 MPa and a temperature from 150 to 400 K.'; return; }
+  err.textContent = '';
+  setPin({ type: 'field', P, T, phases: [classify(P, T)] }, true);
+  ensureVisible(P, T);
+});
+
+function resize() {
+  const r = plotEl.getBoundingClientRect();
+  cssW = r.width; cssH = r.height; dpr = Math.min(window.devicePixelRatio || 1, 3);
+  for (const c of [base, over]) { c.width = Math.round(cssW * dpr); c.height = Math.round(cssH * dpr); }
+  M.l = cssW < 480 ? 54 : 66;
+  M.r = colorBy === 'phase' ? 16 : 94;
+  pw = Math.max(10, cssW - M.l - M.r); ph = Math.max(10, cssH - M.t - M.b);
+  render('full');
+}
+function onTheme() { readColors(); render('full'); renderReadout(); }
+
+(async () => {
+  readColors();
+  if (typeof DecompressionStream === 'undefined') { $('#msg').textContent = 'This page needs a current browser (Chrome, Edge, Firefox, or Safari 16.4 or later).'; return; }
+  try { await loadData(); await loadModel(); } catch (e) { $('#msg').textContent = 'The SeaFreeze data could not be loaded: ' + e.message; return; }
+  EXT = { lin: [0, g.Pmax], log: [Math.log10(g.Pmin), Math.log10(g.Pmax)], T: [g.Tmin, g.Tmax] };
+  view = { x0: EXT.lin[0], x1: EXT.lin[1], y0: EXT.T[0], y1: EXT.T[1] };
+  const qc = new URLSearchParams(location.search).get('color');   // e.g. ?color=Cp
+  if (qc && PROP[qc] && document.documentElement.hasAttribute('data-map')) colorBy = qc;
+  const cb = $('#colorby');
+  for (const id of ['phase', ...PROPS.map(p => p.id)]) {
+    const b = el('button'); b.type = 'button'; b.dataset.id = id; b.setAttribute('aria-pressed', String(id === colorBy));
+    b.innerHTML = id === 'phase' ? 'Phase' : PROP[id].sym;
+    b.title = id === 'phase' ? 'Colour the fields by phase' : `Colour the diagram by ${PROP[id].name.toLowerCase()}`;
+    b.addEventListener('click', () => {
+      colorBy = id; cb.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      resize();
+    });
+    cb.append(b);
+  }
+  renderHead();
+  ready = true; $('#msg').hidden = true;
+  new ResizeObserver(resize).observe(plotEl);
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onTheme);
+  new MutationObserver(onTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { FONT = null; render('full'); });
+  setPin({ type: 'field', P: 500, T: 240, phases: [classify(500, 240)] }, false);
+  renderLog();
+  resize();
+})();
+</script>
+</body>
+</html>

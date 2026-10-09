@@ -27,6 +27,7 @@ To add an image, open its folder and use **Add file → Upload files**.
 | Research page figures in one row   | `style="row"` on the grid and `ratio="width/height"` on each figure (see section 01 of `research/index.md`) |
 | Logo / browser-tab icon            | `images/logo.svg`, `images/icon.svg`        |
 | SeaFreeze 3D plot data             | run `tools/seafreeze_3d_data.py` (needs `pip install SeaFreeze scipy`) |
+| SeaFreeze interactive phase diagram | see `tools/phase_diagram/README.md` |
 
 ### Add a lab member
 

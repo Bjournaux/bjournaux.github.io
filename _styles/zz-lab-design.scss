@@ -787,6 +787,20 @@ details summary {
 
 // ---------- SeaFreeze interactive 3D plot ----------
 
+// interactive phase diagram (_includes/seafreeze-phase-diagram.html)
+.sfpd-frame {
+  display: block;
+  width: 100%;
+  height: 900px;
+  border: 0;
+}
+
+.sfpd-open {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  text-align: right;
+}
+
 .sf3d {
   margin: 24px 0;
   text-align: left;
