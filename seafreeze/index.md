@@ -1,8 +1,5 @@
 ---
 title: SeaFreeze
-nav:
-  order: 5
-  tooltip: Open-source thermodynamics of water and ices
 ---
 
 {% include section.html size="full" %}
@@ -29,20 +26,14 @@ You can also try it directly in your browser with the [SeaFreeze online app](htt
 
 {% include section.html %}
 
-## Interactive phase diagram {#interactive-phase-diagram}
+## Explore it interactively
 
-The stable phase of H<sub>2</sub>O from 0.1 MPa to 2 GPa and 150 to 400 K, computed with SeaFreeze.
-Click anywhere to read off the density, heat capacities, thermal expansivity, bulk modulus and sound speeds; scroll or use the buttons to zoom.
+{% capture text %}
+Read off the stable phase and the properties of water and ices at any pressure and temperature: an interactive phase diagram and 3D plots, computed with SeaFreeze.
 
-{% include seafreeze-phase-diagram.html %}
-
-{% include section.html %}
-
-## Explore water and ices in 3D
-
-Density, sound speed, heat capacity, thermal expansivity and bulk modulus of liquid water and ices across the phase diagram, as computed by SeaFreeze.
-
-{% include seafreeze-3d.html %}
+{% include button.html link="tools/seafreeze-visualizer" text="Open the SeaFreeze visualizer" icon="fa-solid fa-arrow-right" flip=true %}
+{% endcapture %}
+{% include feature.html image="images/tools/seafreeze-visualizer.jpg" link="tools/seafreeze-visualizer" title="SeaFreeze visualizer" text=text %}
 
 {% include section.html %}
 

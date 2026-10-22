@@ -2,7 +2,7 @@
 Generate the data for the interactive 3D plot on the SeaFreeze page.
 
     pip install SeaFreeze scipy
-    python tools/seafreeze_3d_data.py
+    python _tools/seafreeze_3d_data.py
 
 Writes files/seafreeze/water-ice-properties.json: for each stable phase of H2O
 (liquid water, ices Ih, II, III, V, VI) a triangle mesh in pressure-temperature

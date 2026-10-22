@@ -7,7 +7,7 @@
 #
 # The footer shows the logos in color or in one color (white): set
 # footer-logos in _config.yaml. One-color versions are in images/funders/mono/;
-# make them with: python tools/funder_logos.py
+# make them with: python _tools/funder_logos.py
 
 - name: University of Washington
   link: https://www.washington.edu/

@@ -1,0 +1,25 @@
+{% comment %}
+  Cards for the tools listed in _data/tools.yaml (tools with "draft: true" are hidden).
+  {% include tool-cards.html %}
+{% endcomment %}
+<div class="tool-cards">
+  {% for tool in site.data.tools %}
+    {% if tool.draft %}{% continue %}{% endif %}
+    {% assign open = tool.open | default: "Open" %}
+    <article class="tool-card">
+      <a class="tool-card-image" href="{{ tool.link | relative_url }}" tabindex="-1" aria-hidden="true">
+        <img src="{{ tool.image | relative_url }}" alt="" loading="lazy">
+      </a>
+      <div class="tool-card-text">
+        <h3><a href="{{ tool.link | relative_url }}">{{ tool.name }}</a></h3>
+        {{ tool.description | markdownify }}
+        <div class="tool-card-buttons">
+          {% include button.html link=tool.link text=open %}
+          {% for b in tool.buttons %}
+            {% include button.html link=b.link text=b.text icon=b.icon style="outline" %}
+          {% endfor %}
+        </div>
+      </div>
+    </article>
+  {% endfor %}
+</div>

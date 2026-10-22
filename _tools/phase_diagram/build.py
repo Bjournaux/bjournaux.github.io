@@ -1,6 +1,6 @@
 """Step 5: write the web page and its data file for the SeaFreeze page.
 
-    python tools/phase_diagram/build.py
+    python _tools/phase_diagram/build.py
 
 Reads work/grid.npz, work/stored.npz, work/props.npz and work/boundaries.json and writes
     files/seafreeze/phase-diagram.html       the interactive diagram (embedded on /seafreeze/)

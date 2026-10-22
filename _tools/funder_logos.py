@@ -2,7 +2,7 @@
 Make the one-color versions of the footer logos.
 
     pip install pillow
-    python tools/funder_logos.py
+    python _tools/funder_logos.py
 
 For every logo in images/funders/color/ (PNG with a transparent background),
 writes images/funders/mono/ with the same name: the logo in plain white on a

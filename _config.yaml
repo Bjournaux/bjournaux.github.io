@@ -80,7 +80,6 @@ exclude:
   - preview.sh
   - Gemfile.local
   - Gemfile.local.lock
-  - tools
 
 # configure jekyll spaceship
 jekyll-spaceship:

@@ -46,7 +46,22 @@
       | sort: "nav.order"
     %}
     {% for page in pages %}
-      {% if page.nav %}
+      {% if page.nav.menu %}
+        {% comment %} dropdown: "menu: tools" lists the items of _data/tools.yaml {% endcomment %}
+        <div class="nav-menu">
+          <a href="{{ page.dir | relative_url | uri_escape }}" aria-haspopup="true">
+            {{ page.title }}
+            <i class="fa-solid fa-angle-down" aria-hidden="true"></i>
+          </a>
+          <div class="nav-submenu">
+            {% for item in site.data[page.nav.menu] %}
+              {% unless item.draft %}
+                <a href="{{ item.link | relative_url | uri_escape }}">{{ item.name }}</a>
+              {% endunless %}
+            {% endfor %}
+          </div>
+        </div>
+      {% elsif page.nav %}
         <a
           href="{{ page.dir | relative_url | uri_escape }}"
           data-tooltip="{{ page.nav.tooltip | xml_escape }}"

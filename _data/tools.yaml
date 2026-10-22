@@ -1,0 +1,45 @@
+# Tools: shown as cards on the Tools page and in the Tools menu, in this order.
+#
+#   name:        card title and menu item
+#   description: one or two sentences (Markdown)
+#   link:        where the card and the menu item go (a page of this site or a full URL)
+#   open:        text of the main button (default: Open)
+#   image:       card picture, 3:2 (e.g. 1200 x 800), in images/tools/
+#   buttons:     optional extra buttons (text, link, icon)
+#   draft: true  hides the tool until it is ready
+
+- name: SeaFreeze
+  description: Thermodynamic and elastic properties of water, ices and aqueous NaCl up to 100 GPa, as Python and MATLAB packages and an online app.
+  link: seafreeze
+  open: Learn more
+  image: images/tools/seafreeze.jpg
+  buttons:
+    - text: GitHub
+      link: https://github.com/Bjournaux/SeaFreeze
+      icon: fa-brands fa-github
+    - text: Online app
+      link: https://seafreeze.streamlit.app/
+      icon: fa-solid fa-play
+
+- name: SeaFreeze visualizer
+  description: Interactive phase diagram of water with the properties of each phase at any point, and 3D plots of density, sound speed, heat capacity and more.
+  link: tools/seafreeze-visualizer
+  image: images/tools/seafreeze-visualizer.jpg
+
+- name: RubyFit
+  description: Pressure from ruby fluorescence spectra, in your browser. Fits R1 and R2 for one spectrum, a reference and sample pair, or a whole folder. Your files are never uploaded.
+  link: tools/rubyfit/
+  image: images/tools/rubyfit.jpg
+  buttons:
+    - text: Fit only
+      link: tools/rubyfit/fit.html
+      icon: fa-solid fa-chart-line
+    - text: Python
+      link: tools/rubyfit/python/rubyfit.py
+      icon: fa-brands fa-python
+
+- name: 3D print files
+  description: Printable parts for high-pressure and low-temperature experiments.
+  link: tools/3d-print
+  image: images/tools/3d-print.jpg
+  draft: true
