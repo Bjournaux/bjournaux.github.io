@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-app="pressure"><!-- "fit": fit-only batch version (fit.html) -->
+<html lang="en" data-app="fit"><!-- "fit": Batch fits the spectra only; "pressure": Batch also gives pressures per temperature -->
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -99,6 +99,7 @@ body { background: var(--bg); color: var(--text); font: 14px/1.45 var(--font); -
 .ghost:hover { background: rgba(255,255,255,.1); }
 a.ghost { text-decoration: none; display: inline-flex; align-items: center; }
 [data-app="fit"] .pressure-only { display: none !important; }
+[data-app="pressure"] .fit-only { display: none !important; }
 [data-app="fit"] .batch-bottom { grid-template-columns: minmax(0, 1fr); }
 [data-app="fit"] td.file { max-width: 420px; }
 dialog#help { max-width: 760px; max-height: 88vh; overflow: auto; }
@@ -242,7 +243,6 @@ footer a { color: inherit; }
     <button class="tab" role="tab" id="tab-pair" data-view="pair" aria-controls="view-pair" aria-selected="true">Pair</button>
     <button class="tab" role="tab" id="tab-batch" data-view="batch" aria-controls="view-batch" aria-selected="false">Batch</button>
   </nav>
-  <a class="ghost" id="other-app" href="fit.html" title="Batch fitting of spectra only, without pressures">Fit-only batch</a>
   <button class="ghost" id="open-help" type="button" title="File formats and naming rules">? Help</button>
   <button class="ghost" id="theme-toggle" type="button" aria-pressed="false" aria-label="Dark theme" title="Switch to the dark theme">☾</button>
   <button class="ghost" id="open-settings" title="Fit settings and pressure scale">⚙ Settings</button>
@@ -475,7 +475,7 @@ footer a { color: inherit; }
         spectrum in nm.</li>
     </ul>
     <h3>File names</h3>
-    <p>For Pair and Batch, the file name says which ruby a spectrum comes from. Separate the words with <code>_</code>,
+    <p>For Pair<span class="pressure-only"> and Batch</span>, the file name says which ruby a spectrum comes from. Separate the words with <code>_</code>,
       <code>-</code> or spaces, for example:</p>
     <p><code>ice6_inside_297K_ruby3_044.csv</code> → sample ruby 3 at 297 K<br>
       <code>ice6_outside_297K_ruby1_012.csv</code> → reference ruby 1 at 297 K</p>
@@ -487,11 +487,12 @@ footer a { color: inherit; }
         <code>297 K</code>, <code>297_K</code>, <code>T297K</code>. Give it in kelvin and only once per name, and do not use
         <b>K</b> for anything else (<code>10K_counts</code> would be read as 10 K). Not read: <code>297k</code>,
         <code>24C</code>, <code>297Kelvin</code>.</td></tr>
-      <tr><th>Ruby</th><td><code>ruby</code> followed by a number: <code>ruby3</code>, <code>ruby_3</code>,
+      <tr class="pressure-only"><th>Ruby</th><td><code>ruby</code> followed by a number: <code>ruby3</code>, <code>ruby_3</code>,
         <code>ruby-3</code> (<code>ruby03</code> is the same ruby). Repeat spectra of one ruby must share the number; keep the
         spectrum number separate (<code>ruby3_044</code>, not <code>ruby_044</code>, which would be read as ruby 44).</td></tr>
     </table>
-    <p class="note">Sample and reference rubies are paired by temperature. Everything read from the names (role, temperature,
+    <p class="note fit-only">Reference and sample spectra should be at the same temperature: Pair warns when the temperatures in the names differ.</p>
+    <p class="note pressure-only">Sample and reference rubies are paired by temperature. Everything read from the names (role, temperature,
       ruby) is shown in the Batch table and can be corrected there.</p>
     <div class="actions"><span></span><button class="btn primary" value="close">Close</button></div>
   </form>
@@ -1217,7 +1218,7 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
 (() => {
   'use strict';
   const C = RubyCore;
-  // fit.html: the Batch tab only fits spectra (no roles, temperatures or pressures)
+  // data-app="fit" (default): the Batch tab only fits spectra (no roles, temperatures or pressures)
   const FIT_ONLY = document.documentElement.dataset.app === 'fit';
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -1977,7 +1978,7 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
           <dt>λ sample R1</dt><dd>${f4(res.l)} ± ${f4(res.le)} nm</dd>
           <dt>Δλ</dt><dd>${f4(res.l - res.l0)} nm</dd>
         </dl>
-        <p class="note">Uncertainty from the two fits only. Scatter between ruby grains (≈0.01 nm, i.e. tens of MPa) is not included: measure several rubies and use <b>Batch</b> mode for a realistic error.</p>${warnHtml}`;
+        <p class="note">Uncertainty from the two fits only. Scatter between ruby grains (≈0.01 nm, i.e. tens of MPa) is not included: measure several rubies${FIT_ONLY ? '' : ' and use <b>Batch</b> mode'} for a realistic error.</p>${warnHtml}`;
     } else {
       $('#pair-result').innerHTML = `<div class="empty">${ref || smp ? 'Load the other spectrum to get the pressure.' : 'Load a reference and a sample spectrum.'}</div>${warnHtml}`;
     }
@@ -2371,16 +2372,11 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
 
   // ------------------------------------------------------------------ start
   if (FIT_ONLY) {
-    document.title = 'UW MinPhys RubyFit · fitting';
-    $('.topbar .title').textContent = 'UW MinPhys RubyFit · fitting';
     $('#tab-batch').textContent = 'Batch fit';
-    $('#other-app').href = 'index.html';
-    $('#other-app').textContent = 'Pressure tool';
-    $('#other-app').title = 'Ruby pressure tool: single, pair and batch with pressures';
     $('.batch-top').appendChild($('#batch-plot').closest('.card'));   // plot beside the drop zone, table full width
   }
   fillSettings();
-  showView(FIT_ONLY ? 'batch' : 'pair');
+  showView('pair');
   recomputeBatch();
   renderTcorr();
   applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
