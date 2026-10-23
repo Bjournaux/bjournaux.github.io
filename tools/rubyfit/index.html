@@ -1436,8 +1436,9 @@ const RubyCore = (() => {
       shift: T => { const z = T - 296; return 7.29e-3 * z - 3.47e-6 * z * z + 1.09e-8 * z * z * z; },
     },
     journaux2013: {
-      // quadratic in wavenumber (cm-1), dT = T - 273.15 K, room temperature to 300 °C, converted to wavelength;
-      // the paper prints x2 and x3 without their minus signs (R1 moves to longer wavelengths on heating)
+      // quadratic in wavenumber (cm-1), dT = T - 273.15 K, room temperature to 300 °C, converted to wavelength.
+      // Fitted in Raman shift from the 514.53 nm laser (19435.2 cm-1), which grows on heating, so the paper prints
+      // x2 and x3 as positive; in absolute wavenumber, used here, they are negative (checked against the original data)
       name: 'Journaux et al. 2013', range: [293, 573], cite: 'Icarus 226, 355 (2013)',
       shift: T => { const z = T - 273.15; return 1e7 / (14407.1 - 0.1376 * z - 8.1417e-5 * z * z); },
     },
