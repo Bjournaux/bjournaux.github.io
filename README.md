@@ -28,7 +28,7 @@ To add an image, open its folder and use **Add file → Upload files**.
 | Logo / browser-tab icon            | `images/logo.svg`, `images/icon.svg`        |
 | SeaFreeze 3D plot data             | run `_tools/seafreeze_3d_data.py` (needs `pip install SeaFreeze scipy`) |
 | Add or change a tool (Tools page and menu) | an entry in `_data/tools.yaml` + a 3:2 picture in `images/tools/`; web apps go in `tools/<name>/` |
-| Update RubyFit                     | in the RubyFit working folder run `python make_web.py`, then copy `rubyfit-web/index.html` and `python/` into `tools/rubyfit/` |
+| Update RubyFit                     | in the RubyFit working folder run `python make_web.py`, then copy `rubyfit-web/index.html` (only that file) into `tools/rubyfit/` |
 | SeaFreeze interactive phase diagram | see `_tools/phase_diagram/README.md` |
 
 ### Add a lab member

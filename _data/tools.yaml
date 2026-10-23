@@ -27,13 +27,9 @@
   image: images/tools/seafreeze-visualizer.jpg
 
 - name: RubyFit
-  description: Pressure from ruby fluorescence spectra, in your browser, from one spectrum or a reference and sample pair. Batch mode fits R1 and R2 for a whole folder. Your files are never uploaded.
+  description: Pressure from ruby fluorescence spectra, in your browser, from one spectrum or a reference and sample pair, with eight pressure scales and temperature corrections side by side. Batch mode fits a whole folder. Your files are never uploaded.
   link: tools/rubyfit/
   image: images/tools/rubyfit.jpg
-  buttons:
-    - text: Python
-      link: tools/rubyfit/python/rubyfit.py
-      icon: fa-brands fa-python
 
 - name: 3D print files
   description: Printable parts for high-pressure and low-temperature experiments.
