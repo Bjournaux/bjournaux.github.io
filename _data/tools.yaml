@@ -27,7 +27,7 @@
   image: images/tools/seafreeze-visualizer.jpg
 
 - name: RubyFit
-  description: Pressure from ruby fluorescence spectra, in your browser, from one spectrum or a reference and sample pair, with eight pressure scales and temperature corrections side by side. Batch mode fits a whole folder. Your files are never uploaded.
+  description: Pressure from ruby fluorescence spectra, in your browser, from one spectrum, a reference and sample pair, or R1 wavelengths typed in, with eight pressure scales and temperature corrections side by side. Batch mode fits a whole folder. Your files are never uploaded.
   link: tools/rubyfit/
   image: images/tools/rubyfit.jpg
 
