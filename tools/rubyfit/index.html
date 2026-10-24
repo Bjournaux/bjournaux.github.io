@@ -156,6 +156,10 @@ main { padding: 16px 20px 24px; max-width: 1500px; margin: 0 auto; }
 .drop strong { color: var(--text); font-size: 14px; }
 .drop .hint { font-size: 12px; }
 .drop .file-name { font-family: var(--mono); font-size: 12px; color: var(--text); word-break: break-all; }
+.drop .local { display: block; margin-top: 2px; font-size: 11.5px; color: var(--good); }
+.drop .local::before { content: ""; display: inline-block; width: 10px; height: 11px; margin-right: 5px; vertical-align: -1px; background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 11'%3E%3Cpath d='M2 5V3.5a3 3 0 0 1 6 0V5h.5a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1.5 0h3V3.5a1.5 1.5 0 0 0-3 0z'/%3E%3C/svg%3E") center / contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 11'%3E%3Cpath d='M2 5V3.5a3 3 0 0 1 6 0V5h.5a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1.5 0h3V3.5a1.5 1.5 0 0 0-3 0z'/%3E%3C/svg%3E") center / contain no-repeat; }
 .drop .role { display: inline-flex; align-items: center; gap: 6px; }
 .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 .dot.ref { background: var(--ref); } .dot.smp { background: var(--smp); }
@@ -331,6 +335,7 @@ dialog a { color: var(--accent); }
           <strong>Drop a ruby spectrum here</strong>
           <span class="hint">or click to choose a file (CSV or TXT: wavelength in nm, intensity)</span>
           <span class="file-name" data-name></span>
+          <span class="local">Nothing is uploaded: everything is analyzed locally.</span>
         </label>
         <div class="card" id="single-result"><div class="empty">Load a spectrum to fit R1 and R2.</div></div>
         <div class="card">
@@ -376,6 +381,7 @@ dialog a { color: var(--accent); }
           <strong>Drop a ruby spectrum here</strong>
           <span class="hint">or click to choose a file; it is the same spectrum as in <b>Fit and pressure</b></span>
           <span class="file-name" data-name></span>
+          <span class="local">Nothing is uploaded: everything is analyzed locally.</span>
         </label>
         <div class="card" id="compare-fit"><div class="empty">Load a spectrum to compare the pressure laws.</div></div>
         <div class="card">
@@ -421,12 +427,14 @@ dialog a { color: var(--accent); }
           <span class="role"><span class="dot ref"></span><strong>Reference ruby</strong></span>
           <span class="hint">outside the cell, at ambient pressure</span>
           <span class="file-name" data-name></span>
+          <span class="local">Nothing is uploaded: everything is analyzed locally.</span>
         </label>
         <label class="drop" id="pair-smp-drop">
           <input type="file" class="sr-only" id="pair-smp-input" accept=".csv,.txt,.dat,.asc,.xy,.prn,.tsv" multiple>
           <span class="role"><span class="dot smp"></span><strong>Sample ruby</strong></span>
           <span class="hint">inside the cell, same temperature</span>
           <span class="file-name" data-name></span>
+          <span class="local">Nothing is uploaded: everything is analyzed locally.</span>
         </label>
         <div class="row center"><button class="btn small" id="pair-swap" type="button">⇅ Swap reference and sample</button><span class="note" style="margin:0">Tip: drop both files at once.</span></div>
         <div class="card">
@@ -460,12 +468,14 @@ dialog a { color: var(--accent); }
           <span class="role"><span class="dot ref"></span><strong>Reference ruby</strong></span>
           <span class="hint">outside the cell, at ambient pressure</span>
           <span class="file-name" data-name></span>
+          <span class="local">Nothing is uploaded: everything is analyzed locally.</span>
         </label>
         <label class="drop" id="pairc-smp-drop">
           <input type="file" class="sr-only" id="pairc-smp-input" accept=".csv,.txt,.dat,.asc,.xy,.prn,.tsv" multiple>
           <span class="role"><span class="dot smp"></span><strong>Sample ruby</strong></span>
           <span class="hint">inside the cell, same temperature</span>
           <span class="file-name" data-name></span>
+          <span class="local">Nothing is uploaded: everything is analyzed locally.</span>
         </label>
         <div class="card" id="pairc-fit"><div class="empty">Load a reference and a sample spectrum to compare the pressure scales.
           They are the same spectra as in <b>Fit and pressure</b>.</div></div>
@@ -498,6 +508,7 @@ dialog a { color: var(--accent); }
           <input type="file" class="sr-only" id="batch-input" accept=".csv,.txt,.dat,.asc,.xy,.prn,.tsv" multiple>
           <strong>Drop spectra or a whole folder here</strong>
           <span class="hint">or click to choose files (CSV or TXT)</span>
+          <span class="local">Nothing is uploaded: everything is analyzed locally.</span>
         </label>
         <div class="row center">
           <button class="btn small" id="batch-folder" type="button">Choose folder…</button>
