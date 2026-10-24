@@ -1,5 +1,7 @@
 <!doctype html>
-<html lang="en" data-app="fit"><!-- "fit": Batch fits the spectra only; "pressure": Batch also gives pressures per temperature -->
+<html lang="en" data-app="fit" data-version="1.01">
+<!-- data-app "fit": Batch fits the spectra only; "pressure": Batch also gives pressures per temperature.
+     data-version: shown in the title bar, the Info window and the footer; raise it for each new release. -->
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -93,6 +95,7 @@ body { background: var(--bg); color: var(--text); font: 14px/1.45 var(--font); -
 .topbar .logo-link { display: block; border-radius: 4px; }
 .topbar .logo-link:focus-visible { outline: 2px solid #8fc0ff; outline-offset: 2px; }
 .topbar .title { font-size: 18px; font-weight: 600; letter-spacing: .01em; padding-left: 14px; border-left: 1px solid rgba(255,255,255,.3); white-space: nowrap; }
+.topbar .title .app-version { font-size: 12px; font-weight: 500; letter-spacing: 0; opacity: .6; margin-left: 4px; }
 .topbar .spacer { flex: 1; }
 .tabs { display: flex; gap: 3px; background: rgba(255,255,255,.08); padding: 3px; border-radius: 9px; }
 .tab { border: 0; background: transparent; color: rgba(255,255,255,.78); padding: 6px 14px; border-radius: 7px; font: inherit; cursor: pointer; }
@@ -102,6 +105,9 @@ body { background: var(--bg); color: var(--text); font: 14px/1.45 var(--font); -
 .ghost { border: 1px solid rgba(255,255,255,.35); background: transparent; color: #fff; padding: 6px 10px; border-radius: 8px; font: inherit; cursor: pointer; white-space: nowrap; }
 .ghost:hover { background: rgba(255,255,255,.1); }
 a.ghost { text-decoration: none; display: inline-flex; align-items: center; }
+/* narrower screens: icon-only buttons (names in the tooltips) and a smaller logo, so the top bar stays on one line */
+@media (max-width: 1399px) { .topbar .ghost .lbl { display: none; } .topbar .ghost { min-width: 34px; } }
+@media (max-width: 1239px) { .topbar .logo { height: 46px; } .tab { padding: 6px 11px; } }
 [data-app="fit"] .pressure-only { display: none !important; }
 [data-app="pressure"] .fit-only { display: none !important; }
 [data-app="fit"] .batch-bottom { grid-template-columns: minmax(0, 1fr); }
@@ -121,6 +127,15 @@ dialog#help { max-width: 760px; max-height: 88vh; overflow: auto; }
 }
 
 main { padding: 16px 20px 24px; max-width: 1500px; margin: 0 auto; }
+/* mode header: what the mode does, and its views */
+.mode-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 6px 24px; flex-wrap: wrap; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.mode-head h1 { font-size: 18px; margin: 0; font-weight: 650; }
+.mode-head p { margin: 2px 0 10px; color: var(--text-2); font-size: 13px; max-width: 760px; }
+.subtabs { display: flex; gap: 2px; }
+.subtab { border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; background: transparent; color: var(--text-2); padding: 7px 14px 8px; font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap; }
+.subtab:hover { color: var(--text); }
+.subtab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
+.subtab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .layout { display: grid; grid-template-columns: minmax(290px, 370px) minmax(0, 1fr); gap: 16px; align-items: start; }
 .batch-top { display: grid; grid-template-columns: minmax(290px, 370px) minmax(0, 1fr); gap: 16px; align-items: start; }
 .batch-bottom { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 16px; align-items: start; margin-top: 16px; }
@@ -249,27 +264,66 @@ dialog .actions { display: flex; justify-content: space-between; margin-top: 16p
 
 footer { max-width: 1500px; margin: 0 auto; padding: 0 20px 24px; color: var(--text-3); font-size: 12px; }
 footer a { color: inherit; }
+footer strong { color: var(--text); font-weight: 650; }
+dialog a { color: var(--accent); }
+.refs li { margin: 7px 0; }
 </style>
 </head>
 <body>
 <header class="topbar">
   <a class="logo-link" href="https://bjournaux.github.io/" title="UW Planetary Mineral Physics Laboratory"><img class="logo" src="data:image/png;base64,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" alt="UW Planetary Mineral Physics Laboratory"></a>
-  <div class="title">UW MinPhys RubyFit tool</div>
+  <div class="title">UW MinPhys RubyFit tool<span class="app-version"></span></div>
   <div class="spacer"></div>
   <nav class="tabs" role="tablist" aria-label="Mode">
-    <button class="tab" role="tab" id="tab-single" data-view="single" aria-controls="view-single" aria-selected="false">Single spectrum</button>
-    <button class="tab" role="tab" id="tab-compare" data-view="compare" aria-controls="view-compare" aria-selected="false">Compare laws</button>
-    <button class="tab" role="tab" id="tab-pair" data-view="pair" aria-controls="view-pair" aria-selected="true">Pair</button>
-    <button class="tab" role="tab" id="tab-batch" data-view="batch" aria-controls="view-batch" aria-selected="false">Batch</button>
+    <button class="tab" role="tab" id="tab-single" data-mode="single" aria-controls="head-single" aria-selected="false">Single spectrum</button>
+    <button class="tab" role="tab" id="tab-pair" data-mode="pair" aria-controls="head-pair" aria-selected="true">Pair</button>
+    <button class="tab" role="tab" id="tab-batch" data-mode="batch" aria-controls="head-batch" aria-selected="false">Batch</button>
+    <button class="tab" role="tab" id="tab-calc" data-mode="calc" aria-controls="head-calc" aria-selected="false">Calculator</button>
   </nav>
-  <button class="ghost" id="open-help" type="button" title="File formats and naming rules">? Help</button>
+  <button class="ghost" id="open-info" type="button" title="About RubyFit and references" aria-label="Info">ⓘ<span class="lbl"> Info</span></button>
+  <button class="ghost" id="open-help" type="button" title="File formats and naming rules" aria-label="Help">?<span class="lbl"> Help</span></button>
   <button class="ghost" id="theme-toggle" type="button" aria-pressed="false" aria-label="Dark theme" title="Switch to the dark theme">☾</button>
-  <button class="ghost" id="open-settings" title="Fit settings and pressure scale">⚙ Settings</button>
+  <button class="ghost" id="open-settings" title="Fit settings and pressure scale" aria-label="Settings">⚙<span class="lbl"> Settings</span></button>
 </header>
 
 <main>
+  <!-- One header per mode (top tabs): what it does, and its views (sub-tabs) -->
+  <div class="mode-head" id="head-single" data-mode="single" hidden>
+    <div>
+      <h1>Single spectrum</h1>
+      <p>One spectrum against a reference R1 wavelength λ₀ that you enter, moved to the sample temperature by a temperature correction.</p>
+    </div>
+    <div class="subtabs" role="tablist" aria-label="Single spectrum views">
+      <button class="subtab" role="tab" id="sub-single" data-view="single" aria-controls="view-single" aria-selected="false">Fit and pressure</button>
+      <button class="subtab" role="tab" id="sub-compare" data-view="compare" aria-controls="view-compare" aria-selected="false">Compare laws</button>
+    </div>
+  </div>
+  <div class="mode-head" id="head-pair" data-mode="pair">
+    <div>
+      <h1>Pair</h1>
+      <p>A reference ruby outside the cell, at ambient pressure, and a sample ruby inside it, at the same temperature: no temperature correction is needed.</p>
+    </div>
+    <div class="subtabs" role="tablist" aria-label="Pair views">
+      <button class="subtab" role="tab" id="sub-pair" data-view="pair" aria-controls="view-pair" aria-selected="true">Fit and pressure</button>
+      <button class="subtab" role="tab" id="sub-pair-compare" data-view="pair-compare" aria-controls="view-pair-compare" aria-selected="false">Compare laws</button>
+    </div>
+  </div>
+  <div class="mode-head" id="head-batch" data-mode="batch" hidden>
+    <div>
+      <h1><span class="fit-only">Batch fit</span><span class="pressure-only">Batch</span></h1>
+      <p class="fit-only">Many spectra or a whole folder: R1, R2, widths and fit quality for each spectrum, exported as CSV.</p>
+      <p class="pressure-only">Many reference and sample rubies, paired by temperature: the pressure at each temperature, with the scatter between rubies.</p>
+    </div>
+  </div>
+  <div class="mode-head" id="head-calc" data-mode="calc" hidden>
+    <div>
+      <h1>Calculator</h1>
+      <p>Pressure from R1 wavelengths you type in, without spectra, with every pressure scale and temperature correction compared.</p>
+    </div>
+  </div>
+
   <!-- ============================== SINGLE ============================== -->
-  <section class="view" id="view-single" role="tabpanel" aria-labelledby="tab-single" hidden>
+  <section class="view" id="view-single" role="tabpanel" aria-labelledby="sub-single" hidden>
     <div class="layout">
       <div class="stack">
         <label class="drop" id="single-drop">
@@ -314,13 +368,13 @@ footer a { color: inherit; }
   </section>
 
   <!-- ============================== COMPARE LAWS ============================== -->
-  <section class="view" id="view-compare" role="tabpanel" aria-labelledby="tab-compare" hidden>
+  <section class="view" id="view-compare" role="tabpanel" aria-labelledby="sub-compare" hidden>
     <div class="layout">
       <div class="stack">
         <label class="drop" id="compare-drop">
           <input type="file" class="sr-only" id="compare-input" accept=".csv,.txt,.dat,.asc,.xy,.prn,.tsv">
           <strong>Drop a ruby spectrum here</strong>
-          <span class="hint">or click to choose a file; it is the same spectrum as in <b>Single spectrum</b></span>
+          <span class="hint">or click to choose a file; it is the same spectrum as in <b>Fit and pressure</b></span>
           <span class="file-name" data-name></span>
         </label>
         <div class="card" id="compare-fit"><div class="empty">Load a spectrum to compare the pressure laws.</div></div>
@@ -334,7 +388,7 @@ footer a { color: inherit; }
           <div class="row compact" style="margin-top:8px">
             <div class="field"><label for="compare-T">Sample T (K)</label><input type="number" id="compare-T" step="0.1" data-setting="sampleT"></div>
           </div>
-          <p class="note">Shared with <b>Single spectrum</b>. The boxed cell is the scale and temperature correction used there;
+          <p class="note">Shared with <b>Fit and pressure</b>. The boxed cell is the scale and temperature correction used there;
             click any cell to use that combination instead.</p>
         </div>
       </div>
@@ -359,7 +413,7 @@ footer a { color: inherit; }
   </section>
 
   <!-- ============================== PAIR ============================== -->
-  <section class="view" id="view-pair" role="tabpanel" aria-labelledby="tab-pair">
+  <section class="view" id="view-pair" role="tabpanel" aria-labelledby="sub-pair">
     <div class="layout">
       <div class="stack">
         <label class="drop" id="pair-ref-drop">
@@ -393,6 +447,45 @@ footer a { color: inherit; }
           </div>
         </div>
         <div class="canvas-wrap"><canvas class="plot" id="pair-plot"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== PAIR: COMPARE LAWS (pressure scales) ============================== -->
+  <section class="view" id="view-pair-compare" role="tabpanel" aria-labelledby="sub-pair-compare" hidden>
+    <div class="layout">
+      <div class="stack">
+        <label class="drop" id="pairc-ref-drop">
+          <input type="file" class="sr-only" id="pairc-ref-input" accept=".csv,.txt,.dat,.asc,.xy,.prn,.tsv" multiple>
+          <span class="role"><span class="dot ref"></span><strong>Reference ruby</strong></span>
+          <span class="hint">outside the cell, at ambient pressure</span>
+          <span class="file-name" data-name></span>
+        </label>
+        <label class="drop" id="pairc-smp-drop">
+          <input type="file" class="sr-only" id="pairc-smp-input" accept=".csv,.txt,.dat,.asc,.xy,.prn,.tsv" multiple>
+          <span class="role"><span class="dot smp"></span><strong>Sample ruby</strong></span>
+          <span class="hint">inside the cell, same temperature</span>
+          <span class="file-name" data-name></span>
+        </label>
+        <div class="card" id="pairc-fit"><div class="empty">Load a reference and a sample spectrum to compare the pressure scales.
+          They are the same spectra as in <b>Fit and pressure</b>.</div></div>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <div class="toolbar">
+            <div class="title">Pressure with every scale</div>
+            <div class="tools"><button class="btn small" id="pairc-csv" type="button">Save CSV</button></div>
+          </div>
+          <div id="pairc-table"><div class="empty">Load both spectra to see the table.</div></div>
+          <div id="pairc-summary"></div>
+        </div>
+        <div class="card plot-card">
+          <div class="toolbar">
+            <div class="title">Spread between scales</div>
+            <div class="tools"><button class="btn small" id="pairc-png" type="button">Save PNG</button></div>
+          </div>
+          <div class="canvas-wrap"><canvas class="plot" id="pairc-plot"></canvas></div>
+        </div>
       </div>
     </div>
   </section>
@@ -487,13 +580,64 @@ footer a { color: inherit; }
       <div id="perruby-table"></div>
     </details>
   </section>
+
+  <!-- ============================== CALCULATOR (no spectra) ============================== -->
+  <section class="view" id="view-calc" role="tabpanel" aria-labelledby="tab-calc" hidden>
+    <div class="layout">
+      <div class="stack">
+        <div class="card">
+          <h2>R1 wavelengths</h2>
+          <div class="row compact">
+            <div class="field"><label for="calc-lam">Sample R1, λ (nm)</label><input type="number" id="calc-lam" step="0.001" placeholder="e.g. 695.512" data-setting="calcLam"></div>
+            <div class="field"><label for="calc-lamerr">± (nm)</label><input type="number" id="calc-lamerr" step="0.001" min="0" data-setting="calcLamErr"></div>
+          </div>
+          <div class="row compact" style="margin-top:8px">
+            <div class="field"><label for="calc-lam0">Reference R1, λ₀ (nm)</label><input type="number" id="calc-lam0" step="0.001" data-setting="lam0"></div>
+            <div class="field"><label for="calc-lam0err">± (nm)</label><input type="number" id="calc-lam0err" step="0.001" min="0" data-setting="lam0Err"></div>
+            <div class="field"><label for="calc-lam0T">measured at (K)</label><input type="number" id="calc-lam0T" step="0.1" data-setting="lam0T"></div>
+          </div>
+          <div class="row compact" style="margin-top:8px">
+            <div class="field"><label for="calc-T">Sample T (K)</label><input type="number" id="calc-T" step="0.1" data-setting="sampleT"></div>
+            <div class="field grow"><label for="calc-tlaw">Temperature correction of λ₀</label><select id="calc-tlaw" data-setting="tLaw"></select></div>
+          </div>
+          <div class="field" style="margin-top:8px"><label for="calc-scale">Pressure scale</label><select id="calc-scale" data-setting="scale" style="width:100%"></select></div>
+          <div id="calc-tcorr" class="sub" style="margin-top:8px"></div>
+          <p class="note">λ₀, the temperatures, the correction and the scale are shared with <b>Single spectrum</b>. For a reference
+            ruby measured at the sample temperature, as in <b>Pair</b>, give both the same temperature.</p>
+        </div>
+        <div class="card">
+          <h2>Pressure</h2>
+          <div id="calc-result"><div class="empty">Enter the sample R1 wavelength.</div></div>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <div class="toolbar">
+            <div class="title">Pressure with every scale and temperature correction</div>
+            <div class="tools"><button class="btn small" id="calc-csv" type="button">Save CSV</button></div>
+          </div>
+          <div id="calc-table"><div class="empty">Enter the sample R1 wavelength to see the table.</div></div>
+          <div id="calc-summary"></div>
+        </div>
+        <div class="card plot-card">
+          <div class="toolbar">
+            <div class="title">Spread between laws</div>
+            <div class="tools"><button class="btn small" id="calc-png" type="button">Save PNG</button></div>
+          </div>
+          <div class="canvas-wrap"><canvas class="plot" id="calc-plot"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
-  Runs entirely in your browser: files are never uploaded. Model: R1 and R2 peaks (Pearson VII by default; Lorentzian, Voigt
-  or split, i.e. asymmetric, shapes selectable) on a cubic background, same as <code>rubyfit.py</code>. Eight pressure scales (Piermarini 1975 to Wei 2024; Mao et al. 1986 by default).
+  <strong>Runs entirely in your browser: files are never uploaded.</strong><br>
+  Model: R1 and R2 peaks (Pearson VII by default; Lorentzian, Voigt or split, i.e. asymmetric, shapes selectable) on a cubic
+  background. Default pressure scale: Mao et al. 1986; default temperature correction: Datchi et al. 2007
+  (other choices and all <a href="#" data-open-info>references</a> in Info).
   More tools from the <a href="https://bjournaux.github.io/tools/">UW Planetary Mineral Physics Laboratory</a>.<br>
-  RubyFit was created by Baptiste Journaux &amp; Chris Woodburn and is released under the
+  RubyFit <span class="app-version"></span> was created by Baptiste Journaux &amp; Chris Woodburn and is released under the
   <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0 license</a>.
 </footer>
 
@@ -515,10 +659,82 @@ footer a { color: inherit; }
       <div class="field"><label for="set-smpkeys">File-name words for sample rubies</label><input type="text" id="set-smpkeys" data-setting="sampleKeys"></div>
       <label class="radio"><input type="checkbox" id="set-whitepng" data-setting="whitePng"> Save images with a white background (otherwise they follow the theme)</label>
     </div>
+    <p class="note">Your choices are remembered in this browser. <b>Reset defaults</b> also restores the Pearson VII line shape, the
+      Mao et al. 1986 pressure scale and the Datchi et al. 2007 temperature correction; the wavelengths and temperatures you typed are kept.</p>
     <div class="actions">
       <button type="button" class="btn" id="set-reset">Reset defaults</button>
       <button class="btn primary" value="close">Done</button>
     </div>
+  </form>
+</dialog>
+
+<dialog id="info" class="help">
+  <form method="dialog">
+    <h2>RubyFit <span class="app-version"></span></h2>
+    <p>Pressure from ruby (Cr³⁺:Al₂O₃) fluorescence spectra. <b>Runs entirely in your browser: files are never uploaded.</b></p>
+    <p>Created by Baptiste Journaux &amp; Chris Woodburn, <a href="https://bjournaux.github.io/">UW Planetary Mineral Physics
+      Laboratory</a>, University of Washington. Released under the <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0 license</a>.</p>
+    <h3>Method</h3>
+    <ul>
+      <li>R1 and R2 are fitted together, as two peaks on a cubic background, by least squares (Levenberg–Marquardt) in a
+        window around R1 (Settings). Uncertainties come from the fit covariance.</li>
+      <li>Line shapes: Pearson VII (default), Lorentzian, their split (asymmetric) versions, and Voigt, computed with the
+        Faddeeva function (Weideman 1994).</li>
+      <li>The pressure comes from the shift of R1 from λ₀, its wavelength at ambient pressure. In <b>Pair</b>, λ₀ is a reference
+        ruby at the same temperature. In <b>Single spectrum</b>, it is a value you enter, moved to the sample temperature by a
+        temperature correction.</li>
+    </ul>
+    <h3>Pressure scales</h3>
+    <ul class="refs">
+      <li><b>Piermarini et al. 1975</b> (linear). Piermarini, G. J., Block, S., Barnett, J. D. &amp; Forman, R. A. (1975).
+        Calibration of the pressure dependence of the R1 ruby fluorescence line to 195 kbar. <i>Journal of Applied Physics</i>,
+        46(6), 2774–2780. <a href="https://doi.org/10.1063/1.321957">doi:10.1063/1.321957</a></li>
+      <li><b>Mao et al. 1978</b> (non-hydrostatic). Mao, H. K., Bell, P. M., Shaner, J. W. &amp; Steinberg, D. J. (1978).
+        Specific volume measurements of Cu, Mo, Pd, and Ag and calibration of the ruby R1 fluorescence pressure gauge from 0.06
+        to 1 Mbar. <i>Journal of Applied Physics</i>, 49(6), 3276–3283. <a href="https://doi.org/10.1063/1.325277">doi:10.1063/1.325277</a></li>
+      <li><b>Mao et al. 1986</b> (quasi-hydrostatic, default). Mao, H. K., Xu, J. &amp; Bell, P. M. (1986). Calibration of the
+        ruby pressure gauge to 800 kbar under quasi-hydrostatic conditions. <i>Journal of Geophysical Research: Solid Earth</i>,
+        91(B5), 4673–4676. <a href="https://doi.org/10.1029/JB091iB05p04673">doi:10.1029/JB091iB05p04673</a></li>
+      <li><b>Dewaele et al. 2004</b> (helium medium). Dewaele, A., Loubeyre, P. &amp; Mezouar, M. (2004). Equations of state of
+        six metals above 94 GPa. <i>Physical Review B</i>, 70(9), 094112.
+        <a href="https://doi.org/10.1103/PhysRevB.70.094112">doi:10.1103/PhysRevB.70.094112</a></li>
+      <li><b>Chijioke et al. 2005</b>. Chijioke, A. D., Nellis, W. J., Soldatov, A. &amp; Silvera, I. F. (2005). The ruby
+        pressure standard to 150 GPa. <i>Journal of Applied Physics</i>, 98(11), 114905.
+        <a href="https://doi.org/10.1063/1.2135877">doi:10.1063/1.2135877</a></li>
+      <li><b>Jacobsen et al. 2008</b> (helium medium). Jacobsen, S. D., Holl, C. M., Adams, K. A., Fischer, R. A., Martin, E. S.,
+        Bina, C. R., Lin, J.-F., Prakapenka, V. B., Kubo, A. &amp; Dera, P. (2008). Compression of single-crystal magnesium oxide
+        to 118 GPa and a ruby pressure gauge for helium pressure media. <i>American Mineralogist</i>, 93(11–12), 1823–1828.
+        <a href="https://doi.org/10.2138/am.2008.2988">doi:10.2138/am.2008.2988</a></li>
+      <li><b>Shen et al. 2020</b> (Ruby2020). Shen, G., Wang, Y., Dewaele, A., Wu, C., Fratanduono, D. E., Eggert, J., Klotz, S.,
+        Dziubek, K. F., Loubeyre, P., Fat’yanov, O. V., Asimow, P. D., Mashimo, T., Wentzcovitch, R. M. M. &amp; other members of
+        the IPPS task group (2020). Toward an international practical pressure scale: a proposal for an IPPS ruby gauge
+        (IPPS-Ruby2020). <i>High Pressure Research</i>, 40(3), 299–314.
+        <a href="https://doi.org/10.1080/08957959.2020.1791107">doi:10.1080/08957959.2020.1791107</a></li>
+      <li><b>Wei et al. 2024</b> (temperature dependent; also a temperature correction below). Wei, Y., Zhou, Q., Zhang, C., Li, L.,
+        Li, X. &amp; Li, F. (2024). Fluorescence pressure sensors: calibration of ruby, Sm²⁺:SrB₄O₇, and Sm³⁺:YAG to 55 GPa and
+        850 K. <i>Journal of Applied Physics</i>, 135(10), 105902. <a href="https://doi.org/10.1063/5.0178597">doi:10.1063/5.0178597</a></li>
+    </ul>
+    <h3>Temperature corrections of λ₀</h3>
+    <ul class="refs">
+      <li><b>Datchi et al. 2007</b> (default). Datchi, F., Dewaele, A., Loubeyre, P., Letoullec, R., Le Godec, Y. &amp; Canny, B. (2007).
+        Optical pressure sensors for high-pressure–high-temperature studies in a diamond anvil cell. <i>High Pressure
+        Research</i>, 27(4), 447–463. <a href="https://doi.org/10.1080/08957950701659593">doi:10.1080/08957950701659593</a></li>
+      <li><b>Ragan et al. 1992</b>. Ragan, D. D., Gustavsen, R. &amp; Schiferl, D. (1992). Calibration of the ruby R1 and R2
+        fluorescence shifts as a function of temperature from 0 to 600 K. <i>Journal of Applied Physics</i>, 72(12), 5539–5544.
+        <a href="https://doi.org/10.1063/1.351951">doi:10.1063/1.351951</a></li>
+      <li><b>Vos &amp; Schouten 1991</b>. Vos, W. L. &amp; Schouten, J. A. (1991). On the temperature correction to the ruby
+        pressure scale. <i>Journal of Applied Physics</i>, 69(9), 6744–6746. <a href="https://doi.org/10.1063/1.348903">doi:10.1063/1.348903</a></li>
+      <li><b>Wei et al. 2024</b>: see the pressure scales above.</li>
+      <li><b>Journaux et al. 2013</b>. Journaux, B., Daniel, I., Caracas, R., Montagnac, G. &amp; Cardon, H. (2013). Influence of
+        NaCl on ice VI and ice VII melting curves up to 6 GPa, implications for large icy moons. <i>Icarus</i>, 226(1), 355–363.
+        <a href="https://doi.org/10.1016/j.icarus.2013.05.039">doi:10.1016/j.icarus.2013.05.039</a></li>
+    </ul>
+    <h3>Line shape</h3>
+    <ul class="refs">
+      <li><b>Weideman 1994</b> (Voigt profile). Weideman, J. A. C. (1994). Computation of the complex error function.
+        <i>SIAM Journal on Numerical Analysis</i>, 31(5), 1497–1518. <a href="https://doi.org/10.1137/0731077">doi:10.1137/0731077</a></li>
+    </ul>
+    <div class="actions"><span></span><button class="btn primary" value="close">Close</button></div>
   </form>
 </dialog>
 
@@ -548,7 +764,7 @@ footer a { color: inherit; }
       <tr><th>Temperature</th><td>A number followed by a capital <b>K</b>: <code>297K</code>, <code>297.5K</code>,
         <code>297 K</code>, <code>297_K</code>, <code>T297K</code>. Give it in kelvin and only once per name, and do not use
         <b>K</b> for anything else (<code>10K_counts</code> would be read as 10 K). Not read: <code>297k</code>,
-        <code>24C</code>, <code>297Kelvin</code>. In Single spectrum and Compare laws it fills in the sample
+        <code>24C</code>, <code>297Kelvin</code>. In Single spectrum it fills in the sample
         temperature; the temperature-dependent scale (Wei et al. 2024) also uses it in Pair<span class="pressure-only"> and Batch</span>.</td></tr>
       <tr class="pressure-only"><th>Ruby</th><td><code>ruby</code> followed by a number: <code>ruby3</code>, <code>ruby_3</code>,
         <code>ruby-3</code> (<code>ruby03</code> is the same ruby). Repeat spectra of one ruby must share the number; keep the
@@ -1469,12 +1685,20 @@ const RubyCore = (() => {
     return rows;
   }
 
+  /** Pressure of one R1 against a reference R1 at the same temperature with every scale (Compare laws of a Pair). */
+  function compareScales(r1, r1Err, lam0, lam0Err, T) {
+    return Object.keys(SCALES).map(key => {
+      const [P, dP, dP0] = pressure(r1, lam0, key, T);
+      return { scale: key, P_GPa: P, P_err_GPa: Math.hypot(dP * r1Err, dP0 * lam0Err), scale_in_range: scaleInRange(key, P, T) };
+    });
+  }
+
   return {
     PARAM_NAMES, FIT_COLUMNS, SERIOUS_FLAGS, SCALES, DEFAULT_SCALE, scaleInRange, DEFAULT_WINDOW, DEFAULT_MIN_R2, PROFILES, DEFAULT_PROFILE,
     PEAK_PARAMS, paramNames, faddeeva, looksLikeAngstrom,
     DEFAULT_REF_KEYS, DEFAULT_SAMPLE_KEYS, T_LAWS,
     pressure, parseSpectrum, parseName, fitSpectrum, components, model, fitRow, pressureTables, sameT,
-    crossMatrix, correctLambda0, compareLaws,
+    crossMatrix, correctLambda0, compareLaws, compareScales,
   };
 })();
 if (typeof module !== 'undefined') module.exports = RubyCore;
@@ -1523,6 +1747,7 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
     minR2: C.DEFAULT_MIN_R2, searchLo: null, searchHi: null, profile: C.DEFAULT_PROFILE,
     refKeys: C.DEFAULT_REF_KEYS.join(', '), sampleKeys: C.DEFAULT_SAMPLE_KEYS.join(', '),
     lam0: 694.22, lam0Err: 0.02, lam0T: 296, sampleT: 296, tLaw: 'datchi2007',
+    calcLam: null, calcLamErr: 0.01,                     // Calculator: sample R1 typed in (none until given)
     whitePng: true,
   };
   let S = { ...DEFAULTS };
@@ -2125,14 +2350,21 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
              series, vlines, residual, residualPanels: true, aspect: 0.78, maxH: 660 };
   }
 
-  // ------------------------------------------------------------------ tabs
+  // ------------------------------------------------------------------ tabs: modes (top bar) and their views (sub-tabs)
   const plots = {};
+  const VIEW_MODE = { single: 'single', compare: 'single', pair: 'pair', 'pair-compare': 'pair', batch: 'batch', calc: 'calc' };
+  const lastView = { single: 'single', pair: 'pair', batch: 'batch', calc: 'calc' };   // a mode reopens on the view last shown
   function showView(name) {
-    for (const t of $$('.tab')) t.setAttribute('aria-selected', String(t.dataset.view === name));
+    const mode = VIEW_MODE[name];
+    lastView[mode] = name;
+    for (const t of $$('.tab')) t.setAttribute('aria-selected', String(t.dataset.mode === mode));
+    for (const h of $$('.mode-head')) h.hidden = h.dataset.mode !== mode;
+    for (const t of $$('.subtab')) t.setAttribute('aria-selected', String(t.dataset.view === name));
     for (const v of $$('.view')) v.hidden = v.id !== `view-${name}`;
     Object.values(plots).forEach(p => p.draw());
   }
-  $$('.tab').forEach(t => t.addEventListener('click', () => showView(t.dataset.view)));
+  $$('.tab').forEach(t => t.addEventListener('click', () => showView(lastView[t.dataset.mode])));
+  $$('.subtab').forEach(t => t.addEventListener('click', () => showView(t.dataset.view)));
   function segValue(seg) { return $('button[aria-pressed="true"]', seg).dataset.v; }
   function setupSeg(seg, onChange) {
     seg.addEventListener('click', e => {
@@ -2147,15 +2379,19 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
   // ------------------------------------------------------------------ SINGLE
   const single = { item: null, tFromName: false };
   plots.single = new Plot($('#single-plot'), { empty: 'Load a spectrum to see the fit' });
-  $('#single-tlaw').innerHTML = Object.entries(C.T_LAWS).map(([key, L]) =>
-    `<option value="${key}">${esc(L.name)}${fin(L.range[1]) ? ` (${L.range[0]}–${L.range[1]} K)` : ''}</option>`).join('');
+  for (const sel of $$('select[data-setting="tLaw"]')) {
+    sel.innerHTML = Object.entries(C.T_LAWS).map(([key, L]) => {
+      const notes = [fin(L.range[1]) ? `${L.range[0]}–${L.range[1]} K` : '', key === DEFAULTS.tLaw ? 'default' : ''].filter(Boolean);
+      return `<option value="${key}">${esc(L.name)}${notes.length ? ` (${notes.join(', ')})` : ''}</option>`;
+    }).join('');
+  }
   for (const sel of $$('select[data-setting="profile"]')) {
     sel.innerHTML = Object.entries(C.PROFILES).map(([key, name]) =>
       `<option value="${key}">${esc(name.replace(' (asymmetric)', ''))}${key === C.DEFAULT_PROFILE ? ' (default)' : ''}</option>`).join('');
   }
   for (const sel of $$('select[data-setting="scale"]')) {
     sel.innerHTML = Object.entries(C.SCALES).map(([key, sc]) =>
-      `<option value="${key}">${esc(sc.name)}, to ${sc.maxGPa} GPa${sc.Trange ? `, ${sc.Trange[0]}–${sc.Trange[1]} K` : ''}</option>`).join('');
+      `<option value="${key}">${esc(sc.name)}, to ${sc.maxGPa} GPa${sc.Trange ? `, ${sc.Trange[0]}–${sc.Trange[1]} K` : ''}${key === DEFAULTS.scale ? ' (default)' : ''}</option>`).join('');
   }
   async function loadSingle(files) {                     // Single spectrum and Compare laws share the spectrum
     single.item = await readItem(files[0]);
@@ -2166,7 +2402,8 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
   }
   setupDrop($('#single-drop'), $('#single-input'), loadSingle);
   const singleLambda0 = () => C.correctLambda0(S.lam0, S.lam0T, S.sampleT, S.tLaw);
-  function renderTcorr() {
+  /** The λ0 used at the sample temperature, in Single spectrum (default) or the Calculator. */
+  function renderTcorr(target = '#single-tcorr') {
     const tc = singleLambda0(), L = C.T_LAWS[S.tLaw] || C.T_LAWS.none;
     const dT = S.sampleT - S.lam0T;
     let html;
@@ -2179,8 +2416,8 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
       html = `λ₀ at ${+S.sampleT.toFixed(2)} K: <b>${f4(tc.lambda0)} nm</b> (${tc.shift >= 0 ? '+' : ''}${tc.shift.toFixed(4)} nm from ${+S.lam0T.toFixed(2)} K; ${esc(L.name)}, ${esc(L.cite)})`;
       if (!tc.inRange) html += `<div class="warnbox">Outside the ${L.range[0]}–${L.range[1]} K range of ${esc(L.name)}: extrapolated.</div>`;
     }
-    if (single.tFromName && single.item) html += '<div>Sample temperature read from the file name.</div>';
-    $('#single-tcorr').innerHTML = html;
+    if (target === '#single-tcorr' && single.tFromName && single.item) html += '<div>Sample temperature read from the file name.</div>';
+    $(target).innerHTML = html;
   }
   setupSeg($('[data-range="single"]'), () => renderSingle());
   function pressureBlock(P, err, extra = '') {
@@ -2188,13 +2425,17 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
     return `<div class="big">${s.p} <small>± ${s.e} MPa</small></div>
       <div class="sub">${fin(P) ? `${P.toFixed(4)} ± ${fin(err) ? err.toFixed(4) : '–'} GPa · ` : ''}${esc(C.SCALES[S.scale].name)}${extra}</div>`;
   }
+  /** Why P (GPa) at T (K) is outside the calibrated range of a scale ('' when it is inside). */
+  function scaleWhy(scale, P, T) {
+    const sc = C.SCALES[scale];
+    if (!fin(P) || C.scaleInRange(scale, P, T)) return '';
+    return P > sc.maxGPa ? `calibrated up to ${sc.maxGPa} GPa`
+      : fin(T) ? `calibrated for ${sc.Trange[0]}–${sc.Trange[1]} K` : 'temperature dependent and no temperature is given (296 K assumed)';
+  }
   /** Warning when P (GPa) at T (K) is outside the calibrated range of the selected scale. */
   function scaleWarning(P, T) {
-    const sc = C.SCALES[S.scale];
-    if (!fin(P) || C.scaleInRange(S.scale, P, T)) return '';
-    const why = P > sc.maxGPa ? `calibrated up to ${sc.maxGPa} GPa`
-      : fin(T) ? `calibrated for ${sc.Trange[0]}–${sc.Trange[1]} K` : 'temperature dependent and no temperature is given (296 K assumed)';
-    return `<div class="warnbox">${esc(sc.name)} is ${why}: this pressure is extrapolated.</div>`;
+    const why = scaleWhy(S.scale, P, T);
+    return why ? `<div class="warnbox">${esc(C.SCALES[S.scale].name)} is ${why}: this pressure is extrapolated.</div>` : '';
   }
   function renderSingle() {
     const it = single.item;
@@ -2246,10 +2487,11 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
   const LAW_COLORS = { none: '--data', datchi2007: '--fit', ragan1992: '--r1', vos1991: '--r2', wei2024: '--violet', journaux2013: '--amber' };
   plots.compare = new Plot($('#compare-plot'), { aspect: 0.55, minH: 280, maxH: 460, empty: 'Load a spectrum to compare the laws' });
   setupDrop($('#compare-drop'), $('#compare-input'), loadSingle);
+  /** Every scale x temperature correction for a sample R1 (nm), with the λ0 and temperatures of Single spectrum. */
+  const lawRows = (r1, r1Err) => C.compareLaws(r1, r1Err, S.lam0, S.lam0Err, S.lam0T, S.sampleT);
   function compareRows() {
     const it = single.item;
-    if (!it || !it.fit) return null;
-    return C.compareLaws(it.fit.params.r1_center, it.fit.errors.r1_center, S.lam0, S.lam0Err, S.lam0T, S.sampleT);
+    return it && it.fit ? lawRows(it.fit.params.r1_center, it.fit.errors.r1_center) : null;
   }
   const scaleLabel = key => {                            // "Mao et al. 1986 (...)" -> "Mao\n1986" for the chart axis
     const m = C.SCALES[key].name.match(/^(\S+)(?: et al\.)? (\d{4})/);
@@ -2269,7 +2511,7 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
   }
   /** "lo–hi MPa (spread)" over the in-range rows, naming the rows left out (or counting them without nameOf). */
   function spreadText(rows, nameOf = null) {
-    const ok = rows.filter(r => r.scale_in_range && r.law_in_range && fin(r.P_GPa));
+    const ok = rows.filter(r => r.scale_in_range && r.law_in_range !== false && fin(r.P_GPa));
     const out = rows.filter(r => !ok.includes(r));
     const left = !out.length ? '' : nameOf ? `${out.map(nameOf).join(', ')} left out as extrapolated`
       : `${out.length} extrapolated combination${out.length > 1 ? 's' : ''} left out`;
@@ -2279,6 +2521,10 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
     return `<b>${(1000 * lo).toFixed(dec)}–${(1000 * hi).toFixed(dec)} MPa</b> (spread ${(1000 * (hi - lo)).toFixed(dec)} MPa)`
       + (left ? `; ${esc(left)}` : '');
   }
+  const scaleCell = sc => {                             // "Mao et al. 1986" over "quasi-hydrostatic"
+    const [, main, sub] = C.SCALES[sc].name.match(/^(.*?)(?: \((.*)\))?$/);
+    return `<td class="l" title="${esc(`${C.SCALES[sc].name}, ${C.SCALES[sc].ref}`)}">${esc(main)}${sub ? `<small>${esc(sub)}</small>` : ''}</td>`;
+  };
   function renderCompare() {
     const it = single.item;
     $('#compare-drop [data-name]').textContent = it ? it.name : '';
@@ -2288,7 +2534,7 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
         ${it.fit ? `<dl class="kv"><dt>R1</dt><dd>${f4(it.fit.params.r1_center)} ± ${f4(it.fit.errors.r1_center)} nm</dd>
           <dt>Line shape</dt><dd>${esc(C.PROFILES[it.fit.profile])}</dd></dl>` : ''}${flagNotes(it)}
         <p class="note" style="margin-bottom:0">${single.tFromName ? 'Sample temperature read from the file name. ' : ''}
-          <a href="#" id="compare-see-fit">See the fit</a> in <b>Single spectrum</b>.</p>`;
+          <a href="#" id="compare-see-fit">See the fit</a> in <b>Fit and pressure</b>.</p>`;
       $('#compare-see-fit').addEventListener('click', e => { e.preventDefault(); showView('single'); });
     }
     if (!rows) {
@@ -2297,22 +2543,25 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
       plots.compare.set(null);
       return;
     }
+    renderLawTable('compare', plots.compare, rows, it.fit.params.r1_center, 'the R1 fit');
+  }
+  /**
+   * Table, summary and chart of every scale x temperature correction (Compare laws of Single spectrum, Calculator)
+   * into #<id>-table and #<id>-summary; r1 (nm) is the sample R1, r1Source says where its uncertainty comes from.
+   */
+  function renderLawTable(id, plot, rows, r1, r1Source) {
     const laws = [...new Set(rows.map(r => r.t_law))], scales = Object.keys(C.SCALES);
     const get = (sc, law) => rows.find(r => r.scale === sc && r.t_law === law);
     const head = laws.map(law => `<th>${esc(C.T_LAWS[law].name)}<span class="lam0">λ₀ ${f4(get(scales[0], law).lambda0_nm)}</span></th>`).join('');
-    const scaleCell = sc => {                           // "Mao et al. 1986" over "quasi-hydrostatic"
-      const [, main, sub] = C.SCALES[sc].name.match(/^(.*?)(?: \((.*)\))?$/);
-      return `<td class="l" title="${esc(`${C.SCALES[sc].name}, ${C.SCALES[sc].ref}`)}">${esc(main)}${sub ? `<small>${esc(sub)}</small>` : ''}</td>`;
-    };
     const body = scales.map(sc => `<tr>${scaleCell(sc)}${laws.map(law => {
       const r = get(sc, law), f = fmtP(r.P_GPa, r.P_err_GPa), note = lawNote(r);
       const cls = ['cell', sc === S.scale && law === S.tLaw ? 'sel' : '', note ? 'oor' : ''].filter(Boolean).join(' ');
       const tip = `${C.SCALES[sc].name} + ${C.T_LAWS[law].name}.${note ? ` ${note}` : ''} Click to use this combination.`;
       return `<td class="${cls}" tabindex="0" data-scale="${sc}" data-law="${law}" title="${esc(tip)}">${f.p} ± ${f.e}${note ? '*' : ''}</td>`;
     }).join('')}</tr>`).join('');
-    $('#compare-table').innerHTML = `<div class="table-wrap" style="max-height:none"><table class="laws"><thead><tr>
+    $(`#${id}-table`).innerHTML = `<div class="table-wrap" style="max-height:none"><table class="laws"><thead><tr>
         <th class="l">Scale \\ λ₀ correction</th>${head}</tr></thead><tbody>${body}</tbody></table></div>
-      <p class="note">P in MPa ± uncertainty from the R1 fit and λ₀ ± ${S.lam0Err} nm. λ₀ = ${f4(S.lam0)} nm measured at ${+S.lam0T.toFixed(2)} K,
+      <p class="note">P in MPa ± uncertainty from ${r1Source} and λ₀ ± ${S.lam0Err} nm. λ₀ = ${f4(S.lam0)} nm measured at ${+S.lam0T.toFixed(2)} K,
         moved to the sample temperature ${+S.sampleT.toFixed(2)} K by each correction (λ₀ under each heading, in nm).
         * Extrapolated: outside the calibrated pressure or temperature range of the scale, or the temperature range of the correction (hover for details).</p>`;
 
@@ -2326,13 +2575,12 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
       lines.push(`All scales and corrections: ${spreadText(rows)}`);
       if (selLaw) lines.push(`Scales, with ${esc(C.T_LAWS[selLaw].name)}: ${spreadText(rows.filter(r => r.t_law === selLaw), r => C.SCALES[r.scale].name)}`);
       lines.push(`Corrections (${+S.lam0T.toFixed(2)} K → ${+S.sampleT.toFixed(2)} K), with ${esc(selScale.name)}: ${spreadText(rows.filter(r => r.scale === S.scale), r => C.T_LAWS[r.t_law].name)}`);
-      const it0 = single.item.fit;                         // what ignoring the temperature difference would give
-      const P0 = C.pressure(it0.params.r1_center, S.lam0, S.scale, S.sampleT)[0];
+      const P0 = C.pressure(r1, S.lam0, S.scale, S.sampleT)[0];   // what ignoring the temperature difference would give
       const sel = selLaw ? get(S.scale, selLaw) : null, d = sel ? 1000 * (P0 - sel.P_GPa) : NaN;
       lines.push(`Without any correction: ${fmtP(P0, NaN).p} MPa${sel ? ` (${d < 0 ? '−' : '+'}${Math.abs(d).toFixed(0)} MPa from the selected combination)` : ''}.`);
-      if (!selLaw) lines.push('Single spectrum uses no temperature correction: click a cell to choose one.');
+      if (!selLaw) lines.push('No temperature correction is selected: click a cell to choose one.');
     }
-    $('#compare-summary').innerHTML = `<ul class="notes" style="margin-top:10px">${lines.map(l => `<li>${l}</li>`).join('')}</ul>`;
+    $(`#${id}-summary`).innerHTML = `<ul class="notes" style="margin-top:10px">${lines.map(l => `<li>${l}</li>`).join('')}</ul>`;
 
     // chart: one series per correction (a single one when the temperatures are equal: they all agree)
     const shown = sameT ? laws.slice(0, 1) : laws;
@@ -2349,32 +2597,37 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
     if (series.some(se => se.points.some(pt => pt.hollow))) {
       series.push({ kind: 'errorbar', marker: 'circle', color: '--text-2', hollow: true, label: 'Open: extrapolated', points: [] });
     }
-    plots.compare.set({
+    plot.set({
       hover: 'point', ylabel: 'Pressure (MPa)', xlim: [-0.6, scales.length - 0.4], series,
       xticks: scales.map((sc, i) => ({ x: i, ...scaleLabel(sc), bold: sc === S.scale })),
     });
   }
-  function selectCombination(td) {
-    S.scale = td.dataset.scale; S.tLaw = td.dataset.law;
-    saveSettings(); fillSettings(); renderAll();
-    const again = $(`#compare-table td[data-scale="${S.scale}"][data-law="${S.tLaw}"]`);
-    if (again) again.focus();
+  /** Clicking a cell of a law table (or Enter on it) uses that scale and correction everywhere. */
+  function wireLawTable(box) {
+    const pick = td => {
+      S.scale = td.dataset.scale; S.tLaw = td.dataset.law;
+      saveSettings(); fillSettings(); renderAll();
+      const again = $(`td[data-scale="${S.scale}"][data-law="${S.tLaw}"]`, box);
+      if (again) again.focus();
+    };
+    box.addEventListener('click', e => { const td = e.target.closest('td.cell'); if (td) pick(td); });
+    box.addEventListener('keydown', e => {
+      const td = e.target.closest('td.cell');
+      if (td && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); pick(td); }
+    });
   }
-  $('#compare-table').addEventListener('click', e => { const td = e.target.closest('td.cell'); if (td) selectCombination(td); });
-  $('#compare-table').addEventListener('keydown', e => {
-    const td = e.target.closest('td.cell');
-    if (td && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); selectCombination(td); }
-  });
+  wireLawTable($('#compare-table'));
+  /** CSV rows of a law table; first holds the leading columns (file, R1). */
+  const lawCSV = (rows, first) => rows.map(r => ({
+    ...first, temperature_K: S.sampleT, lambda0_ref_nm: S.lam0, lambda0_ref_err_nm: S.lam0Err, lambda0_ref_T_K: S.lam0T,
+    scale: r.scale, scale_name: C.SCALES[r.scale].name, t_law: r.t_law, t_law_name: C.T_LAWS[r.t_law].name,
+    lambda0_nm: r.lambda0_nm, P_GPa: r.P_GPa, P_err_GPa: r.P_err_GPa, in_range: r.scale_in_range && r.law_in_range,
+    selected: r.scale === S.scale && r.t_law === S.tLaw,
+  }));
   $('#compare-csv').addEventListener('click', () => {
     const rows = compareRows(), it = single.item;
     if (!rows) return;
-    const out = rows.map(r => ({
-      file: it.name, r1_nm: it.fit.params.r1_center, r1_err_nm: it.fit.errors.r1_center, temperature_K: S.sampleT,
-      lambda0_ref_nm: S.lam0, lambda0_ref_err_nm: S.lam0Err, lambda0_ref_T_K: S.lam0T,
-      scale: r.scale, scale_name: C.SCALES[r.scale].name, t_law: r.t_law, t_law_name: C.T_LAWS[r.t_law].name,
-      lambda0_nm: r.lambda0_nm, P_GPa: r.P_GPa, P_err_GPa: r.P_err_GPa, in_range: r.scale_in_range && r.law_in_range,
-      selected: r.scale === S.scale && r.t_law === S.tLaw,
-    }));
+    const out = lawCSV(rows, { file: it.name, r1_nm: it.fit.params.r1_center, r1_err_nm: it.fit.errors.r1_center });
     download(toCSV(out, Object.keys(out[0])), `${safeName(it.name)}_laws.csv`);
   });
   $('#compare-png').addEventListener('click', () => single.item && plots.compare.savePNG(`${safeName(single.item.name)}_laws.png`));
@@ -2408,19 +2661,39 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
     const [P, dP, dP0] = C.pressure(l, l0, S.scale, T);
     return { l0, l0e, l, le, T, P, err: Math.hypot(dP * le, dP0 * l0e) };
   }
-  function renderPair() {
-    const { ref, smp } = pair;
-    $('#pair-ref-drop [data-name]').textContent = ref ? ref.name : '';
-    $('#pair-smp-drop [data-name]').textContent = smp ? smp.name : '';
-    const res = pairPressure();
-    const warn = [];
+  /** Warnings about the pair: roles or temperatures in the file names, and fits to check. */
+  function pairWarnings() {
+    const { ref, smp } = pair, warn = [];
     if (ref && ref.parsedSide === 'sample') warn.push('The reference file name looks like a sample (inside) spectrum.');
     if (smp && smp.parsedSide === 'reference') warn.push('The sample file name looks like a reference (outside) spectrum.');
     if (ref && smp && fin(ref.temperature_K) && fin(smp.temperature_K) && ref.temperature_K !== smp.temperature_K) {
       warn.push(`Temperatures in the file names differ (${tLabel(ref.temperature_K)} vs ${tLabel(smp.temperature_K)}). R1 moves ≈0.007 nm per K, about 18 MPa per K.`);
     }
     for (const [it, name] of [[ref, 'reference'], [smp, 'sample']]) if (it && statusOf(it) !== 'ok') warn.push(`Check the ${name} fit before using this pressure.`);
-    const warnHtml = warn.map(w => `<div class="warnbox">${esc(w)}</div>`).join('');
+    return warn.map(w => `<div class="warnbox">${esc(w)}</div>`).join('');
+  }
+  /** Reference and sample fits side by side. */
+  function pairFitsTable(rows) {
+    const { ref, smp } = pair;
+    const cell = (it, fn) => (it && it.fit ? fn(it.fit) : '–');
+    const all = {
+      fit: `<tr><td class="l">Fit</td><td>${ref ? badge(ref) : '–'}</td><td>${smp ? badge(smp) : '–'}</td></tr>`,
+      r1: `<tr><td class="l">R1 (nm)</td><td>${cell(ref, f => f4(f.params.r1_center))}</td><td>${cell(smp, f => f4(f.params.r1_center))}</td></tr>`,
+      r2: `<tr><td class="l">R2 (nm)</td><td>${cell(ref, f => f4(f.params.r2_center))}</td><td>${cell(smp, f => f4(f.params.r2_center))}</td></tr>`,
+      fwhm: `<tr><td class="l">R1 FWHM (nm)</td><td>${cell(ref, f => f4(C.fitRow(f).r1_fwhm_nm))}</td><td>${cell(smp, f => f4(C.fitRow(f).r1_fwhm_nm))}</td></tr>`,
+      r2fit: `<tr><td class="l">r²</td><td>${cell(ref, f => f.rSquared.toFixed(5))}</td><td>${cell(smp, f => f.rSquared.toFixed(5))}</td></tr>`,
+    };
+    return `<table class="summary-table"><thead><tr><th class="l"></th><th><span class="dot ref"></span> Reference</th><th><span class="dot smp"></span> Sample</th></tr></thead>
+      <tbody>${rows.map(k => all[k]).join('')}</tbody></table>`;
+  }
+  function renderPair() {
+    const { ref, smp } = pair;
+    for (const id of ['pair', 'pairc']) {
+      $(`#${id}-ref-drop [data-name]`).textContent = ref ? ref.name : '';
+      $(`#${id}-smp-drop [data-name]`).textContent = smp ? smp.name : '';
+    }
+    const res = pairPressure();
+    const warnHtml = pairWarnings();
     if (res) {
       $('#pair-result').innerHTML = `${pressureBlock(res.P, res.err)}${scaleWarning(res.P, res.T)}
         <dl class="kv" style="margin-top:10px">
@@ -2435,14 +2708,8 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
     }
     const det = $('#pair-details');
     det.hidden = !(ref || smp);
-    const cell = (it, fn) => (it && it.fit ? fn(it.fit) : '–');
-    det.innerHTML = `<h2>Fits</h2><table class="summary-table"><thead><tr><th class="l"></th><th><span class="dot ref"></span> Reference</th><th><span class="dot smp"></span> Sample</th></tr></thead><tbody>
-      <tr><td class="l">Fit</td><td>${ref ? badge(ref) : '–'}</td><td>${smp ? badge(smp) : '–'}</td></tr>
-      <tr><td class="l">R1 (nm)</td><td>${cell(ref, f => f4(f.params.r1_center))}</td><td>${cell(smp, f => f4(f.params.r1_center))}</td></tr>
-      <tr><td class="l">R2 (nm)</td><td>${cell(ref, f => f4(f.params.r2_center))}</td><td>${cell(smp, f => f4(f.params.r2_center))}</td></tr>
-      <tr><td class="l">R1 FWHM (nm)</td><td>${cell(ref, f => f4(C.fitRow(f).r1_fwhm_nm))}</td><td>${cell(smp, f => f4(C.fitRow(f).r1_fwhm_nm))}</td></tr>
-      <tr><td class="l">r²</td><td>${cell(ref, f => f.rSquared.toFixed(5))}</td><td>${cell(smp, f => f.rSquared.toFixed(5))}</td></tr>
-    </tbody></table>`;
+    det.innerHTML = `<h2>Fits</h2>${pairFitsTable(['fit', 'r1', 'r2', 'fwhm', 'r2fit'])}`;
+    renderPairCompare();
     const view = segValue($('[data-range="pair"]'));
     if (view === 'overlay') {
       $('#pair-title').textContent = 'Overlay, normalised to R1';
@@ -2465,6 +2732,90 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
     }
     if (rows.length) download(toCSV(rows, FITS_COLS), 'ruby_pair.csv');
   });
+
+  // ------------------------------------------------------------------ PAIR: COMPARE LAWS (pressure scales only)
+  // Both rubies are at the same temperature, so there is no temperature correction to compare.
+  plots.pairCompare = new Plot($('#pairc-plot'), { aspect: 0.55, minH: 280, maxH: 460, empty: 'Load a reference and a sample spectrum to compare the scales' });
+  setupDrop($('#pairc-ref-drop'), $('#pairc-ref-input'), files => pairFiles(files, 'ref'));
+  setupDrop($('#pairc-smp-drop'), $('#pairc-smp-input'), files => pairFiles(files, 'smp'));
+  function pairCompareRows() {
+    const res = pairPressure();
+    return res ? C.compareScales(res.l, res.le, res.l0, res.l0e, res.T) : null;
+  }
+  function renderPairCompare() {
+    const { ref, smp } = pair, res = pairPressure(), rows = pairCompareRows();
+    const tUsed = res && fin(res.T) ? tLabel(res.T) : '296 K (none in the file names)';
+    if (ref || smp) {
+      $('#pairc-fit').innerHTML = `<h2>Fits</h2>${pairFitsTable(['fit', 'r1'])}
+        ${res ? `<dl class="kv" style="margin-top:10px"><dt>Δλ</dt><dd>${f4(res.l - res.l0)} nm</dd>
+          <dt>T for Wei et al. 2024</dt><dd>${esc(tUsed)}</dd></dl>` : ''}${pairWarnings()}
+        <p class="note" style="margin-bottom:0"><a href="#" id="pairc-see-fit">See the fits</a> in <b>Fit and pressure</b>.</p>`;
+      $('#pairc-see-fit').addEventListener('click', e => { e.preventDefault(); showView('pair'); });
+    }
+    if (!rows) {
+      $('#pairc-table').innerHTML = `<div class="empty">${ref && smp ? 'A fit failed: no pressures to compare.' : 'Load both spectra to see the table.'}</div>`;
+      $('#pairc-summary').innerHTML = '';
+      plots.pairCompare.set(null);
+      return;
+    }
+    const sel = rows.find(r => r.scale === S.scale);
+    const dec = fin(sel.P_err_GPa) && sel.P_err_GPa < 0.01 ? 1 : 0;
+    const note = r => { const why = scaleWhy(r.scale, r.P_GPa, res.T); return why ? `Extrapolated: ${C.SCALES[r.scale].name} is ${why}.` : ''; };
+    const range = sc => `≤ ${sc.maxGPa} GPa${sc.Trange ? `, ${sc.Trange[0]}–${sc.Trange[1]} K` : ''}`;
+    const body = rows.map(r => {
+      const sc = C.SCALES[r.scale], f = fmtP(r.P_GPa, r.P_err_GPa), why = note(r), d = 1000 * (r.P_GPa - sel.P_GPa);
+      const cls = ['cell', r.scale === S.scale ? 'sel' : '', why ? 'oor' : ''].filter(Boolean).join(' ');
+      return `<tr>${scaleCell(r.scale)}
+        <td class="${cls}" tabindex="0" data-scale="${r.scale}" title="${esc(`${sc.name}.${why ? ` ${why}` : ''} Click to use this scale.`)}">${f.p} ± ${f.e}${why ? '*' : ''}</td>
+        <td>${r.scale === S.scale ? '–' : `${d < 0 ? '−' : '+'}${Math.abs(d).toFixed(dec)}`}</td><td>${range(sc)}</td></tr>`;
+    }).join('');
+    $('#pairc-table').innerHTML = `<div class="table-wrap" style="max-height:none"><table class="laws"><thead><tr>
+        <th class="l">Scale</th><th>P (MPa)</th><th>Δ (MPa)</th><th>Calibrated range</th></tr></thead>
+        <tbody>${body}</tbody></table></div>
+      <p class="note">P in MPa ± uncertainty from the two R1 fits; Δ: difference from ${esc(C.SCALES[S.scale].name.replace(/ \(.*\)$/, ''))},
+        the boxed scale used in <b>Fit and pressure</b> (click any value to use that scale instead). λ₀ is the reference ruby R1,
+        ${f4(res.l0)} nm. Only Wei et al. 2024 depends on the temperature (${esc(tUsed)}). * Extrapolated: outside the calibrated
+        range of the scale (hover for details).</p>`;
+    $('#pairc-summary').innerHTML = `<ul class="notes" style="margin-top:10px">
+      <li>Scales: ${spreadText(rows, r => C.SCALES[r.scale].name)}</li>
+      <li>The spread between scales is a systematic uncertainty: it is not included in the ± of each pressure.</li></ul>`;
+
+    const series = [{
+      kind: 'errorbar', marker: 'diamond', color: '--fit', label: 'Pressure ± fit uncertainty',
+      points: rows.map((r, i) => {
+        const why = note(r), f = fmtP(r.P_GPa, r.P_err_GPa);
+        return { x: i, y: 1000 * r.P_GPa, err: 1000 * r.P_err_GPa, hollow: !!why,
+                 tip: [C.SCALES[r.scale].name, `P = ${f.p} ± ${f.e} MPa`, ...(why ? [why] : [])] };
+      }),
+    }];
+    if (series[0].points.some(pt => pt.hollow)) series.push({ kind: 'errorbar', marker: 'circle', color: '--text-2', hollow: true, label: 'Open: extrapolated', points: [] });
+    plots.pairCompare.set({
+      hover: 'point', ylabel: 'Pressure (MPa)', xlim: [-0.6, rows.length - 0.4], series,
+      xticks: rows.map((r, i) => ({ x: i, ...scaleLabel(r.scale), bold: r.scale === S.scale })),
+    });
+  }
+  function selectScale(td) {
+    S.scale = td.dataset.scale;
+    saveSettings(); fillSettings(); renderAll();
+    const again = $(`#pairc-table td[data-scale="${S.scale}"]`);
+    if (again) again.focus();
+  }
+  $('#pairc-table').addEventListener('click', e => { const td = e.target.closest('td.cell'); if (td) selectScale(td); });
+  $('#pairc-table').addEventListener('keydown', e => {
+    const td = e.target.closest('td.cell');
+    if (td && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); selectScale(td); }
+  });
+  $('#pairc-csv').addEventListener('click', () => {
+    const res = pairPressure(), rows = pairCompareRows();
+    if (!rows) return;
+    const out = rows.map(r => ({
+      reference_file: pair.ref.name, sample_file: pair.smp.name, lambda0_nm: res.l0, lambda0_err_nm: res.l0e,
+      r1_nm: res.l, r1_err_nm: res.le, temperature_K: res.T, scale: r.scale, scale_name: C.SCALES[r.scale].name,
+      P_GPa: r.P_GPa, P_err_GPa: r.P_err_GPa, in_range: r.scale_in_range, selected: r.scale === S.scale,
+    }));
+    download(toCSV(out, Object.keys(out[0])), 'ruby_pair_scales.csv');
+  });
+  $('#pairc-png').addEventListener('click', () => plots.pairCompare.spec && plots.pairCompare.savePNG('ruby_pair_scales.png'));
 
   // ------------------------------------------------------------------ BATCH
   const batch = { items: [], selected: null, tables: null, cross: [] };
@@ -2745,6 +3096,45 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
   $('#exp-summary').addEventListener('click', () => batch.tables && download(toCSV(batch.tables.summary, SUMMARY_COLS), 'pressure_summary.csv'));
   $('#exp-cross').addEventListener('click', () => batch.cross.length && download(toCSV(batch.cross, CROSS_COLS), 'pressure_cross.csv'));
 
+  // ------------------------------------------------------------------ CALCULATOR (R1 typed in, no spectra)
+  plots.calc = new Plot($('#calc-plot'), { aspect: 0.55, minH: 280, maxH: 460, empty: 'Enter the sample R1 wavelength' });
+  const calcErr = () => (fin(S.calcLamErr) ? S.calcLamErr : 0);
+  const calcRows = () => (fin(S.calcLam) ? lawRows(S.calcLam, calcErr()) : null);
+  function renderCalc() {
+    renderTcorr('#calc-tcorr');
+    const rows = calcRows();
+    if (!rows) {
+      $('#calc-result').innerHTML = '<div class="empty">Enter the sample R1 wavelength.</div>';
+      $('#calc-table').innerHTML = '<div class="empty">Enter the sample R1 wavelength to see the table.</div>';
+      $('#calc-summary').innerHTML = '';
+      plots.calc.set(null);
+      return;
+    }
+    const lam0 = singleLambda0().lambda0;
+    const [P, dP, dP0] = C.pressure(S.calcLam, lam0, S.scale, S.sampleT);
+    const err = Math.hypot(dP * calcErr(), dP0 * S.lam0Err);
+    $('#calc-result').innerHTML = pressureBlock(P, err) + scaleWarning(P, S.sampleT)
+      + `<dl class="kv" style="margin-top:10px"><dt>λ₀ at the sample temperature</dt><dd>${f4(lam0)} nm</dd>
+         <dt>Δλ</dt><dd>${f4(S.calcLam - lam0)} nm</dd></dl>`;
+    renderLawTable('calc', plots.calc, rows, S.calcLam, `R1 ± ${calcErr()} nm`);
+  }
+  wireLawTable($('#calc-table'));
+  // the result follows the typing; the full update (all tabs) comes with the change event
+  for (const el of $$('#view-calc input[type=number]')) {
+    el.addEventListener('input', () => {
+      if (el.value === '' || !fin(Number(el.value))) return;
+      S[el.dataset.setting] = Number(el.value);
+      renderCalc();
+    });
+  }
+  $('#calc-csv').addEventListener('click', () => {
+    const rows = calcRows();
+    if (!rows) return;
+    const out = lawCSV(rows, { r1_nm: S.calcLam, r1_err_nm: calcErr() });
+    download(toCSV(out, Object.keys(out[0])), 'ruby_calculator_laws.csv');
+  });
+  $('#calc-png').addEventListener('click', () => plots.calc.spec && plots.calc.savePNG('ruby_calculator_laws.png'));
+
   // ------------------------------------------------------------------ settings dialog
   const dlg = $('#settings');
   function fillSettings() {
@@ -2775,8 +3165,9 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
   for (const el of $$('[data-setting]')) el.addEventListener('change', () => onSettingChange(el));
   $('#open-settings').addEventListener('click', () => { fillSettings(); dlg.showModal(); });
   $('#set-reset').addEventListener('click', () => {
-    // the line shape, pressure scale and Single-mode inputs are not part of the dialog: keep them
-    const keep = { scale: S.scale, profile: S.profile, lam0: S.lam0, lam0Err: S.lam0Err, lam0T: S.lam0T, sampleT: S.sampleT, tLaw: S.tLaw };
+    // the values typed in the tabs (λ0, temperatures, Calculator R1) are kept; every choice goes back to its default,
+    // including the line shape, pressure scale (Mao et al. 1986) and temperature correction (Datchi et al. 2007)
+    const keep = { lam0: S.lam0, lam0Err: S.lam0Err, lam0T: S.lam0T, sampleT: S.sampleT, calcLam: S.calcLam, calcLamErr: S.calcLamErr };
     S = { ...DEFAULTS, ...keep };
     saveSettings(); fillSettings(); reparseNames(); refitAll();
   });
@@ -2801,6 +3192,7 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
     renderSingle();
     renderCompare();
     renderPair();
+    renderCalc();
     recomputeBatch();
   }
 
@@ -2818,9 +3210,14 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
   }
   themeBtn.addEventListener('click', () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
 
-  // ------------------------------------------------------------------ help
+  // ------------------------------------------------------------------ help, info and version
   $('#open-help').addEventListener('click', () => $('#help').showModal());
   $$('[data-open-help]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); $('#help').showModal(); }));
+  $('#open-info').addEventListener('click', () => $('#info').showModal());
+  $$('[data-open-info]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); $('#info').showModal(); }));
+  for (const el of $$('.app-version')) el.textContent = `v${document.documentElement.dataset.version}`;
+  // links to other pages open in a new tab, so the spectra loaded here are kept
+  for (const a of $$('a[href^="http"]')) { a.target = '_blank'; a.rel = 'noopener'; }
 
   // ------------------------------------------------------------------ start
   if (FIT_ONLY) {
@@ -2831,6 +3228,7 @@ if (typeof module !== 'undefined') module.exports = RubyCore;
   showView('pair');
   recomputeBatch();
   renderTcorr();
+  renderCalc();
   applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
 })();
 </script>
