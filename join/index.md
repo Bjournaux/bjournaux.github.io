@@ -24,6 +24,6 @@ I am not looking for new graduate students at the moment, but we welcome collabo
 
 Please contact Prof. Journaux directly for inquiries.
 
-{% include button.html type="email" text="bjournau@uw.edu" link="mailto:bjournau@uw.edu" %}
+{% include button.html type="email" text="bjournau@uw.edu" link="bjournau@uw.edu" %}
 
 Department of Earth and Space Sciences, University of Washington, Seattle, WA, USA.
