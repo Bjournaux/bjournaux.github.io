@@ -16,7 +16,8 @@ permissions:
 
 jobs:
   build-site:
-    runs-on: ubuntu-latest
+    # pinned: the locked gems fail to compile on Ubuntu 26 (ubuntu-latest since Oct 2026)
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout main branch contents
