@@ -10,10 +10,14 @@
 <script>
 // Options from the address: ?embed=1 (shown inside the lab website), skin=original (the first
 // design's fonts and colours instead of the website's), map=0 (no "Color by" property maps),
-// color=Cp etc. (start with that map), theme=dark|light.
+// color=Cp etc. (start with that map), theme=dark|light, lattice=1 (estimated lattice parameters
+// of the ices, from ice-reflections.json), dx=1 (layout of the diffraction tool: flatter diagram,
+// pinned points shown by the framing page; implies lattice=1).
 (() => {
   const q = new URLSearchParams(location.search), r = document.documentElement;
   if (q.has('embed')) r.dataset.embed = '';
+  if (q.get('dx') === '1') r.dataset.dx = '';
+  if (q.get('lattice') === '1' || q.get('dx') === '1') r.dataset.lattice = '';
   r.dataset.skin = q.get('skin') === 'original' ? 'original' : 'site';
   if (q.get('map') !== '0') r.dataset.map = '';
   if (q.get('theme') === 'dark' || q.get('theme') === 'light') r.dataset.theme = q.get('theme');
@@ -173,6 +177,19 @@ dd .na { color: var(--muted); font-family: var(--font-sans); font-size: 12px; }
 @media (max-width: 520px) {
   :root[data-embed] #plot { height: 380px; }
 }
+:root[data-dx] .log, :root[data-dx] footer, :root[data-dx] .hint { display: none; }
+:root[data-dx] #plot { height: 340px; }
+@media (min-width: 961px) {
+  /* side panel no taller than the diagram; it scrolls */
+  :root[data-dx] .side { max-height: 354px; overflow-y: auto; align-content: start; scrollbar-width: thin; }
+}
+@media (max-width: 960px) {
+  :root[data-dx] #plot { height: 380px; }
+}
+@media (max-width: 520px) {
+  :root[data-dx] #plot { height: 340px; }
+}
+.lat-cap { grid-column: 1 / -1; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); }
 @media (max-width: 960px) {
   .main { grid-template-columns: minmax(0, 1fr); }
   #plot { height: 460px; min-height: 0; }
@@ -376,6 +393,32 @@ function propAt(k, id, P, T) {
   return ws > 0 ? s / ws : NaN;
 }
 /*CORE-END*/
+
+/* ---------- estimated lattice parameters (lattice=1) ----------
+   Reference cell of each ice (ice-reflections.json, made by diffraction.py) scaled isotropically
+   to the SeaFreeze volume V = Z M / (rho N_A): axial ratios and angles of the reference are kept. */
+let CELLS = null;
+async function loadCells() {
+  if (!document.documentElement.hasAttribute('data-lattice')) return;
+  try {
+    const d = await (await fetch(new URL('ice-reflections.json', location.href))).json();
+    CELLS = Object.fromEntries(d.phases.map(p => [p.id, { Z: p.Z, cell: p.cell, V: p.V, M: d.M }]));
+  } catch (e) { CELLS = null; }
+}
+function latticeOf(k, rho) {
+  const c = CELLS && CELLS[PH[k].id];
+  if (!c || !(rho > 0)) return null;
+  const V = c.Z * c.M / (6.02214076e23 * rho / 1000) * 1e24, f = Math.cbrt(V / c.V);
+  const [a, b, cc, al, be, ga] = c.cell;
+  return { a: a * f, b: b * f, c: cc * f, al, be, ga, V, Z: c.Z, mono: PH[k].sys === 'Monoclinic' };
+}
+const LATCOLS = [
+  { id: 'a', head: 'a (Å)', csv: 'a_A', f: l => l.a.toFixed(4) },
+  { id: 'b', head: 'b (Å)', csv: 'b_A', f: l => l.b.toFixed(4) },
+  { id: 'c', head: 'c (Å)', csv: 'c_A', f: l => l.c.toFixed(4) },
+  { id: 'be', head: 'β (°)', csv: 'beta_deg', f: l => l.be.toFixed(3) },
+  { id: 'V', head: 'V<sub>cell</sub> (Å³)', csv: 'Vcell_A3', f: l => l.V.toFixed(2) },
+];
 
 /* ---------- formatting ---------- */
 const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
@@ -792,8 +835,24 @@ function setPin(h, record) {
     if (history.length > 5) history.shift();   // keep the last 5 points
     renderLog();
   }
-  renderReadout(); drawOverlay();
+  renderReadout(); drawOverlay(); notifyPin();
 }
+// tell a page that frames the diagram (e.g. the diffraction tool) which point is shown
+function notifyPin() {
+  if (!pin || window.parent === window) return;
+  try {
+    window.parent.postMessage({ type: 'sfpd-pin', kind: pin.type, P: pin.P, T: pin.T, place: placeName(pin),
+      phases: pin.phases.map(k => PH[k].id), rho: pin.rho, colors: pin.phases.map(k => C.ph[k]),
+      palette: Object.fromEntries(PH.map((p, k) => [p.id, C.ph[k]])),
+      log: logModel(), csv: csv(), footer: document.querySelector('footer').innerHTML }, location.origin);
+  } catch (e) {}
+}
+window.addEventListener('message', e => {
+  if (e.origin !== location.origin || !e.data) return;
+  if (e.data.type === 'sfpd-get') notifyPin();
+  else if (e.data.type === 'sfpd-show') showPinned(e.data.id);
+  else if (e.data.type === 'sfpd-clear') { history = []; selId = null; renderLog(); notifyPin(); }
+});
 function renderReadout() {
   const ro = $('#readout'); ro.replaceChildren();
   if (!pin) return;
@@ -820,49 +879,79 @@ function renderReadout() {
       else dd.textContent = fmtProp(q.id, pin.v[q.id][i]);
       d.append(dt, dd);
     }
-    box.append(d); ro.append(box);
+    box.append(d);
+    const lat = latticeOf(k, pin.rho[i]);
+    if (lat) {
+      const ld = el('dl', 'ph-props');
+      ld.append(el('div', 'lat-cap', 'Lattice, estimated'));
+      const row = (a, b) => { ld.append(el('dt', null, a), el('dd', null, b)); };
+      row('a', lat.a.toFixed(4) + ' Å');
+      if (lat.mono) row('b', lat.b.toFixed(4) + ' Å');
+      row('c', lat.c.toFixed(4) + ' Å');
+      if (lat.mono) row('β', lat.be.toFixed(3) + '°');
+      const dt = el('dt'); dt.innerHTML = `Cell volume (Z = ${lat.Z})`; ld.append(dt, el('dd', null, lat.V.toFixed(2) + ' Å³'));
+      box.append(ld);
+    }
+    ro.append(box);
   });
   const act = el('div', 'actions'), b = el('button', null, 'Copy values'), fl = el('span', 'flash');
   b.type = 'button'; b.addEventListener('click', () => copyText(pinText(pin), fl));
   act.append(b, fl); ro.append(act);
 }
+function latText(k, rho) {
+  const l = latticeOf(k, rho);
+  return l ? `, estimated lattice a = ${l.a.toFixed(4)} A${l.mono ? `, b = ${l.b.toFixed(4)} A` : ''}, c = ${l.c.toFixed(4)} A${l.mono ? `, beta = ${l.be.toFixed(3)} deg` : ''}, Vcell = ${l.V.toFixed(2)} A3 (Z = ${l.Z})` : '';
+}
 function pinText(p) {
   const parts = p.phases.map((k, i) => {
     const ph_ = PH[k], struct = ph_.fluid ? 'fluid' : `${ph_.sys.toLowerCase()}, ${ph_.sgText}`;
     const extra = PROPS.slice(1).map(q => `${q.id} = ${q.id === 'Vs' && ph_.fluid ? 'n/a' : fmtProp(q.id, p.v[q.id][i]).replace('³', '3').replace('·', ' ')}`).join(', ');
-    return `${ph_.name} (${struct}): rho = ${fmtRho(p.rho[i])} kg/m3, v = ${fmtV(p.rho[i])} cm3/g, ${extra}`;
+    return `${ph_.name} (${struct}): rho = ${fmtRho(p.rho[i])} kg/m3, v = ${fmtV(p.rho[i])} cm3/g, ${extra}${latText(k, p.rho[i])}`;
   });
   return `${KIND[p.type]} ${placeName(p)} | P = ${fmtP(p.P)} MPa, T = ${fmtT(p.T)} K | ` + parts.join('; ');
 }
+// pinned-points table as data: drawn here, or by the framing page when dx=1
+function logModel() {
+  const head = [['#'], ['Location'], ['Phase'], ['P (MPa)', 1], ['T (K)', 1], ['ρ (kg/m³)', 1], ['v (cm³/g)', 1],
+    ...PROPS.slice(1).map(q => [`${q.sym} (${q.unit})`, 1]), ...(CELLS ? LATCOLS.map(c => [c.head + ' est.', 1]) : [])];
+  const rows = history.map(p => {
+    const ks = p.phases;
+    const lat = CELLS ? LATCOLS.map(c => [ks.map((k, i) => { const l = latticeOf(k, p.rho[i]); return l && (c.id !== 'b' && c.id !== 'be' || l.mono) ? c.f(l) : '—'; }).join(' / '), 1]) : [];
+    return { id: p.id, sel: p.id === selId, cells: [[String(p.id), 1], [KIND[p.type]], [ks.map(k => PH[k].long).join(' / ')],
+      [fmtP(p.P), 1], [fmtT(p.T), 1], [p.rho.map(fmtRho).join(' / '), 1], [p.rho.map(fmtV).join(' / '), 1],
+      ...PROPS.slice(1).map(q => [p.v[q.id].map((v, i) => q.id === 'Vs' && PH[ks[i]].fluid ? '—' : fmtNum(q.id, v)).join(' / '), 1]), ...lat] };
+  });
+  return { head, rows };
+}
 function renderHead() {
   const tr = $('#thead'); tr.replaceChildren();
-  const th = (html, num) => { const e = el('th', num ? 'num' : null); e.innerHTML = html; tr.append(e); };
-  th('#'); th('Location'); th('Phase'); th('P (MPa)', 1); th('T (K)', 1); th('ρ (kg/m³)', 1); th('v (cm³/g)', 1);
-  for (const q of PROPS.slice(1)) th(`${q.sym} (${q.unit})`, 1);
+  for (const [html, num] of logModel().head) { const e = el('th', num ? 'num' : null); e.innerHTML = html; tr.append(e); }
+}
+function showPinned(id) {
+  const p = history.find(q => q.id === id);
+  if (!p) return;
+  pin = p; selId = p.id; pinExample = false; ensureVisible(p.P, p.T); renderReadout(); renderLog(); drawOverlay(); notifyPin();
 }
 function renderLog() {
   const tb = $('#rows'); tb.replaceChildren();
   $('#empty').hidden = history.length > 0;
-  for (const p of history) {
-    const tr = el('tr'); if (p.id === selId) tr.className = 'sel';
-    const ks = p.phases;
-    tr.append(el('td', 'num', String(p.id)), el('td', null, KIND[p.type]), el('td', null, ks.map(k => PH[k].long).join(' / ')),
-      el('td', 'num', fmtP(p.P)), el('td', 'num', fmtT(p.T)),
-      el('td', 'num', p.rho.map(fmtRho).join(' / ')), el('td', 'num', p.rho.map(fmtV).join(' / ')),
-      ...PROPS.slice(1).map(q => el('td', 'num', p.v[q.id].map((v, i) => q.id === 'Vs' && PH[ks[i]].fluid ? '—' : fmtNum(q.id, v)).join(' / '))));
+  for (const r of logModel().rows) {
+    const tr = el('tr'); if (r.sel) tr.className = 'sel';
+    for (const [t, num] of r.cells) tr.append(el('td', num ? 'num' : null, t));
     tr.tabIndex = 0;
-    const show = () => { pin = p; selId = p.id; pinExample = false; ensureVisible(p.P, p.T); renderReadout(); renderLog(); drawOverlay(); };
-    tr.addEventListener('click', show); tr.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(); } });
+    tr.addEventListener('click', () => showPinned(r.id)); tr.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showPinned(r.id); } });
     tb.append(tr);
   }
 }
 function csv() {
-  const lines = ['point,location,phase,crystal_system,space_group,P_MPa,T_K,rho_kg_m3,v_cm3_g,' + PROPS.slice(1).map(q => q.csv).join(',')];
+  const lines = ['point,location,phase,crystal_system,space_group,P_MPa,T_K,rho_kg_m3,v_cm3_g,' + PROPS.slice(1).map(q => q.csv).join(',')
+    + (CELLS ? ',est_a_A,est_b_A,est_c_A,alpha_deg,beta_deg,gamma_deg,est_Vcell_A3,Z' : '')];
   for (const p of history) p.phases.forEach((k, i) => {
-    const q = PH[k];
+    const q = PH[k], l = latticeOf(k, p.rho[i]);
     lines.push([p.id, KIND[p.type], q.name, q.fluid ? '' : q.sys, q.fluid ? '' : q.sgText, p.P.toPrecision(8), p.T.toFixed(4),
       isFinite(p.rho[i]) ? p.rho[i].toPrecision(7) : '', isFinite(p.rho[i]) ? (1000 / p.rho[i]).toPrecision(7) : '',
-      ...PROPS.slice(1).map(q => isFinite(p.v[q.id][i]) ? p.v[q.id][i].toPrecision(6) : '')].join(','));
+      ...PROPS.slice(1).map(q => isFinite(p.v[q.id][i]) ? p.v[q.id][i].toPrecision(6) : ''),
+      ...(CELLS ? (l ? [l.a.toFixed(5), l.b.toFixed(5), l.c.toFixed(5), l.al, l.be, l.ga, l.V.toFixed(4), l.Z] : ['', '', '', '', '', '', '', '']) : [])].join(','));
   });
   return lines.join('\n');
 }
@@ -954,7 +1043,7 @@ $('#z-reset').addEventListener('click', resetView);
 $('#z-box').addEventListener('click', () => { boxMode = !boxMode; $('#z-box').setAttribute('aria-pressed', String(boxMode)); });
 $('#snap').addEventListener('change', e => { snapOn = e.target.checked; });
 $('#csv').addEventListener('click', () => copyText(csv(), $('#csv-flash')));
-$('#clear').addEventListener('click', () => { history = []; selId = null; renderLog(); $('#fallback').hidden = true; });
+$('#clear').addEventListener('click', () => { history = []; selId = null; renderLog(); $('#fallback').hidden = true; notifyPin(); });
 $('#lk').addEventListener('submit', e => {
   e.preventDefault();
   if (!ready) return;
@@ -979,7 +1068,7 @@ function onTheme() { readColors(); render('full'); renderReadout(); }
 (async () => {
   readColors();
   if (typeof DecompressionStream === 'undefined') { $('#msg').textContent = 'This page needs a current browser (Chrome, Edge, Firefox, or Safari 16.4 or later).'; return; }
-  try { await loadData(); await loadModel(); } catch (e) { $('#msg').textContent = 'The SeaFreeze data could not be loaded: ' + e.message; return; }
+  try { await Promise.all([loadData().then(loadModel), loadCells()]); } catch (e) { $('#msg').textContent = 'The SeaFreeze data could not be loaded: ' + e.message; return; }
   EXT = { lin: [0, g.Pmax], log: [Math.log10(g.Pmin), Math.log10(g.Pmax)], T: [g.Tmin, g.Tmax] };
   view = { x0: EXT.lin[0], x1: EXT.lin[1], y0: EXT.T[0], y1: EXT.T[1] };
   const qc = new URLSearchParams(location.search).get('color');   // e.g. ?color=Cp
