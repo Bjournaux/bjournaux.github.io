@@ -1,0 +1,632 @@
+{% comment %}
+  SeaFreeze diffraction tool: the interactive phase diagram (seafreeze-phase-diagram.html, in its
+  dx layout: flatter, estimated lattice parameters in its side panel) and, for the point shown
+  there, a synthetic powder diffractogram of the stable ice and, on request, of the metastable ices,
+  their lattice parameters and the pinned points of the diagram.
+  Data: files/seafreeze/ice-reflections.json and ice-metastable.bin, made by
+  _tools/phase_diagram/diffraction.py.
+  {% include seafreeze-diffraction.html %}
+{% endcomment %}
+{% include seafreeze-phase-diagram.html dx=true %}
+
+<div class="sfdx" id="sfdx" data-src="{{ "files/seafreeze/ice-reflections.json" | relative_url }}" data-meta="{{ "files/seafreeze/ice-metastable.bin" | relative_url }}">
+  <div class="sfdx-title">
+    <h3 class="sfdx-h">Synthetic powder diffractogram</h3>
+    <span class="sfdx-point" id="sfdx-point" aria-live="polite">Loading…</span>
+  </div>
+
+  <div class="sfdx-controls">
+    <div class="sfdx-seg" role="group" aria-label="Radiation">
+      <button type="button" data-mode="xray" aria-pressed="true">X-ray</button>
+      <button type="button" data-mode="neutron" aria-pressed="false">Neutron</button>
+      <button type="button" data-mode="sticks" aria-pressed="false">Peak positions</button>
+    </div>
+    <div class="sfdx-seg" role="group" aria-label="Horizontal axis">
+      <button type="button" data-axis="d" aria-pressed="true">d-spacing</button>
+      <button type="button" data-axis="tth" aria-pressed="false">2θ</button>
+    </div>
+    <label class="sfdx-field" id="sfdx-lamfield">Wavelength
+      <span class="sfdx-row">
+        <select id="sfdx-lamsel">
+          <option value="1.540598">Cu Kα₁ 1.5406 Å</option>
+          <option value="0.709320">Mo Kα₁ 0.7093 Å</option>
+          <option value="0.559421">Ag Kα₁ 0.5594 Å</option>
+          <option value="custom">Other…</option>
+        </select>
+        <span class="sfdx-unit" id="sfdx-lamwrap" hidden><input id="sfdx-lam" type="number" min="0.1" max="5" step="0.0001" value="1.5406" aria-label="Wavelength in ångström"> Å</span>
+      </span>
+    </label>
+    <label class="sfdx-field" id="sfdx-isofield">Sample
+      <select id="sfdx-iso">
+        <option value="D">D₂O</option>
+        <option value="H">H₂O</option>
+      </select>
+    </label>
+    <label class="sfdx-field" id="sfdx-fwhmfield">Width Δd/d (%)
+      <input id="sfdx-fwhm" type="number" min="0.02" max="5" step="0.05" value="0.3">
+    </label>
+    <label class="sfdx-field"><span id="sfdx-from-lab">d from</span>
+      <input id="sfdx-xmin" type="number" step="0.1">
+    </label>
+    <label class="sfdx-field"><span id="sfdx-to-lab">to (Å)</span>
+      <input id="sfdx-xmax" type="number" step="0.1">
+    </label>
+    <div class="sfdx-field">Peak labels
+      <span class="sfdx-row">
+        <label class="sfdx-check"><input id="sfdx-labels" type="checkbox" checked> hkl</label>
+        <label class="sfdx-check"><input id="sfdx-poslabels" type="checkbox"> position</label>
+      </span>
+    </div>
+  </div>
+
+  <div class="sfdx-phases" id="sfdx-phases" role="group" aria-label="Phases shown"></div>
+  <div class="sfdx-plot" id="sfdx-plot">
+    <svg id="sfdx-svg" role="img" aria-label="Synthetic powder diffractogram"></svg>
+    <div class="sfdx-tip" id="sfdx-tip" hidden></div>
+  </div>
+  <p class="sfdx-note" id="sfdx-note"></p>
+  <div class="sfdx-actions">
+    <button type="button" id="sfdx-csv-pattern">Download pattern (CSV)</button>
+    <button type="button" id="sfdx-csv-refl">Download reflections (CSV)</button>
+  </div>
+
+  <h3 class="sfdx-h">Lattice parameters (estimated)</h3>
+  <div class="sfdx-scroll" id="sfdx-lattice"></div>
+
+  <div class="sfdx-loghead">
+    <h3 class="sfdx-h">Pinned points</h3>
+    <div class="sfdx-actions">
+      <button type="button" id="sfdx-log-csv">Copy as CSV</button>
+      <button type="button" id="sfdx-log-clear">Clear</button>
+      <span class="sfdx-muted" id="sfdx-log-flash"></span>
+    </div>
+  </div>
+  <div class="sfdx-scroll" id="sfdx-log"></div>
+
+  <details class="sfdx-refl">
+    <summary id="sfdx-refl-sum">Reflection list</summary>
+    <div class="sfdx-table" id="sfdx-refl"></div>
+  </details>
+
+  <details class="sfdx-refl">
+    <summary>How it is computed</summary>
+    <div class="sfdx-method">
+      <p><strong>Phase diagram.</strong> <span id="sfdx-footer">See the SeaFreeze visualizer.</span> <a href="{{ "files/seafreeze/phase-diagram.html" | relative_url }}">Open the phase diagram on its own page.</a></p>
+      <p><strong>Metastable ices.</strong> At each point, every ice that SeaFreeze evaluates there is listed, with its Gibbs energy above the stable phase, ΔG = G − G<sub>stable</sub>. Away from their stability fields the SeaFreeze representations are extrapolations, more uncertain the larger ΔG. The density of a metastable ice comes from SeaFreeze on the same grid as the diagram (every second node, density within 3 × 10<sup>−6</sup>).</p>
+      <p><strong>Lattice parameters.</strong> SeaFreeze gives the density ρ of each phase at the chosen pressure and temperature. The unit-cell volume is V = Z M / (ρ N<sub>A</sub>), with M the molar mass of H<sub>2</sub>O and Z the number of molecules in the cell. The reference cell of each ice is then scaled isotropically to that volume: its axial ratios (c/a, b/a) and angles are kept, so compression is assumed to be the same along every axis. The volume and density are exact (within SeaFreeze's accuracy); individual axes can differ from measurements where compression is anisotropic.</p>
+      <p><strong>Intensities.</strong> Reflections come from the reference structures below (average structures with partial hydrogen occupancies for the proton-disordered ices). The fractional coordinates are kept fixed. Each peak's intensity is m |F|² times a geometric factor. For X-rays this is the Lorentz–polarization factor of an unpolarized beam, (1 + cos² 2θ) / (sin² θ cos θ), with O and H atomic form factors (International Tables, Cromer–Mann). For neutrons it is d⁴ against d-spacing (time of flight) and 1 / (sin² θ cos θ) against 2θ (constant wavelength), with coherent scattering lengths b<sub>O</sub> = 5.803, b<sub>D</sub> = 6.671 and b<sub>H</sub> = −3.739 fm. Isotropic displacement parameters U<sub>O</sub> = 0.020 Å² and U<sub>H</sub> = 0.035 Å² are used for every phase. Peaks are Gaussians of constant Δd/d, and each phase is scaled to its own strongest peak. H<sub>2</sub>O also gives a large incoherent neutron background, which is not shown. Liquid water and vapour have no Bragg peaks.</p>
+      <p><strong>Reference structures.</strong></p>
+      <ul id="sfdx-refs"></ul>
+    </div>
+  </details>
+</div>
+
+<style>
+  .sfdx { margin: 4px 0 24px; text-align: left; }
+  .sfdx-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; margin: 2px 0 8px; }
+  .sfdx-title .sfdx-h { margin: 0; }
+  .sfdx-h { margin: 26px 0 10px; font-size: var(--large); }
+  .sfdx-point { color: var(--gray); font-size: 0.92rem; font-variant-numeric: tabular-nums; }
+  .sfdx-muted, .sfdx-note { color: var(--gray); font-size: 0.85rem; }
+  .sfdx-note { margin: 6px 0 0; }
+  .sfdx-sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; flex: none; }
+  .sfdx-scroll { overflow-x: auto; }
+  .sfdx table { width: 100%; border-collapse: collapse; font-size: 0.86rem; font-variant-numeric: tabular-nums; }
+  .sfdx th { text-align: left; font-weight: var(--semi-bold); color: var(--gray); padding: 6px 10px; border-bottom: 1px solid var(--light-gray); white-space: nowrap; }
+  .sfdx td { padding: 6px 10px; border-bottom: 1px solid var(--light-gray); white-space: nowrap; }
+  .sfdx td.num, .sfdx th.num { text-align: right; font-family: var(--code); font-size: 0.8rem; }
+  .sfdx th sub { font-size: 0.75em; }
+  .sfdx .hkl { font-family: var(--code); font-size: 0.8rem; }
+  .sfdx .bar { text-decoration: overline; }
+  .sfdx-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 14px; margin-bottom: 8px; }
+  .sfdx-seg { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sfdx-seg button, .sfdx-actions button, .sfdx-chip { padding: 5px 12px; border: 1.5px solid var(--light-gray); border-radius: 999px; background: transparent; color: var(--text); font: inherit; font-size: 0.86rem; cursor: pointer; transition: all var(--transition); }
+  .sfdx-seg button:hover, .sfdx-actions button:hover, .sfdx-chip:hover { border-color: var(--primary); }
+  .sfdx-seg button[aria-pressed="true"] { border-color: var(--primary); background: var(--primary); color: var(--background); }
+  .sfdx-field { display: flex; flex-direction: column; gap: 3px; font-size: 0.78rem; color: var(--gray); }
+  .sfdx-field[hidden] { display: none; }
+  .sfdx-row { display: flex; gap: 6px; }
+  .sfdx-field select, .sfdx-field input { padding: 4px 8px; border: 1px solid var(--light-gray); border-radius: var(--rounded); background: var(--background); color: var(--text); font: inherit; font-size: 0.86rem; }
+  .sfdx-field input[type="number"] { width: 6.2em; }
+  .sfdx-check { display: flex; align-items: center; gap: 6px; font-size: 0.86rem; color: var(--text); padding: 4px 0; }
+  .sfdx-unit { display: inline-flex; align-items: center; gap: 4px; color: var(--text); font-size: 0.86rem; }
+  .sfdx-unit[hidden] { display: none; }
+  .sfdx-phases { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; min-height: 2em; margin-bottom: 6px; font-size: 0.86rem; }
+  .sfdx-chip { display: inline-flex; align-items: center; gap: 0; padding: 4px 11px 4px 9px; }
+  .sfdx-chip[aria-pressed="false"] { opacity: 0.6; border-style: dashed; }
+  .sfdx-chip[aria-pressed="false"] .sfdx-sw { background: transparent !important; outline: 1.5px solid currentColor; outline-offset: -1.5px; }
+  .sfdx-chip small { margin-left: 6px; color: var(--gray); font-size: 0.78rem; }
+  .sfdx-linkbtn { border: 0; background: none; color: var(--primary); font: inherit; font-size: 0.82rem; cursor: pointer; padding: 4px; text-decoration: underline; }
+  .sfdx-plot { position: relative; border: 1px solid var(--light-gray); border-radius: 12px; background: var(--background); overflow: hidden; }
+  .sfdx-plot svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
+  .sfdx-plot svg text { fill: var(--gray); font-family: var(--body); font-size: 11px; }
+  .sfdx-plot svg .lab { fill: var(--text); font-family: var(--code); font-size: 10px; }
+  .sfdx-plot svg .ttl { fill: var(--text); font-size: 12px; }
+  .sfdx-plot svg .msg { fill: var(--gray); font-size: 14px; }
+  .sfdx-tip { position: absolute; pointer-events: none; padding: 8px 10px; border: 1px solid var(--light-gray); border-radius: 8px; background: var(--background); box-shadow: var(--shadow); font-size: 0.8rem; line-height: 1.45; white-space: nowrap; z-index: 2; }
+  .sfdx-tip .num { font-family: var(--code); font-size: 0.78rem; }
+  .sfdx-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+  .sfdx-loghead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 16px; margin-top: 26px; }
+  .sfdx-loghead .sfdx-h, .sfdx-loghead .sfdx-actions { margin: 0; }
+  .sfdx-log-row { cursor: pointer; }
+  .sfdx-log-row:hover, .sfdx-log-row.sel { background: var(--background-alt); }
+  .sfdx-refl { margin-top: 18px; }
+  .sfdx-refl summary { cursor: pointer; font-weight: var(--semi-bold); }
+  .sfdx-table { max-height: 420px; overflow: auto; margin-top: 8px; }
+  .sfdx-table thead th { position: sticky; top: 0; background: var(--background); }
+  .sfdx-method { font-size: 0.9rem; }
+  .sfdx-method ul { padding-left: 1.2em; }
+</style>
+
+<script>
+  (() => {
+    const box = document.getElementById("sfdx");
+    if (!box) return;
+    const $ = (id) => document.getElementById("sfdx-" + id);
+    const frame = document.getElementById("sfpd-frame");
+    const NA = 6.02214076e23;
+    const U = { O: 0.02, H: 0.035 };                        // displacement parameters (Å²)
+    const B_N = { O: 5.803, D: 6.671, H: -3.739 };          // neutron scattering lengths (fm)
+    const CM = {                                            // Cromer–Mann X-ray form factors
+      O: [[3.0485, 13.2771], [2.2868, 5.7011], [1.5463, 0.3239], [0.867, 32.9089], 0.2508],
+      H: [[0.489918, 20.6593], [0.262003, 7.74039], [0.196767, 49.5519], [0.049879, 2.20159], 0.001305],
+    };
+    const ff = (el, s) => CM[el].slice(0, 4).reduce((t, [a, b]) => t + a * Math.exp(-b * s * s), CM[el][4]);
+    const NAMES = { Ih: "Ice Ih", II: "Ice II", III: "Ice III", V: "Ice V", VI: "Ice VI", liq: "Liquid water", vap: "Water vapour" };
+    const ICES = ["Ih", "II", "III", "V", "VI"];
+
+    let DATA = null, META = null, PIN = null, view = null;
+    const S = {
+      mode: "xray", axis: "d", lam: 1.540598, iso: "D", fwhm: 0.3, labels: true, posLabels: false,
+      r: { d: { min: 1.0, max: 6.5, auto: true }, tth: { min: 5, max: 100, auto: true } },
+      show: {},                         // phases turned on or off by the viewer; default: stable only
+    };
+    const lamUsed = () => S.mode === "xray" || S.axis === "tth";
+
+    // ---------- formatting ----------
+    const minus = (s) => s.replace(/-/g, "−");
+    const fix = (x, n) => (isFinite(x) ? minus(x.toFixed(n)) : "—");
+    const fmtP = (P) => (P < 1 ? P.toFixed(3) : P < 100 ? P.toFixed(2) : P.toFixed(1));
+    const fmtDG = (g) => (!isFinite(g) ? "" : g < 1000 ? `ΔG +${Math.round(g)} J/kg` : `ΔG +${(g / 1000).toFixed(g < 1e4 ? 2 : 1)} kJ/kg`);
+    const hklHTML = (lab) => lab.split(";").map((f) => f.split(" ").map((x) => (x.startsWith("-") ? `<span class="bar">${x.slice(1)}</span>` : x)).join("")).join(", ");
+    const hklText = (lab) => lab.split(";").map((f) => "(" + f + ")").join(" ");
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+    // ---------- metastable ices: density and ΔG on the diagram grid (ice-metastable.bin) ----------
+    async function loadMeta(url) {
+      const buf = await (await fetch(url)).arrayBuffer(), n = new DataView(buf).getUint32(0, true);
+      const h = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 4, n))), base = 4 + n;
+      const dec = async (ref) => {
+        const st = new Blob([new Uint8Array(buf, base + ref[0], ref[1])]).stream().pipeThrough(new DecompressionStream("gzip"));
+        const src = new Uint8Array(await new Response(st).arrayBuffer()), m = src.length / 4, out = new Uint8Array(src.length);
+        for (let k = 0; k < 4; k++) for (let i = 0; i < m; i++) out[i * 4 + k] = src[k * m + i];
+        return new Float32Array(out.buffer);
+      };
+      const L = {}, D = {};
+      for (const id of h.phases) { L[id] = await dec(h.L[id]); D[id] = await dec(h.dG[id]); }
+      return { g: h.grid, L, D };
+    }
+    function metaAt(id, P, T) {
+      if (!META || !META.L[id]) return null;
+      const g = META.g, fi = (Math.log(P) + P / g.PK - g.s0) / g.ds, fj = (T - g.T0) / g.dT;
+      if (fi < 0 || fj < 0 || fi > g.nS - 1 || fj > g.nT - 1) return null;
+      const i = Math.min(Math.floor(fi), g.nS - 2), j = Math.min(Math.floor(fj), g.nT - 2), u = fi - i, w = fj - j, b = i * g.nT + j;
+      const bil = (A) => (1 - u) * (1 - w) * A[b] + u * (1 - w) * A[b + g.nT] + (1 - u) * w * A[b + 1] + u * w * A[b + g.nT + 1];
+      const lr = bil(META.L[id]), dg = bil(META.D[id]);
+      return isFinite(lr) && isFinite(dg) ? { rho: Math.exp(lr), dG: dg } : null;   // NaN if a corner is outside SeaFreeze's range
+    }
+
+    // ---------- physics ----------
+    function cellAt(id, rho) {
+      const ph = DATA.byId[id];
+      if (!ph || !(rho > 0)) return null;
+      const V = (ph.Z * DATA.M) / (NA * (rho / 1000)) * 1e24;   // Å³
+      const f = Math.cbrt(V / ph.V);
+      const [a, b, c, al, be, ga] = ph.cell;
+      return { ph, V, f, cell: [a * f, b * f, c * f, al, be, ga] };
+    }
+    // ices at the point: the stable one(s) from the diagram, the others from SeaFreeze where it evaluates them
+    function phasesAtPin() {
+      if (!PIN) return [];
+      const out = [];
+      for (const id of ICES) {
+        const si = PIN.phases.indexOf(id);
+        let rho, dG, stable = si >= 0;
+        if (stable) { rho = PIN.rho[si]; dG = 0; }
+        else { const m = metaAt(id, PIN.P, PIN.T); if (!m) continue; rho = m.rho; dG = m.dG; }
+        const c = cellAt(id, rho);
+        if (!c) continue;
+        out.push({ id, rho, dG, stable, color: (PIN.palette && PIN.palette[id]) || "#888", on: id in S.show ? S.show[id] : stable, ...c });
+      }
+      return out;
+    }
+    const tth = (d) => (d >= S.lam / 2 ? (2 * Math.asin(S.lam / (2 * d)) * 180) / Math.PI : NaN);
+    const dOfTth = (t) => S.lam / (2 * Math.sin((t * Math.PI) / 360));
+    function peakI(d, OO, HH, OH) {
+      const s = 1 / (2 * d);
+      const wO = Math.exp(-8 * Math.PI ** 2 * U.O * s * s), wH = Math.exp(-8 * Math.PI ** 2 * U.H * s * s);
+      let F2;
+      if (S.mode === "neutron") { const bO = B_N.O * wO, bH = B_N[S.iso] * wH; F2 = bO * bO * OO + bH * bH * HH + bO * bH * OH; }
+      else { const fO = ff("O", s) * wO, fH = ff("H", s) * wH; F2 = fO * fO * OO + fH * fH * HH + fO * fH * OH; }
+      if (S.mode === "sticks") return F2;
+      if (S.mode === "neutron" && S.axis === "d") return F2 * d ** 4;          // time of flight
+      if (d < S.lam / 2) return NaN;
+      const th = Math.asin(S.lam / (2 * d)), c2 = Math.cos(2 * th);
+      const L = 1 / (Math.sin(th) ** 2 * Math.cos(th));
+      return F2 * L * (S.mode === "xray" ? 1 + c2 * c2 : 1);
+    }
+    const xOf = (d) => (S.axis === "d" ? d : tth(d));
+    function pattern(p, xs, x0, x1) {
+      const peaks = [];
+      for (const [d0, m, OO, HH, OH, lab] of p.ph.peaks) {
+        const d = d0 * p.f, x = xOf(d);
+        if (!isFinite(x)) continue;
+        const pad = 0.03 * (x1 - x0);
+        if (x < x0 - pad || x > x1 + pad) continue;
+        const I = peakI(d, OO, HH, OH);
+        if (isFinite(I) && I > 0) {
+          // Gaussian of constant Δd/d; in 2θ its width is 2 tanθ Δd/d (radians)
+          const r = S.fwhm / 100;
+          const w = S.axis === "d" ? r * d : (2 * Math.tan((x * Math.PI) / 360) * r * 180) / Math.PI;
+          peaks.push({ d, x, m, lab, I, sig: w / 2.35482 });
+        }
+      }
+      const y = new Float64Array(xs.length);
+      if (S.mode !== "sticks") {
+        const dx = xs[1] - xs[0];
+        for (const k of peaks) {
+          const amp = k.I / (k.sig * Math.sqrt(2 * Math.PI));
+          const i0 = Math.max(0, Math.floor((k.x - 5 * k.sig - xs[0]) / dx)), i1 = Math.min(xs.length - 1, Math.ceil((k.x + 5 * k.sig - xs[0]) / dx));
+          for (let i = i0; i <= i1; i++) y[i] += amp * Math.exp(-0.5 * ((xs[i] - k.x) / k.sig) ** 2);
+        }
+      }
+      let ymax = 0;
+      for (const v of y) if (v > ymax) ymax = v;
+      const vis = peaks.filter((k) => k.x >= x0 && k.x <= x1);
+      const Imax = vis.reduce((t, k) => Math.max(t, k.I), 0);
+      for (const k of peaks) {
+        k.rel = Imax ? (100 * k.I) / Imax : 0;
+        k.h = S.mode === "sticks" ? 100 : ymax ? (100 * k.I) / (k.sig * Math.sqrt(2 * Math.PI)) / ymax : 0;
+      }
+      if (ymax) for (let i = 0; i < y.length; i++) y[i] = (100 * y[i]) / ymax;
+      return { peaks, y };
+    }
+
+    // ---------- range ----------
+    function range(list) {
+      const R = S.r[S.axis];
+      if (R.auto) {
+        const on = list.filter((p) => p.on), top = on.length ? Math.max(...on.map((p) => p.ph.peaks[0][0] * p.f)) : 6;
+        if (S.axis === "d") { R.min = 1.0; R.max = Math.ceil(top * 1.06 * 2) / 2; }
+        else {
+          R.min = Math.max(1, Math.floor(tth(top * 1.06) || 1));
+          const t1 = tth(S.r.d.min);
+          R.max = isFinite(t1) ? Math.min(150, Math.ceil(t1 / 5) * 5) : 150;
+        }
+      }
+      return [R.min, Math.max(R.max, R.min + 0.1)];
+    }
+
+    // ---------- plot ----------
+    const NS = "http://www.w3.org/2000/svg";
+    function svgEl(tag, attrs, text) {
+      const e = document.createElementNS(NS, tag);
+      for (const k in attrs) e.setAttribute(k, attrs[k]);
+      if (text != null) e.textContent = text;
+      return e;
+    }
+    function niceTicks(lo, hi, n) {
+      const step0 = (hi - lo) / n, mag = 10 ** Math.floor(Math.log10(step0));
+      const step = [1, 2, 2.5, 5, 10].map((s) => s * mag).find((s) => s >= step0);
+      const out = [];
+      for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(+v.toFixed(10));
+      return out;
+    }
+
+    function render() {
+      if (!DATA) return;
+      const all = phasesAtPin(), list = all.filter((p) => p.on);
+      const [x0, x1] = range(all);
+      const R = S.r[S.axis];
+      if (document.activeElement !== $("xmin")) $("xmin").value = +x0.toFixed(3);
+      if (document.activeElement !== $("xmax")) $("xmax").value = +R.max.toFixed(3);
+      renderPoint();
+      renderChips(all);
+      renderLattice(all);
+
+      const svg = $("svg"), W = Math.max(320, $("plot").clientWidth), narrow = W < 560;
+      const m = { l: narrow ? 40 : 52, r: 14, t: 12, b: 38 }, Hp = narrow ? 190 : 185, row = 14;
+      const H = m.t + Hp + m.b + list.length * row + (list.length ? 4 : 0);
+      svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+      svg.replaceChildren();
+      const X = (x) => m.l + ((x - x0) / (x1 - x0)) * (W - m.l - m.r);
+      const Y = (v) => m.t + Hp - (v / 105) * Hp;
+      const cs = getComputedStyle(document.documentElement);
+      const grid = cs.getPropertyValue("--light-gray").trim() || "#ddd", surface = cs.getPropertyValue("--background").trim() || "#fff";
+
+      for (const v of [0, 25, 50, 75, 100]) {
+        svg.append(svgEl("line", { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), stroke: grid, "stroke-width": 1 }));
+        svg.append(svgEl("text", { x: m.l - 6, y: Y(v) + 4, "text-anchor": "end" }, v));
+      }
+      for (const v of niceTicks(x0, x1, narrow ? 5 : 10)) {
+        svg.append(svgEl("line", { x1: X(v), x2: X(v), y1: m.t + Hp, y2: m.t + Hp + 4, stroke: grid }));
+        svg.append(svgEl("text", { x: X(v), y: m.t + Hp + 16, "text-anchor": "middle" }, v));
+      }
+      const xt = S.axis === "d" ? "d-spacing (Å)" : `2θ (°), λ = ${S.lam.toFixed(4)} Å`;
+      svg.append(svgEl("text", { class: "ttl", x: (m.l + W - m.r) / 2, y: m.t + Hp + 32, "text-anchor": "middle" }, xt));
+      svg.append(svgEl("text", { class: "ttl", x: 12, y: m.t + Hp / 2, "text-anchor": "middle", transform: `rotate(-90 12 ${m.t + Hp / 2})` }, "Relative intensity"));
+
+      if (!list.length) {
+        const msg = !PIN ? "Click a point on the phase diagram" : all.length ? "Turn on a phase above to see its pattern" : "No Bragg peaks: liquid water and vapour, and no ice SeaFreeze can evaluate here";
+        svg.append(svgEl("text", { class: "msg", x: (m.l + W - m.r) / 2, y: m.t + Hp / 2, "text-anchor": "middle" }, msg));
+        view = null; renderRefl([]); setNote(all, list); return;
+      }
+
+      const N = Math.min(4000, Math.round((W - m.l - m.r) * 3));
+      const xs = new Float64Array(N);
+      for (let i = 0; i < N; i++) xs[i] = x0 + ((x1 - x0) * i) / (N - 1);
+      const pats = list.map((p) => ({ p, ...pattern(p, xs, x0, x1) }));
+      const clip = svgEl("clipPath", { id: "sfdx-clip" });
+      clip.append(svgEl("rect", { x: m.l, y: m.t - 2, width: W - m.l - m.r, height: Hp + 2 }));
+      svg.append(clip);
+      const g = svgEl("g", { "clip-path": "url(#sfdx-clip)" });
+      svg.append(g);
+      for (const pt of pats) {
+        let dPath = "";
+        if (S.mode === "sticks") for (const k of pt.peaks) dPath += `M${X(k.x).toFixed(1)} ${Y(0)}V${Y(100)}`;
+        else for (let i = 0; i < N; i++) dPath += (i ? "L" : "M") + X(xs[i]).toFixed(1) + " " + Y(pt.y[i]).toFixed(1);
+        if (S.mode !== "sticks") g.append(svgEl("path", { d: dPath, stroke: surface, "stroke-width": 4, fill: "none", "stroke-linejoin": "round" }));
+        g.append(svgEl("path", { d: dPath, stroke: pt.p.color, "stroke-width": S.mode === "sticks" ? 1.5 : 2, "stroke-opacity": S.mode === "sticks" && list.length > 1 ? 0.75 : 1, fill: "none", "stroke-linejoin": "round" }));
+      }
+      pats.forEach((pt, j) => {
+        const y0 = m.t + Hp + m.b + j * row + 2;
+        let dPath = "";
+        for (const k of pt.peaks) if (k.x >= x0 && k.x <= x1) dPath += `M${X(k.x).toFixed(1)} ${y0}v${row - 5}`;
+        svg.append(svgEl("path", { d: dPath, stroke: pt.p.color, "stroke-width": 1.25 }));
+      });
+      if (S.labels || S.posLabels) {
+        const placed = [], cand = [];
+        for (const pt of pats) for (const k of pt.peaks) if (k.x >= x0 && k.x <= x1 && k.rel >= (S.mode === "sticks" ? 0 : 4)) cand.push(k);
+        cand.sort((a, b) => (S.mode === "sticks" ? b.d - a.d : b.h - a.h));
+        const maxN = narrow ? 10 : 22;
+        for (const k of cand) {
+          if (placed.length >= maxN) break;
+          const x = X(k.x);
+          if (placed.some((q) => Math.abs(q - x) < 14)) continue;
+          placed.push(x);
+          const yy = Math.max(Y(Math.min(k.h, 100)) - 5, m.t + (S.labels && S.posLabels ? 84 : S.posLabels ? 50 : 30));
+          const t = svgEl("text", { class: "lab", x: 0, y: 0, transform: `translate(${x - 3} ${yy}) rotate(-90)` });
+          if (S.labels) k.lab.split(";").slice(0, 2).forEach((f, fi) => {
+            if (fi) t.append(svgEl("tspan", {}, ","));
+            for (const xv of f.split(" ")) t.append(svgEl("tspan", xv.startsWith("-") ? { "text-decoration": "overline" } : {}, xv.replace("-", "")));
+          });
+          if (S.posLabels) t.append(svgEl("tspan", {}, (S.labels ? " · " : "") + (S.axis === "d" ? k.d.toFixed(4) + " Å" : k.x.toFixed(3) + "°")));
+          svg.append(t);
+        }
+      }
+      const cross = svgEl("line", { y1: m.t, y2: m.t + Hp + list.length * row + m.b, stroke: "currentColor", "stroke-opacity": 0.35, "stroke-dasharray": "3 3", visibility: "hidden" });
+      svg.append(cross);
+      view = { pats, X, m, W, x0, x1, cross, xs };
+      renderRefl(pats);
+      setNote(all, list);
+    }
+
+    function renderPoint() {
+      $("point").textContent = PIN ? `${PIN.place} · ${fmtP(PIN.P)} MPa · ${PIN.T.toFixed(2)} K (${minus((PIN.T - 273.15).toFixed(2))} °C)` : "Click a point on the phase diagram";
+    }
+    function renderChips(all) {
+      const el = $("phases");
+      el.replaceChildren();
+      if (!all.length) return;
+      for (const p of all) {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "sfdx-chip"; b.setAttribute("aria-pressed", String(p.on));
+        b.title = p.stable ? "Stable phase at this point" : "Metastable here: Gibbs energy above the stable phase";
+        b.innerHTML = `<span class="sfdx-sw" style="background:${esc(p.color)}"></span>${NAMES[p.id]}<small>${p.stable ? "stable" : fmtDG(p.dG)}</small>`;
+        b.addEventListener("click", () => { S.show[p.id] = !p.on; render(); });
+        el.append(b);
+      }
+      const nMeta = all.filter((p) => !p.stable).length;
+      if (Object.keys(S.show).length) {
+        const r = document.createElement("button");
+        r.type = "button"; r.className = "sfdx-linkbtn"; r.textContent = "Stable only";
+        r.addEventListener("click", () => { S.show = {}; render(); });
+        el.append(r);
+      } else if (nMeta) {
+        const s = document.createElement("span");
+        s.className = "sfdx-muted"; s.textContent = `${nMeta} metastable ${nMeta > 1 ? "ices" : "ice"}: click to show`;
+        el.append(s);
+      }
+    }
+    function renderLattice(all) {
+      const el = $("lattice"), list = all.filter((p) => p.on);
+      if (!list.length) { el.innerHTML = `<p class="sfdx-muted">${PIN ? "No ice shown at this point." : ""}</p>`; return; }
+      el.innerHTML = `<table><thead><tr><th>Phase</th><th></th><th class="num">a (Å)</th><th class="num">b (Å)</th><th class="num">c (Å)</th>
+        <th class="num">α (°)</th><th class="num">β (°)</th><th class="num">γ (°)</th><th class="num">V (Å³)</th><th class="num">Z</th>
+        <th class="num">V/Z (Å³)</th><th class="num">ρ (kg/m³)</th><th class="num">V/V<sub>ref</sub></th><th>Setting</th></tr></thead>
+        <tbody>${list.map((p) => {
+          const [a, b, c, al, be, ga] = p.cell;
+          return `<tr><td><span class="sfdx-sw" style="background:${esc(p.color)}"></span>${NAMES[p.id]}</td><td>${p.stable ? "stable" : "metastable, " + fmtDG(p.dG)}</td>
+            <td class="num">${fix(a, 4)}</td><td class="num">${fix(b, 4)}</td><td class="num">${fix(c, 4)}</td>
+            <td class="num">${fix(al, 2)}</td><td class="num">${fix(be, 3)}</td><td class="num">${fix(ga, 2)}</td>
+            <td class="num">${fix(p.V, 2)}</td><td class="num">${p.ph.Z}</td><td class="num">${fix(p.V / p.ph.Z, 3)}</td>
+            <td class="num">${fix(p.rho, 1)}</td><td class="num">${fix(p.V / p.ph.V, 4)}</td><td>${esc(p.ph.setting)}</td></tr>`;
+        }).join("")}</tbody></table>`;
+    }
+    function setNote(all, list) {
+      const bits = [];
+      if (S.mode === "xray") bits.push(`X-ray, λ = ${S.lam.toFixed(4)} Å (reflections with d < ${(S.lam / 2).toFixed(3)} Å are out of reach).`);
+      if (S.mode === "neutron") bits.push(`Neutron, ${S.iso === "D" ? "D₂O" : "H₂O"}, ${S.axis === "d" ? "time-of-flight intensities (d⁴ factor)" : `constant wavelength λ = ${S.lam.toFixed(4)} Å`}.`);
+      if (S.mode === "sticks") bits.push("All reflections allowed by symmetry with non-zero X-ray intensity, as equal sticks.");
+      if (list.length > 1) bits.push("Each phase is scaled to its own strongest peak.");
+      if (PIN && PIN.phases.some((id) => id === "liq" || id === "vap")) bits.push("The fluid at this point gives no Bragg peaks.");
+      if (list.some((p) => !p.stable)) bits.push("Metastable ices are SeaFreeze extrapolations outside their stability fields.");
+      $("note").textContent = bits.join(" ");
+    }
+
+    function onMove(ev) {
+      const tip = $("tip");
+      if (!view) { tip.hidden = true; return; }
+      const svg = $("svg"), r = svg.getBoundingClientRect(), sc = view.W / r.width;
+      const x = (ev.clientX - r.left) * sc;
+      if (x < view.m.l || x > view.W - view.m.r) { tip.hidden = true; view.cross.setAttribute("visibility", "hidden"); return; }
+      const xv = view.x0 + ((x - view.m.l) / (view.W - view.m.l - view.m.r)) * (view.x1 - view.x0);
+      let best = null;
+      for (const pt of view.pats) for (const k of pt.peaks) {
+        const dx = Math.abs(view.X(k.x) - x);
+        if (dx < 6 * sc && (!best || dx < best.dx - sc || (Math.abs(dx - best.dx) <= sc && k.rel > best.k.rel))) best = { k, pt, dx };
+      }
+      const both = (d) => `d = <span class="num">${d.toFixed(4)} Å</span>${lamUsed() && isFinite(tth(d)) ? ` · 2θ = <span class="num">${tth(d).toFixed(3)}°</span>` : ""}`;
+      let html, cx;
+      if (best) {
+        const { k, pt } = best;
+        html = `<span class="sfdx-sw" style="background:${esc(pt.p.color)}"></span><b>${NAMES[pt.p.id]}</b> <span class="hkl">${hklHTML(k.lab)}</span><br>${both(k.d)}<br>
+          multiplicity <span class="num">${k.m}</span>${S.mode === "sticks" ? "" : ` · I = <span class="num">${k.rel.toFixed(1)}</span>`}`;
+        cx = view.X(k.x);
+      } else {
+        const i = Math.round(((xv - view.x0) / (view.x1 - view.x0)) * (view.xs.length - 1));
+        html = both(S.axis === "d" ? xv : dOfTth(xv));
+        if (S.mode !== "sticks") for (const pt of view.pats) html += `<br><span class="sfdx-sw" style="background:${esc(pt.p.color)}"></span>${NAMES[pt.p.id]} <span class="num">${pt.y[i].toFixed(1)}</span>`;
+        cx = x;
+      }
+      view.cross.setAttribute("x1", cx); view.cross.setAttribute("x2", cx); view.cross.setAttribute("visibility", "visible");
+      tip.innerHTML = html;
+      tip.hidden = false;
+      const pr = $("plot").getBoundingClientRect(), px = ev.clientX - pr.left, tw = tip.offsetWidth;
+      tip.style.left = Math.min(Math.max(4, px + 14 + tw > pr.width ? px - tw - 14 : px + 14), pr.width - tw - 4) + "px";
+      tip.style.top = Math.max(4, ev.clientY - pr.top - tip.offsetHeight - 12) + "px";
+    }
+    function onLeave() { $("tip").hidden = true; if (view) view.cross.setAttribute("visibility", "hidden"); }
+
+    // ---------- reflection table and CSV ----------
+    function reflRows(pats) {
+      const rows = [];
+      for (const pt of pats) for (const k of pt.peaks) if (view && k.x >= view.x0 && k.x <= view.x1) rows.push({ pt, k });
+      return rows.sort((a, b) => b.k.d - a.k.d);
+    }
+    function renderRefl(pats) {
+      const rows = reflRows(pats), tt = lamUsed(), unit = S.axis === "d" ? "Å" : "°";
+      $("refl-sum").textContent = view ? `Reflection list (${rows.length} peaks from ${+view.x0.toFixed(3)} to ${+view.x1.toFixed(3)} ${unit})` : "Reflection list";
+      $("refl").innerHTML = rows.length ? `<table><thead><tr><th>Phase</th><th>hkl</th><th class="num">d (Å)</th>${tt ? '<th class="num">2θ (°)</th>' : ""}
+        <th class="num">m</th>${S.mode === "sticks" ? "" : '<th class="num">I (rel.)</th>'}</tr></thead><tbody>${rows.map(({ pt, k }) =>
+        `<tr><td><span class="sfdx-sw" style="background:${esc(pt.p.color)}"></span>${NAMES[pt.p.id]}</td><td class="hkl">${hklHTML(k.lab)}</td>
+         <td class="num">${k.d.toFixed(4)}</td>${tt ? `<td class="num">${fix(tth(k.d), 3)}</td>` : ""}<td class="num">${k.m}</td>
+         ${S.mode === "sticks" ? "" : `<td class="num">${k.rel.toFixed(2)}</td>`}</tr>`).join("")}</tbody></table>` : "";
+    }
+    function header() {
+      const lines = [`# SeaFreeze diffraction tool, ${location.href.split("?")[0]}`];
+      if (PIN) lines.push(`# ${PIN.place}; P = ${PIN.P.toPrecision(8)} MPa; T = ${PIN.T.toFixed(4)} K`);
+      if (view) for (const pt of view.pats) lines.push(`# ${NAMES[pt.p.id]} (${pt.p.stable ? "stable" : "metastable, dG = " + pt.p.dG.toFixed(1) + " J/kg"}): a b c = ${pt.p.cell.slice(0, 3).map((x) => x.toFixed(5)).join(" ")} A; alpha beta gamma = ${pt.p.cell.slice(3).join(" ")} deg; V = ${pt.p.V.toFixed(4)} A3; Z = ${pt.p.ph.Z}; rho = ${pt.p.rho.toFixed(3)} kg/m3`);
+      lines.push(`# mode = ${S.mode}${S.mode === "neutron" ? ` ${S.iso}2O` : ""}${lamUsed() ? `, lambda = ${S.lam} A` : ""}; FWHM = ${S.fwhm} % of d`);
+      return lines;
+    }
+    function download(name, text) {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([text], { type: "text/csv" }));
+      a.download = name;
+      document.body.append(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    }
+    const tag = () => (PIN ? `_${Math.round(PIN.P)}MPa_${Math.round(PIN.T)}K` : "");
+    $("csv-pattern").addEventListener("click", () => {
+      if (!view) return;
+      if (S.mode === "sticks") { $("csv-refl").click(); return; }
+      const lines = header(), tt = lamUsed();
+      const cols = S.axis === "d" ? ["d_A", ...(tt ? ["two_theta_deg"] : [])] : ["two_theta_deg", "d_A"];
+      lines.push([...cols, ...view.pats.map((pt) => "I_" + pt.p.id)].join(","));
+      for (let i = 0; i < view.xs.length; i++) {
+        const x = view.xs[i], d = S.axis === "d" ? x : dOfTth(x);
+        const lead = S.axis === "d" ? [d.toFixed(5), ...(tt ? [isFinite(tth(d)) ? tth(d).toFixed(4) : ""] : [])] : [x.toFixed(4), d.toFixed(5)];
+        lines.push([...lead, ...view.pats.map((pt) => pt.y[i].toFixed(4))].join(","));
+      }
+      download(`seafreeze_pattern${tag()}.csv`, lines.join("\n"));
+    });
+    $("csv-refl").addEventListener("click", () => {
+      if (!view) return;
+      const lines = header();
+      lines.push("phase,status,hkl,d_A,two_theta_deg,multiplicity,I_rel");
+      for (const { pt, k } of reflRows(view.pats))
+        lines.push([pt.p.id, pt.p.stable ? "stable" : "metastable", `"${hklText(k.lab)}"`, k.d.toFixed(5), lamUsed() && isFinite(tth(k.d)) ? tth(k.d).toFixed(4) : "", k.m, S.mode === "sticks" ? "" : k.rel.toFixed(3)].join(","));
+      download(`seafreeze_reflections${tag()}.csv`, lines.join("\n"));
+    });
+
+    // ---------- pinned points (kept by the diagram, shown here) ----------
+    function renderLog() {
+      const L = PIN && PIN.log, el = $("log");
+      if (!L || !L.rows.length) { el.innerHTML = `<p class="sfdx-muted">Your last 5 clicked points are listed here. Click a row to show it again.</p>`; return; }
+      el.innerHTML = `<table><thead><tr>${L.head.map(([h, n]) => `<th${n ? ' class="num"' : ""}>${h}</th>`).join("")}</tr></thead><tbody>${L.rows.map((r) =>
+        `<tr class="sfdx-log-row${r.sel ? " sel" : ""}" data-id="${r.id}" tabindex="0">${r.cells.map(([t, n]) => `<td${n ? ' class="num"' : ""}>${esc(t)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+    }
+    const toFrame = (msg) => { try { frame.contentWindow.postMessage(msg, location.origin); } catch (e) {} };
+    $("log").addEventListener("click", (e) => { const tr = e.target.closest("tr[data-id]"); if (tr) toFrame({ type: "sfpd-show", id: +tr.dataset.id }); });
+    $("log").addEventListener("keydown", (e) => { const tr = e.target.closest("tr[data-id]"); if (tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toFrame({ type: "sfpd-show", id: +tr.dataset.id }); } });
+    $("log-clear").addEventListener("click", () => toFrame({ type: "sfpd-clear" }));
+    $("log-csv").addEventListener("click", () => {
+      const txt = (PIN && PIN.csv) || "", fl = $("log-flash");
+      const done = (m) => { fl.textContent = m; setTimeout(() => (fl.textContent = ""), 1800); };
+      try { navigator.clipboard.writeText(txt).then(() => done("Copied"), () => { download("seafreeze_points.csv", txt); done("Downloaded"); }); }
+      catch (e) { download("seafreeze_points.csv", txt); done("Downloaded"); }
+    });
+
+    // ---------- controls ----------
+    function syncControls() {
+      box.querySelectorAll("[data-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === S.mode)));
+      box.querySelectorAll("[data-axis]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.axis === S.axis)));
+      $("lamfield").hidden = !lamUsed();
+      $("isofield").hidden = S.mode !== "neutron";
+      $("fwhmfield").hidden = S.mode === "sticks";
+      $("from-lab").textContent = S.axis === "d" ? "d from" : "2θ from";
+      $("to-lab").textContent = S.axis === "d" ? "to (Å)" : "to (°)";
+      const st = S.axis === "d" ? 0.1 : 1;
+      $("xmin").step = st; $("xmax").step = st;
+    }
+    box.querySelectorAll("[data-mode]").forEach((b) => b.addEventListener("click", () => { S.mode = b.dataset.mode; syncControls(); render(); }));
+    box.querySelectorAll("[data-axis]").forEach((b) => b.addEventListener("click", () => { S.axis = b.dataset.axis; syncControls(); render(); }));
+    $("lamsel").addEventListener("change", (e) => {
+      const v = e.target.value;
+      $("lamwrap").hidden = v !== "custom";
+      if (v !== "custom") { S.lam = +v; $("lam").value = (+v).toFixed(4); } else S.lam = +$("lam").value;
+      render();
+    });
+    $("lam").addEventListener("input", (e) => { const v = parseFloat(e.target.value); if (v >= 0.1 && v <= 5) { S.lam = v; render(); } });
+    $("fwhm").addEventListener("input", (e) => { const v = parseFloat(e.target.value); if (v >= 0.02 && v <= 5) { S.fwhm = v; render(); } });
+    const lim = () => (S.axis === "d" ? [0.6, 20] : [0.5, 175]);
+    $("xmin").addEventListener("input", (e) => { const v = parseFloat(e.target.value), [lo, hi] = lim(); if (v >= lo && v <= hi) { S.r[S.axis].min = v; S.r[S.axis].auto = false; render(); } });
+    $("xmax").addEventListener("input", (e) => { const v = parseFloat(e.target.value), [lo, hi] = lim(); if (v >= lo && v <= hi) { S.r[S.axis].max = v; S.r[S.axis].auto = false; render(); } });
+    $("iso").addEventListener("change", (e) => { S.iso = e.target.value; render(); });
+    $("labels").addEventListener("change", (e) => { S.labels = e.target.checked; render(); });
+    $("poslabels").addEventListener("change", (e) => { S.posLabels = e.target.checked; render(); });
+    $("svg").addEventListener("pointermove", onMove);
+    $("svg").addEventListener("pointerleave", onLeave);
+    let rq = 0;
+    new ResizeObserver(() => { cancelAnimationFrame(rq); rq = requestAnimationFrame(render); }).observe($("plot"));
+
+    // ---------- link with the phase diagram ----------
+    window.addEventListener("message", (e) => {
+      if (e.origin !== location.origin || !e.data || e.data.type !== "sfpd-pin") return;
+      PIN = e.data;
+      if (PIN.footer) $("footer").innerHTML = PIN.footer.replace(/^\s*<p>\s*<strong>How it is computed\.<\/strong>\s*/, "").replace(/<\/p>\s*$/, "");
+      renderLog();
+      render();
+    });
+    const ask = () => toFrame({ type: "sfpd-get" });
+    if (frame) {
+      frame.addEventListener("load", () => setTimeout(ask, 300));
+      new MutationObserver(() => setTimeout(ask, 60)).observe(document.documentElement, { attributes: true, attributeFilter: ["data-dark"] });
+    }
+
+    syncControls();
+    Promise.all([
+      fetch(box.dataset.src).then((r) => r.json()),
+      loadMeta(box.dataset.meta).catch(() => null),
+    ]).then(([d, meta]) => {
+      DATA = d;
+      DATA.byId = Object.fromEntries(d.phases.map((p) => [p.id, p]));
+      META = meta;
+      $("refs").innerHTML = d.phases.map((p) => `<li><b>${NAMES[p.id]}</b>, ${esc(p.setting.toLowerCase())}: ${esc(p.ref)}${p.link ? ` (<a href="${esc(p.link)}">CIF</a>)` : ""}.</li>`).join("");
+      renderLog();
+      render();
+      ask();
+    }).catch(() => { $("point").textContent = "Could not load the reflection data."; });
+  })();
+</script>

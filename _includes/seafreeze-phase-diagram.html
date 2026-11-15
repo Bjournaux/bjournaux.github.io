@@ -3,7 +3,8 @@
   and its data file). Shown in a frame that follows the site's dark/light mode and grows with
   its content. Rebuild it with the scripts in _tools/phase_diagram.
   {% include seafreeze-phase-diagram.html %}
-  Optional: skin="original" (first design's fonts and colors), map=false (no "Color by" maps)
+  Optional: skin="original" (first design's fonts and colors), map=false (no "Color by" maps),
+  dx=true (layout of the diffraction tool, see seafreeze-diffraction.html)
 {% endcomment %}
 {% assign page-url = "files/seafreeze/phase-diagram.html" | relative_url %}
 <div class="sfpd">
@@ -12,11 +13,13 @@
     id="sfpd-frame"
     title="Interactive water phase diagram computed with SeaFreeze"
     loading="lazy"
-    data-src="{{ page-url }}?embed=1{% if include.skin == "original" %}&amp;skin=original{% endif %}{% if include.map == false %}&amp;map=0{% endif %}"
+    data-src="{{ page-url }}?embed=1{% if include.skin == "original" %}&amp;skin=original{% endif %}{% if include.map == false %}&amp;map=0{% endif %}{% if include.dx %}&amp;dx=1{% endif %}"
   ></iframe>
+  {% unless include.dx %}
   <p class="sfpd-open">
     <a href="{{ page-url }}">Open the phase diagram on its own page</a>
   </p>
+  {% endunless %}
 </div>
 
 <script>

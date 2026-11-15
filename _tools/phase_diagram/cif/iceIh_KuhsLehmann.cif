@@ -1,0 +1,54 @@
+#------------------------------------------------------------------------------
+# Ice Ih, average proton-disordered structure (D2O), space group P6_3/mmc.
+# Positions after Kuhs & Lehmann (1983, J. Phys. Chem. 87, 4312): O on 4f, D on 4f and 12k,
+# each D site half occupied. Cell after Roettger et al. (1994, Acta Cryst. B 50, 644), 250 K.
+# Typed in for the SeaFreeze diffraction tool (no ice Ih entry in the COD ice collection);
+# only the c/a ratio and the fractional coordinates are used, the volume comes from SeaFreeze.
+#------------------------------------------------------------------------------
+data_iceIh
+_chemical_name_common            'ice Ih'
+_space_group_IT_number           194
+_space_group_name_H-M_alt        'P 63/m m c'
+_cell_length_a                   4.5190
+_cell_length_b                   4.5190
+_cell_length_c                   7.3616
+_cell_angle_alpha                90
+_cell_angle_beta                 90
+_cell_angle_gamma                120
+_cell_formula_units_Z            4
+loop_
+_space_group_symop_operation_xyz
+'x, y, z'
+'-y, x-y, z'
+'-x+y, -x, z'
+'-x, -y, z+1/2'
+'y, -x+y, z+1/2'
+'x-y, x, z+1/2'
+'y, x, -z'
+'x-y, -y, -z'
+'-x, -x+y, -z'
+'-y, -x, -z+1/2'
+'-x+y, y, -z+1/2'
+'x, x-y, -z+1/2'
+'-x, -y, -z'
+'y, -x+y, -z'
+'x-y, x, -z'
+'x, y, -z+1/2'
+'-y, x-y, -z+1/2'
+'-x+y, -x, -z+1/2'
+'-y, -x, z'
+'-x+y, y, z'
+'x, x-y, z'
+'y, x, z+1/2'
+'x-y, -y, z+1/2'
+'-x, -x+y, z+1/2'
+loop_
+_atom_site_label
+_atom_site_occupancy
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_type_symbol
+O1 1.0 0.333333 0.666667 0.0625 O
+D1 0.5 0.333333 0.666667 0.1980 D
+D2 0.5 0.4537 0.9074 0.0185 D

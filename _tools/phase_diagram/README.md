@@ -25,9 +25,20 @@ python validate.py        # 3. storage masks; checks phases and densities at ran
 python compute_props.py   # 4. Cp, Cv, alpha, Kt, Vp, Vs on the same grid
 python check_props.py     # 4b. checks those properties at random points (a few minutes)
 python build.py           # 5. writes the page and its data file into files/seafreeze/
+python diffraction.py     # 6. diffraction tool: ice reflections and metastable-ice densities
 ```
 
-Then preview the site and commit the two files in `files/seafreeze/`.
+Then preview the site and commit the files in `files/seafreeze/`.
+
+## Diffraction tool (tools/seafreeze-diffraction)
+
+`diffraction.py` reads the reference ice structures in `cif/` and writes
+`files/seafreeze/ice-reflections.json` (reflections and structure-factor terms of ices Ih, II,
+III, V and VI). When `work/grid.npz` exists (step 1), it also writes
+`files/seafreeze/ice-metastable.bin` (density and Gibbs energy above the stable phase of every
+ice wherever SeaFreeze evaluates it). The page is `_includes/seafreeze-diffraction.html`; it
+frames the phase diagram with `dx=1` (flatter layout, estimated lattice parameters in the side
+panel, pinned points shown by the framing page). `lattice=1` alone adds the lattice parameters.
 
 ## Page options
 
